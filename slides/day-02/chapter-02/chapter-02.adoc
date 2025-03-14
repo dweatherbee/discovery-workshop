@@ -1,0 +1,150 @@
+== Write Intents in CockroachDB
+
+=== Understanding Write Intents
+
+* Temporary records created during transactions
+* Essential for MVCC and transaction isolation
+* Impact concurrent access and performance
+* Require cleanup after transaction completion
+* Affect cluster storage utilization
+
+[.notes]
+--
+Write intents are temporary markers placed on data when a transaction modifies rows but has not yet committed. These markers ensure transactional integrity by allowing *other transactions* or *reads* to detect that the data is currently being changed. In CockroachDB, write intents are tied to MVCC, which manages multiple versions of rows.
+
+Key points to understand:
+
+* *Isolation:* Write intents serve to isolate in-flight transactions, preventing others from reading or modifying the data in conflicting ways.
+* *Visibility:* Other transactions see that the row is “locked” pending a commit or rollback. Reads may wait or retry if they encounter these intents, depending on the transaction isolation level.
+* *Cleanup:* Once a transaction completes (commits or aborts), its write intents are either *promoted* to committed data or *discarded* if the transaction is rolled back.
+* *Performance Impact:* Excessive write intents—especially under a high write load—can create contention, lengthen transaction retries, and strain the system’s storage and CPU resources.
+--
+
+=== Write Intent Lifecycle
+
+* Created at transaction start
+* Block conflicting operations
+* Persist until transaction commits/aborts
+* Require cleanup resources
+* Impact concurrent transactions
+
+[.notes]
+--
+The lifecycle of a write intent proceeds through distinct phases:
+
+* *Creation:* As soon as a transaction writes to a row, CockroachDB places a write intent at that row’s latest MVCC version, marking the data as “in flux.”
+* *Blocking:* Operations that conflict with the intent (i.e., other writes to the same row) may be forced to wait or retry, ensuring serializable isolation. Lock-free reads can still proceed on older committed versions, though they might see stale data relative to the in-flight transaction.
+* *Persistence:* Write intents are durable in the underlying key-value store. If the node crashes, these intents remain, awaiting resolution once the transaction is recovered or timed out.
+* *Resolution (Cleanup):* On commit, the intent is “resolved,” promoting the row to a fully committed version. On rollback (abort), the system discards the write. This cleanup process uses additional resources and can impact performance if large numbers of intents need resolution.
+* *Concurrency Impact:* While the write intent remains, concurrent transactions can be slowed or retried, potentially increasing overall cluster latency if not managed effectively.
+--
+
+=== Impact of Write Intent Buildup
+
+* Increased transaction conflicts
+* Higher storage consumption
+* Extended cleanup overhead
+* Reduced system throughput
+* Degraded query performance
+
+[.notes]
+--
+A buildup of unresolved write intents can create bottlenecks:
+
+* *Transaction Conflicts:* Multiple transactions attempting to modify the same rows frequently encounter each other’s intents, increasing the likelihood of restarts or backoffs.
+* *Storage Overhead:* Each intent adds an additional version record. A large volume of uncommitted changes spikes storage usage and can put pressure on system resources like memory and disk.
+* *Cleanup Costs:* The background process that resolves intents must handle more records, consuming CPU and I/O. Under heavy write loads, this cost can become significant.
+* *Performance Degradation:* Longer resolution times mean reads and writes experience delays. If too many transactions produce lingering intents, the cluster’s throughput is reduced.
+--
+
+=== Monitoring Write Intents
+
+* Track active transactions
+* Measure intent counts
+* Observe cleanup duration
+* Monitor system impact
+* Analyze performance patterns
+
+[.notes]
+--
+Effective monitoring of write intents is vital to ensure healthy cluster operation:
+
+* *Active Transaction Inspection:* Use queries or the DB Console to see how many transactions are currently open and what they’re modifying.
+* *Intent Counts:* Look for metrics that specifically track the number of outstanding write intents or “locks.” High or steadily increasing counts may signal a problem.
+* *Cleanup Duration:* Observe how long it takes the system to resolve intents after commit or rollback. Prolonged cleanup times can indicate contention or insufficient resources.
+* *System-Wide Metrics:* CPU, memory, and disk I/O usage can all be affected by high-intent workloads. If these metrics spike without corresponding throughput increases, write intents could be at fault.
+* *Performance Profiling:* Use logs, traces, or built-in instrumentation to analyze how transactions and batch operations behave under load. Identify patterns, such as frequent retries or slow commits, that point to excessive write intent activity.
+--
+
+=== Batch Processing Strategies
+
+* Size batches appropriately
+* Control transaction scope
+* Balance throughput vs overhead
+* Allow concurrent operations
+* Minimize cleanup impact
+
+[.notes]
+--
+Batching in CockroachDB means grouping multiple statements into a single transaction. This approach can improve throughput but may lead to a large number of write intents if transactions are too big:
+
+* *Appropriate Batch Sizing:* If a batch is too large, it may hold onto many write intents for an extended period, increasing conflict potential. If it’s too small, overhead from transaction setup and commit could reduce throughput. Finding a sweet spot is key.
+* *Transaction Scope Control:* Make sure each transaction’s changes are related. Combining unrelated operations into the same transaction increases the chance of contention and complicated rollbacks.
+* *Throughput vs. Overhead:* Large batches can boost throughput but risk greater conflict and bigger cleanup tasks. Smaller batches reduce concurrency conflicts but might not fully utilize the cluster’s capacity.
+* *Concurrency Allowance:* By running multiple moderately sized transactions in parallel, the cluster can better distribute load across nodes, limiting the buildup of any single transaction’s write intents.
+--
+
+=== Performance Optimization Tips
+
+* Limit transaction size
+* Use appropriate batch sizes
+* Schedule large updates carefully
+* Monitor system metrics
+* Plan for cleanup overhead
+
+[.notes]
+--
+When designing workloads in CockroachDB, consider:
+
+* *Limiting Transaction Size:* Smaller, well-defined transactions create fewer write intents, reducing the likelihood of large-scale rollbacks and making cleanup faster.
+* *Batch Size Tuning:* Use trial and error and workload analysis to find an optimal batch size. Too large can cause lock contention; too small can hamper throughput.
+* *Scheduling Large Updates:* Perform major migrations or bulk updates during off-peak hours to minimize conflict with regular workloads and to allow more time for intent resolution.
+* *Metric Monitoring:* Keep an eye on CPU usage, I/O, and the count of open transactions. Spikes can indicate concurrency issues linked to write intents.
+* *Cleanup Overhead Planning:* Recognize that cleanup tasks (resolving many write intents) can consume cluster resources. Factor this into your operational plan, ensuring you allocate enough capacity.
+--
+
+=== Summary
+
+* Write intents enable transactions
+* Buildup impacts performance
+* Monitoring is essential
+* Batching improves efficiency
+* Size affects cleanup time
+
+[.notes]
+--
+Write intents form the backbone of CockroachDB’s transactional consistency model, but they must be carefully managed to avoid bottlenecks:
+
+* *Essential Transaction Component:* They preserve isolation across concurrent operations and keep data consistent.
+* *Performance Trade-Off:* Accumulated write intents can degrade performance, requiring thoughtful transaction design and cleanup processes.
+* *Monitoring & Batching:* By keeping watch on system metrics and using well-tuned batch sizes, you can keep write intents from overwhelming the cluster.
+* *Impact on Cleanup:* The more writes left “in limbo,” the more overhead is needed to resolve them, so controlling transaction scope and timing is key to smooth operations.
+--
+
+=== Exercise Preview
+
+* Monitor write intent metrics
+* Compare batch strategies
+* Observe cleanup patterns
+* Measure system impact
+* Optimize update operations
+
+[.notes]
+--
+In the upcoming exercise, you will:
+
+* Examine the volume of write intents generated by different batch sizes and transactional scopes.
+* Measure system impact by monitoring key metrics (e.g., CPU, memory, open transactions).
+* Assess how quickly CockroachDB cleans up uncommitted writes after transactions complete.
+* Adjust strategies—batch size, scheduling, concurrency—to see how each change affects performance and resource usage.
+--

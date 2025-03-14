@@ -1,0 +1,148 @@
+== Quorum and Resilience in CockroachDB
+=== Why Resilience Matters
+[.text-left]
+
+* Ensures continuous business operations
+* Maintains data consistency during failures
+* Prevents service interruptions
+* Supports high availability requirements
+* Enables maintenance without downtime
+
+[.notes]
+--
+Resilience in CockroachDB ensures the cluster continues to provide consistent
+reads and writes even if individual nodes or network segments fail. Its
+*shared-nothing* *horizontally scalable* architecture is designed for fault
+tolerance. By distributing data across multiple nodes and leveraging consensus
+algorithms (like Raft) to maintain quorum, CockroachDB keeps the system
+operational and able to serve requests without manual intervention or downtime.
+Resilience is especially important for mission-critical applications that
+require guaranteed uptime and data consistency despite hardware or network
+failures.
+--
+
+=== Understanding Replication
+[.text-left]
+
+* Data replicated across multiple nodes
+* Default 3x replication for application data
+* Default 5x replication for system data
+* Even distribution across nodes
+* One replica per range per node
+
+[.notes]
+--
+CockroachDB uses *range-based replication*: data is split into ranges (typically 512 MiB each), and each range is replicated. By default:
+  
+* *3 replicas* for user/application data  
+* *5 replicas* for system data (e.g., metadata tables)  
+
+Replication is key to CockroachDB’s high availability. The cluster ensures that
+no two replicas of the same range reside on the same node, preventing a single
+node failure from taking down a majority of replicas. This even distribution
+also helps balance load across nodes and avoid hotspots.
+
+Example:  
+[source,sql]
+----
+SHOW RANGES FROM TABLE mydatabase.mytable;
+----
+This displays each range and which nodes hold replicas, helping you verify replication topology.
+--
+
+=== Node Failure Detection
+[.text-left]
+
+* Automatic failure detection
+* Configurable detection timeout
+* Default 5-minute wait period
+* Minimum 1m15s detection time
+* Automatic healing process initiation
+
+[.notes]
+--
+CockroachDB uses a combination of *heartbeats* and *store gossip* to detect node failures. The setting  
+[source,sql]
+----
+SET CLUSTER SETTING server.time_until_store_dead = '1m15s';
+----
+specifies how long the cluster waits (after missing heartbeats) before declaring a node “dead.” Once a node is marked dead, CockroachDB automatically starts re-replication of that node’s data. The default is 5 minutes, but you can lower it to improve responsiveness at the risk of false positives (e.g., transient network issues).
+
+Keep in mind that if *server.time_until_store_dead* is too short, the cluster might overreact to brief network blips, initiating unnecessary re-replication. Balancing quick detection with stable operations is crucial.
+--
+
+=== Automatic Healing Process
+[.text-left]
+
+* Re-replication of affected ranges
+* Leaseholder reassignment
+* Even redistribution of replicas
+* Maintenance of replication factor
+* System data handling constraints
+
+[.notes]
+--
+When a node goes down, CockroachDB begins an *automatic healing process*:
+
+. *Re-replication:* Any range that lost a replica is copied to a healthy node to maintain the desired replication factor.  
+. *Leaseholder Reassignment:* The leaseholder (the replica responsible for coordinating writes) is reassigned to another live replica, ensuring write availability.  
+. *Replica Redistribution:* The cluster balances these new replicas across other nodes to avoid overloading a single node.  
+. *System Data Constraints:* Because system data has a higher default replication factor (5), CockroachDB takes extra precautions to keep it fully replicated.
+
+This healing occurs in the background, minimizing any performance impact on active transactions. The cluster continues serving reads and writes (assuming a quorum still exists) while re-replication finishes.
+--
+
+=== Surviving Multiple Failures
+[.text-left]
+
+* Configurable replication factor
+* Trade-off between availability and performance
+* Higher replication increases write latency
+* Zone configurations for fine-grained control
+* Balanced failure tolerance decisions
+
+[.notes]
+--
+Quorum-based voting (Raft) requires a majority of replicas to acknowledge
+writes. Increasing the *num_replicas* in a zone config improves fault tolerance
+(e.g., you can survive 2 node failures with 5 replicas) but also *increases the
+number of acknowledgments* needed, impacting write latency.
+
+Example of raising replication factor for user data:  
+
+[source,sql]
+----
+ALTER RANGE default CONFIGURE ZONE USING num_replicas=5;
+----
+
+Use *zone configurations* to apply different replication policies by table,
+index, or even row-level partitioning. This granularity helps you tune each
+dataset’s tolerance for failures versus its performance requirements.
+
+Design decisions around replication factor, node counts, and geographic
+distribution directly impact how many simultaneous failures the cluster can
+handle. Balance these choices based on your business continuity needs.
+--
+
+=== Exercise Overview
+[.text-left]
+
+* Test cluster resilience
+* Simulate node failures
+* Monitor automatic healing
+* Adjust replication factors
+* Verify continuous operation
+
+[.notes]
+--
+In the upcoming exercise, you will:
+
+* Run a *continuous workload* against a CockroachDB cluster to measure throughput and observe behavior under load.  
+* *Simulate node failures* (e.g., stopping a node or severing network connectivity) and watch how CockroachDB responds.  
+* *Monitor automatic healing* by checking logs and the DB Console to see replicas re-balancing and new leaseholder assignments.  
+* Experiment with *zone configurations* to *adjust replication factors* confirming that the cluster can survive multiple failures.  
+* Validate that queries and transactions remain available and consistent throughout node interruptions.
+
+These activities will give you hands-on experience with CockroachDB’s resilience
+mechanisms, ensuring you can design and operate a highly available cluster.
+--

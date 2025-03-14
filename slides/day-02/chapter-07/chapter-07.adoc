@@ -1,0 +1,236 @@
+== Cluster Version Management
+
+=== Why Version Management Matters
+* Ensures access to latest security patches and features
+* Minimizes downtime through rolling upgrades
+* Preserves data consistency during transitions
+* Enables rollback capability when needed
+* Maintains compliance with support requirements
+
+[.notes]
+--
+Version management is a critical operational skill because:
+- Security patches protect against vulnerabilities that could compromise data integrity or system availability.
+- New features introduce performance enhancements and functionality that can improve operations.
+- Rolling upgrades allow updates with minimal disruption to client applications, ensuring continuous availability of services.
+- Proper management preserves rollback options, which are especially valuable if issues arise during or after an upgrade.
+- Many support agreements require clusters to remain on currently supported versions to receive timely patches and assistance.
+
+The upgrade process requires thorough planning and execution to maintain cluster stability. Typical steps include verifying cluster health, performing backups, and completing the upgrade in a node-by-node fashion.
+--
+
+=== Understanding Version Types and Impact
+* Patch versions (e.g., 24.1.6 → 24.1.8): Bug fixes and security updates
+* Major versions (e.g., 24.1 → 24.3): New features and architectural changes
+* Auto-finalization impacts rollback capability
+* Enterprise licenses may affect upgrade paths
+* Version compatibility affects client applications
+
+[.notes]
+--
+Different version changes have different implications in CockroachDB:
+
+Patch Updates:
+- Primarily bug fixes and security updates.
+- Often address stability and minor performance issues.
+- Typically straightforward to implement.
+- Generally do not require finalization and involve minimal risk of compatibility issues.
+
+Major Updates:
+- May include new features, performance improvements, and architectural changes.
+- Require careful planning due to changes in cluster behavior or data layout.
+- Often need manual finalization to enable newly introduced features.
+- Could affect application compatibility if APIs or system behavior change.
+
+Auto-finalization:
+- When enabled, the cluster automatically finalizes a major upgrade after a certain period.
+- Disabling auto-finalization allows administrators to test stability and roll back if necessary (before finalization).
+
+Enterprise Licenses:
+- Some features (e.g., certain backup/restore options, encryption) may require an active enterprise license.
+- Expired or invalid licenses can interrupt upgrade paths for enterprise-only functionalities.
+
+Version Compatibility:
+- Client drivers or libraries must be compatible with the upgraded cluster version.
+- It’s best practice to test upgraded nodes or clusters with staging/QA environments before rolling changes out to production.
+--
+
+=== Critical Pre-Upgrade Considerations
+* Verify cluster health and stability
+* Check enterprise license status
+* Assess available disk space for binary files
+* Review client application compatibility
+* Create backup and rollback plans
+
+[.notes]
+--
+Before starting any upgrade, verify:
+
+Health Checks:
+- Ensure there are no dead or decommissioning nodes. Upgrading an already unhealthy cluster can exacerbate existing issues.
+- Confirm there are no under-replicated ranges by checking Admin UI or running queries like:
+  [source,sql]
+  ----
+  SELECT range_id, replicas FROM crdb_internal.ranges WHERE array_length(replicas, 1) < 3;
+  ----
+  (Adjust the replication factor as needed for your cluster.)
+- Check performance metrics (CPU, RAM, disk I/O) to verify stability and that the cluster can handle additional rebalancing if necessary.
+- Make sure sufficient disk space is available on each node to accommodate new binaries and any extra data associated with rebalancing.
+
+Planning Requirements:
+- A valid CockroachDB enterprise license if enterprise features are in use (for backup/restore, encryption, etc.).
+- Confirm that client libraries, ORM frameworks, or custom applications are compatible with the new version.
+- Document rollback procedures, which may involve retaining older binaries and disabling auto-finalization.
+- Test backup solutions (e.g., `cockroach backup`) to guarantee you can restore data if needed. A typical command is:
+  [source,bash]
+  ----
+  cockroach backup --host=<host> --port=<port> --user=<username> --insecure \
+      --full-backup-destination="nodelocal://1/backup"
+  ----
+--
+
+=== Rolling Upgrade Process
+* Node-by-node upgrade preserves availability
+* Drain connections before upgrading each node
+* Replace binary and restart service
+* Verify node health before proceeding
+* Monitor cluster stability throughout
+
+[.notes]
+--
+The rolling upgrade process in CockroachDB involves:
+
+1. Draining and Stopping a Node:
+   - Use the drain feature to gracefully shut down the node:
+     [source,bash]
+     ----
+     cockroach node drain <node-id> --host=<host> --port=<port> \
+         --insecure --accept-sql-connections=false
+     ----
+     This allows the node to reject new SQL connections and push ongoing transactions to completion, minimizing disruptions.
+
+2. Upgrading the Binary:
+   - Stop the CockroachDB service (e.g., `systemctl stop cockroach` or a similar command in your environment).
+   - Replace the old binary with the new version (download and install the latest CockroachDB release).
+   - Restart the service (e.g., `systemctl start cockroach`).
+
+3. Rejoining the Cluster:
+   - Confirm that the node rejoins the cluster and that it shows a healthy status in the Admin UI or via CLI:
+     [source,bash]
+     ----
+     cockroach node status --host=<host> --port=<port> --insecure
+     ----
+   - Check logs (`cockroach.log`) for any critical errors.
+
+4. Repeating for Each Node:
+   - Proceed one node at a time to maintain quorum and minimize downtime.
+   - Verify cluster stability (no under-replicated ranges, no errors in logs) before moving on to the next node.
+
+Throughout this process, monitor cluster metrics (CPU, memory, storage, network) to spot potential issues like overloading or performance regressions.
+--
+
+=== Finalization and Validation
+* Auto-finalization can be controlled via settings
+* Manual finalization enables new features
+* Verify consistent versions across nodes
+* Test basic operations post-upgrade
+* Monitor performance metrics
+
+[.notes]
+--
+Post-upgrade steps ensure the cluster is ready for production use:
+
+Finalization:
+- If auto-finalization is disabled, you must manually finalize the upgrade to enable certain new features:
+  [source,sql]
+  ----
+  SET CLUSTER SETTING version = '24.3';
+  ----
+- Finalization is irreversible, so confirm all nodes are upgraded and stable before finalizing.
+- If `auto-finalize` is enabled, the cluster will finalize automatically after a grace period. Watch logs and metrics to ensure successful completion.
+
+Validation:
+- Verify that each node reports the same version:
+  [source,sql]
+  ----
+  SHOW CLUSTER SETTING version;
+  ----
+- Test basic SQL operations (CRUD) to confirm the cluster is functioning correctly.
+- Check performance metrics (latency, throughput, CPU, memory, disk I/O) for any anomalies.
+- Confirm application compatibility by performing integration tests on typical transactions or workloads.
+--
+
+=== Rollback Procedures and Troubleshooting
+* Pre-finalization rollback preserves options
+* Monitor node rejoin process
+* Check logs for errors
+* Verify client connectivity
+* Document lessons learned
+
+[.notes]
+--
+When issues arise or if you suspect instability:
+
+Rollback Options:
+- Rollback is possible only if finalization has not occurred. Keep older binaries accessible to revert nodes.
+- Conduct a node-by-node downgrade by draining, stopping, and restarting each node with the previous binary.
+- If the cluster is partially upgraded, ensure all nodes are eventually on the same lower version before rejoining.
+
+Monitoring and Troubleshooting:
+- Carefully watch logs (`cockroach.log` or syslog) for errors or warnings that indicate version mismatches or node connectivity issues.
+- Verify nodes can rejoin the cluster. If a node is stuck, check disk usage, network connectivity, or potential replication conflicts.
+- Confirm client connectivity after rollback, ensuring that drivers and applications can still communicate normally with the downgraded cluster.
+- Thoroughly document any anomalies, root causes, and remediation steps to improve future upgrade processes.
+--
+
+=== Summary
+* Version management maintains cluster health
+* Rolling upgrades minimize disruption
+* Preparation prevents common issues
+* Monitoring ensures success
+* Documentation supports future upgrades
+
+[.notes]
+--
+Key takeaways:
+1. Proper planning is essential: Conduct health checks, verify license requirements, and prepare backups.
+2. Rolling upgrades maintain availability: Upgrading nodes one by one avoids losing quorum.
+3. Monitoring guides decisions: Observe cluster metrics to detect potential stresses or anomalies.
+4. Preparation prevents common issues: Understand application compatibility and test thoroughly in staging environments.
+5. Documentation improves processes: Keep clear records of upgrade steps, troubleshooting insights, and rollback plans.
+
+Remember:
+- Test thoroughly in non-production environments.
+- Continuously monitor the cluster during and after the upgrade.
+- Document each step, including any lessons learned, for future reference.
+- Prepare for rollbacks by disabling auto-finalization and retaining older binaries until confident in the new version’s stability.
+--
+
+=== Exercise Preview: Version Management
+* Configure auto-finalization settings
+* Perform health checks
+* Execute rolling upgrades
+* Monitor and validate
+* Practice rollback procedures
+
+[.notes]
+--
+The upcoming exercise will provide hands-on experience with:
+
+Key Activities:
+1. Configuring cluster auto-finalization options and verifying the setting:
+   [source,sql]
+   ----
+   SHOW CLUSTER SETTING upgrade.auto_finalize_enabled;
+   ----
+2. Performing detailed health checks to ensure the cluster is ready for an upgrade.
+3. Executing a rolling upgrade across multiple nodes and validating each step (including node draining and binary replacement).
+4. Monitoring key metrics (under-replicated ranges, CPU usage, memory usage) to assess stability.
+5. Practicing rollback procedures before finalization to confirm you can safely revert if unexpected problems appear.
+
+Learning Objectives:
+- Understand the impact of version management on cluster stability.
+- Implement robust pre-upgrade checks and backups.
+- Perform rolling upgrades with minimal downtime.
+- Validate success and manage potential rollbacks for safe operations.
+--

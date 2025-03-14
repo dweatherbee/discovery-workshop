@@ -1,0 +1,180 @@
+== Installing and Configuring a CockroachDB Cluster
+=== Why Multi-Node Deployment Matters
+[.text-left]
+
+* Enables high availability
+* Provides data distribution
+* Ensures fault tolerance
+* Supports horizontal scaling
+* Enables geographic distribution
+
+[.notes]
+--
+A multi-node CockroachDB deployment is *crucial* for production environments
+aiming to avoid single points of failure and ensure continuous service. By
+distributing data and replicas across multiple nodes, CockroachDB:
+
+* Offers *high availability*—if one node goes offline, other replicas can continue serving requests.
+* Supports *scalability*—adding more nodes can increase read/write throughput.
+* Ensures *fault tolerance*—data remains consistent and accessible even with hardware or network failures.
+* Facilitates *geographic distribution*—place nodes in different regions to reduce latency for globally distributed users.
+
+Carefully planning and implementing a multi-node setup is the foundation for a
+resilient and performant CockroachDB cluster.
+--
+
+=== Cluster Architecture
+[.text-left]
+
+* Node communication paths
+* Load balancer integration
+* Port configuration
+* Process management
+* Security considerations
+
+[.notes]
+--
+CockroachDB nodes communicate via *gRPC* over TCP. Each node runs a *cockroach*
+process, typically listening on:
+
+* *Port 26257* for SQL and internal cluster traffic (Raft, gossip, etc.).
+* *Port 8080* for the DB Console/UI (viewable in a web browser).
+
+Example startup command:
+[source,bash]
+----
+cockroach start \
+  --locality=host=instruqtVM,node=nodeX \
+  --listen-addr=0.0.0.0 \
+  --advertise-addr=nodeX:26257 \
+  --join=node1:26257,node2:26257
+----
+Here:
+
+* `--listen-addr` defines the local IP/port the node listens on.
+* `--advertise-addr` is how other nodes find this node.
+* `--join` points to at least one existing node (or itself if it’s the first node).
+
+Use environment or parameter files to standardize these settings. Integrate a
+*load balancer* (e.g., HAProxy) for distributing client connections, typically
+pointing to each node’s SQL port.
+--
+
+=== Load Balancer Configuration
+[.text-left]
+
+* HAProxy setup
+* Health checking
+* Traffic distribution
+* Node management
+* Configuration generation
+
+[.notes]
+--
+HAProxy is a commonly used load balancer for CockroachDB, capable of:
+
+* *Distributing traffic* among all active nodes.
+* *Failing over* if a node becomes unreachable.
+* *Checking health* endpoints to avoid sending traffic to offline or overloaded nodes.
+
+CockroachDB can generate an initial HAProxy config automatically:
+[source,bash]
+----
+cockroach gen haproxy --insecure --host=node1:26257
+----
+(Use `--certs-dir` and remove `--insecure` for secure clusters.) The generated `haproxy.cfg` includes:
+
+* A *backend* listing each node’s address/port.
+* Health-check configurations.
+* A *frontend* accepting client connections on a chosen port (default 26257 for SQL).
+
+Deploy this config to the HAProxy host, then restart the HAProxy service.
+Monitor logs or HAProxy’s stats page to confirm proper operation.
+--
+
+=== Cluster Initialization
+[.text-left]
+
+* Bootstrap process
+* Node joining
+* Initial configuration
+* Startup validation
+* Status verification
+
+[.notes]
+--
+To form a cluster, at least one node must be initialized (once). For insecure testing:
+[source,bash]
+----
+cockroach init --insecure --host=localhost:26257
+----
+This “bootstraps” the first store, creating the initial cluster metadata.
+Afterwards, additional nodes can join using the `--join` parameter. *Validation*
+steps:
+
+1. *Node Join:* Ensure each node logs that it found the existing cluster and is now part of it.
+2. *Startup Messages:* Check logs for any errors regarding store directories or network issues.
+3. *Status Verification:* Run:
++
+[source,bash]
+----
+cockroach node status --insecure --host=localhost:26257
+----
++
+This outputs a table showing each node’s ID, address, and whether it’s live and fully joined.
+--
+
+=== Cluster Validation
+[.text-left]
+
+* Status checking
+* Workload testing
+* SQL connectivity
+* Performance validation
+* Health monitoring
+
+[.notes]
+--
+After cluster initialization, verify functionality through:
+
+* *cockroach node status*—lists node details, including if all nodes are live.
+* *Basic SQL queries* (e.g. `SHOW DATABASES;` or creating a test table) to confirm successful DDL and DML.
+* *Sample workload*: 
++
+[source,bash]
+----
+cockroach workload init movr \
+  'postgresql://root@haproxy:26257?sslmode=disable'
+----
++
+Then run queries or use `cockroach workload run movr` to ensure the cluster
+processes transactions smoothly.
+* *DB Console*: Access it at `http://nodeX:8080` to check UI metrics, node
+statuses, and potential warnings or errors.
+
+This step ensures your cluster is stable and prepared for real workloads.
+--
+
+=== Exercise Overview
+[.text-left]
+
+* Install CockroachDB
+* Configure multi-node cluster
+* Set up load balancing
+* Initialize cluster
+* Validate functionality
+
+[.notes]
+--
+In this exercise, you will:
+
+* *Install* CockroachDB on multiple hosts or VMs.
+* *Configure* each node with correct listening addresses, advertise addresses, and join flags.
+* *Deploy HAProxy* or another load balancer, generating a config that points to all nodes.
+* *Initialize* the cluster to establish the first set of metadata and confirm all nodes have joined.
+* *Validate* through basic SQL commands, node status checks, and optional workload tests.
+
+Completing these steps provides a solid understanding of how to deploy a
+*production-ready* CockroachDB cluster with high availability, load balancing,
+and validated operation.
+--

@@ -1,0 +1,252 @@
+
+== TTL Management in CockroachDB
+
+=== Why Row-Level TTL Matters
+* Automated data lifecycle management is crucial for modern applications
+* Manual cleanup processes are error-prone and resource-intensive
+* Regulatory compliance often requires systematic data removal
+* TTL provides a reliable, performant solution for data expiration
+* Reduces operational overhead and ensures consistent data management
+
+[.notes]
+--
+Row-Level TTL is a critical feature for modern database management. It automates
+the process of removing expired data, which is essential for maintaining
+database performance, ensuring compliance with data retention policies, and
+implementing efficient data lifecycle management. Without TTL, organizations
+often rely on complex application-level code or manual processes, which can be
+unreliable and resource-intensive.
+
+CockroachDB's TTL mechanism ensures that expired data is removed efficiently
+without requiring manual intervention, reducing the risk of orphaned or outdated
+records. This feature is especially useful in applications dealing with
+temporary or compliance-sensitive data, such as session logs, transaction
+histories, and time-limited offers.
+--
+
+=== Understanding Row-Level TTL
+* TTL automatically removes expired data based on time conditions
+* Works at the storage layer for optimal performance
+* Supports both absolute timestamps and relative time expressions
+* Configurable scheduling with cron-style expressions
+* Balances cleanup operations with system performance
+
+[.notes]
+--
+Row-Level TTL in CockroachDB operates directly at the *storage layer*,
+ensuring high efficiency and minimal impact on query performance. Unlike
+application-driven deletions, TTL does not require explicit `DELETE` statements,
+as expiration policies are automatically enforced.
+
+TTL can be configured using:
+
+- *Absolute timestamps*: A column that explicitly defines when a row should be deleted.
+- *Relative time expressions*: Defines a time-based retention period (e.g., `ttl_expire_after = '30d'`).
+
+CockroachDB leverages *background jobs* to manage TTL cleanup, and these jobs can be fine-tuned using cron-style scheduling (`ttl_job_cron`) to minimize performance impact during peak hours.
+--
+
+=== Implementing TTL
+* TTL configuration requires either `ttl_expiration_expression` or `ttl_expire_after`
+* Expiration can be based on any timestamp column
+* TTL jobs run on a configurable schedule using cron syntax
+* Supports both `timestamp` and `timestamptz` data types
+* Can be modified or paused without table restructuring
+
+[.notes]
+--
+When implementing TTL, you must specify either `ttl_expiration_expression` or
+`ttl_expire_after`. The `ttl_expiration_expression` can reference any timestamp
+column in the table. The default schedule for TTL jobs is *daily* (`@daily`),
+but it can be customized using cron syntax.
+
+*Example*: Defining TTL Based on an Expiration Column
+
+[source,sql]
+----
+CREATE TABLE user_sessions (
+    session_id UUID PRIMARY KEY,
+    created_at TIMESTAMPTZ DEFAULT now(),
+    expires_at TIMESTAMPTZ,
+    user_id UUID REFERENCES users(id)
+) WITH (
+    ttl_expiration_expression = 'expires_at',
+    ttl_job_cron = '@hourly'
+);
+----
+
+In this example:
+
+- The `expires_at` column defines when each session expires.
+- The TTL job runs *every hour* (`@hourly`), ensuring timely cleanup.
+
+TTL configurations can be modified dynamically:
+[source,sql]
+----
+ALTER TABLE user_sessions SET (ttl_expire_after = '7d');
+ALTER TABLE user_sessions SET (ttl_job_cron = '0 3 * * *'); -- Run cleanup daily at 3 AM UTC
+----
+
+Pausing TTL jobs is also supported:
+[source,sql]
+----
+ALTER TABLE user_sessions SET (ttl_pause = 'on');
+----
+
+This allows administrators to temporarily disable TTL cleanup without altering table schema.
+--
+
+=== TTL Management and Monitoring
+* TTL jobs can be monitored through the DB Console
+* Status and metrics available via system tables
+* Supports pause/resume functionality for maintenance
+* Configurable batch sizes for performance tuning
+* Integration with CockroachDB's job framework
+
+[.notes]
+--
+Monitoring TTL execution is crucial to ensure that cleanup processes do not
+interfere with production workloads. CockroachDB provides multiple tools for
+observing TTL jobs:
+
+*Monitoring TTL Jobs*
+
+1. *DB Console*: 
+
+   - The CockroachDB Web UI displays active TTL jobs, their status, and execution history.
+   
+2. *Querying System Tables*:
+   - View TTL jobs using:
++
+```sql
+SELECT * FROM [SHOW JOBS] WHERE job_type = 'ROW LEVEL TTL';
+```
++
+
+   - Check TTL schedules:
++
+```sql
+SELECT * FROM [SHOW SCHEDULES] WHERE schedule_name LIKE '%TTL%';
+```
+
+*Managing TTL Jobs*
+
+- *Pause TTL Cleanup*:
++
+```sql
+ALTER TABLE user_sessions SET (ttl_pause = 'on');
+```
++
+
+- *Resume TTL Cleanup*:
++
+```sql
+ALTER TABLE user_sessions SET (ttl_pause = 'off');
+```
++
+
+- *Modify TTL Execution Schedule*:
++
+```sql
+ALTER TABLE user_sessions SET (ttl_job_cron = '@daily');
+```
++
+
+This level of control allows for precise tuning of TTL operations, ensuring that
+they run during optimal time windows and avoid impacting transactional
+workloads.
+--
+
+=== Best Practices and Considerations
+* Monitor TTL job performance impact
+* Consider scheduling during off-peak hours
+* Index design affects TTL cleanup performance
+* Batch size tuning may be necessary for large tables
+* Test TTL configuration in non-production first
+
+[.notes]
+--
+*Key Best Practices for TTL Management*
+
+1. *Monitor the Impact on Performance*
+   - TTL jobs can generate a high volume of deletions, which may trigger additional write amplification due to MVCC garbage collection.
+   - Monitor job execution time and resource utilization via:
++
+```sql
+SELECT * FROM [SHOW JOBS] WHERE job_type = 'ROW LEVEL TTL';
+```
++
+
+2. *Schedule TTL Cleanup During Off-Peak Hours*
+   - By default, TTL jobs run daily (`@daily`), but modifying this to *off-peak hours* minimizes the impact on active transactions:
++
+```sql
+ALTER TABLE user_sessions SET (ttl_job_cron = '0 2 * * *'); -- Run at 2 AM UTC
+```
++
+
+3. *Optimize Indexing for TTL Queries*
+
+   - TTL deletions involve scans, so having an appropriate *index strategy* reduces unnecessary table scans.
+   - Ensure that *the expiration column is indexed* when TTL is configured based on `ttl_expiration_expression`:
++
+```sql
+CREATE INDEX ON user_sessions (expires_at);
+```
++
+
+4. *Batch Size Tuning for Large Tables*
+
+   - The default batch size for TTL deletions may not be optimal for large datasets. Adjust this using:
++
+```sql
+ALTER TABLE user_sessions SET (ttl_batch_size = 5000);
+```
++
+
+5. *Test TTL Configurations in a Staging Environment*
+
+   - Before enabling TTL in production, verify behavior in a controlled environment.
+   - Use CockroachDB's *EXPLAIN ANALYZE* feature to observe execution plans before applying TTL policies.
+
+Following these best practices ensures that TTL jobs execute efficiently without negatively impacting database performance.
+--
+
+=== Summary
+* TTL provides automated data lifecycle management
+* Configuration options support various use cases
+* Monitoring tools ensure visibility into TTL operations
+* Management features enable operational control
+* Exercise will provide hands-on experience
+
+[.notes]
+--
+Key takeaways:
+- TTL automates data cleanup, reducing manual intervention.
+- It provides configurable options for different expiration strategies.
+- Multiple monitoring tools help track TTL execution and performance.
+- Tuning job schedules and batch sizes optimizes efficiency.
+- The exercise will reinforce these concepts with hands-on implementation.
+
+With TTL, CockroachDB provides a powerful mechanism for managing data retention efficiently.
+--
+
+=== Exercise Preview: TTL Implementation
+* Create a table with TTL configuration
+* Implement a book promotion system
+* Monitor TTL job execution
+* Manage TTL operations and scheduling
+* Observe automatic data cleanup
+
+[.notes]
+--
+In the upcoming exercise, you will:
+
+1. *Define TTL for a table* that automatically removes expired book promotions.
+2. *Configure custom TTL expiration rules* and job schedules.
+3. *Monitor TTL execution* using CockroachDB system tables and logs.
+4. *Pause and resume TTL operations* dynamically.
+5. *Observe data cleanup* as expired rows are deleted.
+
+This hands-on experience will reinforce key TTL concepts and provide practical exposure to managing TTL in CockroachDB.
+--

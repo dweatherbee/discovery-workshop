@@ -1,0 +1,3 @@
+= Day 2 Chapter 6
+
+include::chapter-06/chapter-06.adoc[]

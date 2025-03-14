@@ -1,0 +1,62 @@
+{
+  "name": "cockroach-university-ilt-operational-fundamentals",
+  "version": "1.0.0",
+  "description": "Instructor-led training for operators",
+  "scripts": {
+    "clean": "gulp clean",
+    "start": "gulp serve",
+    "build": "gulp build",
+    "package": "gulp package"
+  },
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cockroachlabs/cockroach-university-ilt-operational-fundamentals.git"
+  },
+  "keywords": [
+    "cockroachdb",
+    "cockroach",
+    "labs",
+    "operators",
+    "fundamentals",
+    "ILT"
+  ],
+  "contributors": [
+    {
+      "name": "Kiki Carter"
+    },
+    {
+      "name": "Ramki Thurimella"
+    },
+    {
+      "name": "Greg L. Turnquist"
+    }
+  ],
+  "license": "LicenseRef-LICENSE",
+  "bugs": {
+    "url": "https://github.com/cockroachlabs/cockroach-university-ilt-operational-fundamentals/issues"
+  },
+  "homepage": "https://github.com/cockroachlabs/cockroach-university-ilt-operational-fundamentals#readme",
+  "dependencies": {
+    "@asciidoctor/reveal.js": "^5.1.0",
+    "highlight.js": "^11.9.0",
+    "reveal.js": "^5.0.5",
+    "source-sans-pro": "^3.6.0"
+  },
+  "devDependencies": {
+    "@asciidoctor/gulp-asciidoctor": "^2.2.5",
+    "@rollup/plugin-commonjs": "^25.0.7",
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "asciidoctor": "^3.0.4",
+    "del": "^7.1.0",
+    "gulp": "^5.0.0",
+    "gulp-connect": "^5.0.0",
+    "gulp-sass": "^5.1.0",
+    "gulp-zip": "^6.0.0",
+    "minimist": "^1.2.8",
+    "puppeteer": "^23.6.1",
+    "rollup": "^4.12.0",
+    "sass": "^1.71.1",
+    "vinyl-source-stream": "^2.0.0"
+  }
+}

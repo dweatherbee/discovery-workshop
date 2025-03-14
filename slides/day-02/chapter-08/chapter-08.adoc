@@ -1,0 +1,200 @@
+== Application Behavior Settings
+
+=== Why Application Settings Matter
+* Protect cluster stability and performance
+* Balance application needs with system resources
+* Prevent problematic workload patterns
+* Enable effective troubleshooting
+* Foster collaboration between ops and dev teams
+
+[.notes]
+--
+Application behavior settings are crucial because they:
+- Act as guardrails for system stability by limiting or shaping how applications can interact with the database. For example, restricting excessively large transactions can protect other workloads from performance degradation.
+- Help prevent resource exhaustion: By imposing per-session or per-transaction limits, you avoid scenarios where a single misbehaving query or application can overwhelm the cluster.
+- Enable identification of problematic patterns: Logging or restricting certain SQL behaviors can reveal inefficiencies (e.g., excessive writes, large in-flight transactions, or repeated full-table scans).
+- Support proper capacity planning: Knowing the boundary conditions (like maximum row size or max transactions in flight) helps plan resource scaling.
+- Create clear boundaries for applications: Developers and operators benefit from well-documented limits around transaction sizes, row sizes, and concurrency.
+
+Additionally, these settings help both operators and developers work together. Ops can enforce high-level constraints while dev teams can fine-tune session-specific behaviors to best suit their application requirements.
+--
+
+=== SQL Defaults vs Session Settings
+* Cluster-wide defaults provide baseline behavior
+* Session settings enable application-specific overrides
+* Role-based defaults target specific use cases
+* Changes affect only new sessions
+* Clear communication prevents conflicts
+
+[.notes]
+--
+Two layers of settings control how queries and transactions are run:
+
+Cluster Defaults:
+- Set the baseline or "global" behavior for all new connections. For instance, you can enforce a default transaction isolation level, or a particular date style across the cluster.
+- Modified with `CLUSTER SETTING` commands. For example:
+  [source,sql]
+  ----
+  SET CLUSTER SETTING sql.defaults.transaction_isolation = 'serializable';
+  ----
+- Do not affect existing sessions already established.
+- Provide a safety net when multiple applications share the same cluster.
+
+Session Variables:
+- Allow fine-grained customization for specific use cases or applications. For example:
+  [source,sql]
+  ----
+  SET application_name = 'MyAppV1';
+  SET search_path = 'public,myschema';
+  ----
+- Only affect the current connection; the settings revert to defaults when the session ends.
+- Useful when different applications (or modules within the same application) have distinct needs for concurrency, isolation, or timeouts.
+- Role-based or user-based defaults can be applied to help specific groups or services adopt a certain baseline without affecting the entire cluster.
+
+Clear communication with dev teams is critical. They need to know the cluster defaults so they can decide whether session-level overrides are necessary, and to avoid conflicts that could degrade performance or lead to unexpected behavior.
+--
+
+=== Write Path Protection
+* Transaction row limits prevent resource exhaustion
+* Separate thresholds for logging and errors
+* Batching strategies for large operations
+* Role-specific limits for different workloads
+* Monitoring helps identify trends
+
+[.notes]
+--
+Write path protection is a safety mechanism to guard against overly large or runaway write operations. Common ways CockroachDB addresses this:
+
+Key Settings:
+- `sql.guardrails.transaction_rows_written_err`: A hard limit on the total number of rows a single transaction can write. Exceeding it will result in an error.
+- `sql.guardrails.transaction_rows_written_log`: A warning threshold that, if crossed, logs an event but does not abort the transaction. This helps detect potentially excessive write workloads early.
+
+Batching Strategies:
+- When you anticipate large data loads—such as bulk inserts or heavy ETL processes—implement batching to write data in segments (e.g., 1,000 rows per transaction) to prevent hitting hard limits.
+- Use facilities like the IMPORT statement or built-in CSV import features for large-scale data ingestion, which are optimized to handle large datasets more safely.
+
+Role-Specific Limits:
+- By using role-based settings (if supported by your CockroachDB version), different teams or microservices can have distinct thresholds for warnings and errors. For instance, a data ingestion role might need higher logging thresholds than an OLTP application role.
+
+Monitoring:
+- Keep an eye on logs and metrics in the Admin UI or your logging stack to identify frequent threshold breaches. Frequent logs may indicate a need to adjust thresholds or optimize application-side batching.
+--
+
+=== Cluster Guardrails
+* Provide hard limits that cannot be overridden
+* Control maximum row sizes
+* Separate logging and error thresholds
+* Protect against resource exhaustion
+* Help identify problematic access patterns
+
+[.notes]
+--
+Cluster guardrails extend beyond transactional row limits to safeguard the overall data model:
+
+Key Settings:
+- `sql.guardrails.max_row_size_err`: Defines the maximum allowed row size in bytes. If a write exceeds this limit, it triggers an error.
+- `sql.guardrails.max_row_size_log`: A warning threshold that logs whenever a row exceeds the specified size but does not block the write.
+
+Implementation Strategy:
+- Start with values that align with typical row sizes in your schema design. For example, if your largest row is around 8 KB, setting a log threshold at 16 KB and an error threshold at 32 KB might be a reasonable starting point.
+- Monitor the logs for warnings indicating row sizes nearing the log threshold. This can reveal unforeseen usage patterns or suboptimal schema designs (like storing large BLOBs without partitioning).
+- Communicate these guardrails to developers, so they don’t accidentally exceed them with new features or unexpected usage patterns.
+- If needed, make measured adjustments, balancing performance and resource usage. Very large row sizes may slow down queries, backups, and rebalancing operations.
+--
+
+=== Transaction Size Management
+* Controls maximum pending write intents
+* Affects large transaction handling
+* Query optimization before limit adjustment
+* Batching strategies for large operations
+* Monitoring guides tuning decisions
+
+[.notes]
+--
+Transaction size management in CockroachDB ensures that large or complex transactions do not overwhelm the system:
+
+Key Concepts:
+- Write intents are placeholders for pending changes within an open transaction. If a transaction accumulates too many write intents, it can slow down the system or risk running out of memory.
+- CockroachDB offers cluster settings (e.g., `kv.transaction.max_intents`) to cap how many write intents a single transaction can hold before the database rejects or logs it.
+
+Best Practices:
+1. **Analyze and optimize queries first**: Identify if queries can be split or if the data model can be reorganized to reduce the size of each transaction.
+2. **Batching**: Similar to write path protection, break large updates/inserts into multiple smaller transactions to reduce the risk of exceeding intent limits.
+3. **Monitor transaction sizes**: Tools like the Admin UI, system ranges, and logs help pinpoint if large transactions are frequently approaching limits.
+4. **Adjust limits carefully**: Use incremental changes, then reassess performance. Overly generous limits can put the cluster at risk of memory pressure or performance degradation.
+5. **Document**: Any time you deviate from defaults, record the justification and keep application teams informed so they can adapt queries or workloads accordingly.
+--
+
+=== Best Practices for Setting Changes
+* Document all cluster-level changes
+* Start with logging before implementing errors
+* Monitor impact of changes
+* Communicate with application teams
+* Plan for existing session handling
+
+[.notes]
+--
+Effective setting management requires:
+
+Documentation:
+- Log every change in a centralized location (e.g., wiki, version control, or an internal knowledge base).
+- Include the rationale for each setting adjustment, the exact command used, and any observed or expected impacts.
+- Track historical patterns: If a setting is changed repeatedly, it may indicate an underlying architectural issue.
+
+Communication:
+- When raising thresholds from warnings to errors (or lowering them for more restrictive behavior), let application teams know the timeline, so they can adjust queries or code if needed.
+- Clarify how changes affect existing sessions. Some changes only apply to new connections, so applications might need restarts or new connections to see updated behaviors.
+
+Planning:
+- Always test new settings in a non-production or staging environment, where you can safely replicate production-like workloads.
+- Roll out changes gradually if possible, especially in large clusters. Rapid, cluster-wide changes can create unexpected performance spikes.
+--
+
+=== Summary
+* Settings protect cluster stability
+* Balancing flexibility with protection
+* Clear communication is essential
+* Monitoring guides adjustments
+* Documentation supports maintenance
+
+[.notes]
+--
+Key takeaways:
+1. Settings protect cluster health by preventing runaway processes or resource misuse.
+2. Multiple layers of protection ensure each environment can have different thresholds, from cluster defaults to session overrides.
+3. Communication prevents issues: Dev and Ops alignment on limits is crucial to avoid breaking workloads or overloading the cluster.
+4. Monitoring informs decisions: Adjust thresholds based on actual metrics and logs, not just guesswork.
+5. Documentation ensures consistency: Proper records of setting changes prevent confusion and guide future maintenance.
+
+Remember:
+- Start with monitoring to identify normal usage and detect anomalies.
+- Communicate changes early and frequently to avoid surprises.
+- Document all changes so you can roll them back if necessary or revisit them later.
+- Plan for growth, as workload patterns often evolve over time.
+--
+
+=== Exercise Preview
+* Configure SQL defaults and session variables
+* Implement write path protection
+* Set up cluster guardrails
+* Manage large transactions
+* Monitor setting impacts
+
+[.notes]
+--
+The upcoming exercise provides hands-on experience with:
+
+Learning Objectives:
+- Configure cluster-level defaults (e.g., transaction limits, row size guardrails) and per-session overrides for specialized workloads.
+- Implement protection mechanisms around write paths, such as logging and error thresholds, to safeguard cluster performance.
+- Monitor the effectiveness of these settings, using logs, the Admin UI, or external observability tools, to detect potential issues early.
+- Manage large transactions by splitting or batching operations to stay within configured intent limits or row thresholds.
+- Communicate changes effectively and document them thoroughly, ensuring a shared understanding with development teams.
+
+You will:
+1. Work with cluster settings (e.g., `SET CLUSTER SETTING sql.guardrails.transaction_rows_written_log = 50000;`).
+2. Configure write protection, using both logging and error thresholds.
+3. Set up guardrails for row sizes and transaction sizes.
+4. Handle large transactions via optimized queries or batching strategies.
+5. Practice monitoring and validation techniques to confirm that your changes have the intended effect without harming performance.
+--

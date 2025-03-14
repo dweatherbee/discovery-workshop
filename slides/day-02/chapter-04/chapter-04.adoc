@@ -1,0 +1,117 @@
+== Compaction in CockroachDB
+=== Why Compaction Matters
+[.text-left]
+* Storage performance directly impacts application responsiveness
+* LSM trees balance write speed against read efficiency
+* Unmanaged growth leads to degraded query performance
+* Critical for maintaining consistent database performance
+* Essential skill for database administrators
+
+[.notes]
+--
+Compaction is a fundamental process in CockroachDB that directly affects database performance. The storage layer uses Log-Structured Merge (LSM) trees (via Pebble) to organize data, prioritizing write performance while maintaining read efficiency. Without proper compaction, SST files can accumulate, increasing read amplification and storage costs.
+
+Effective compaction merges smaller, fragmented SST files into larger, more organized files, reducing the number of lookups required for queries. This leads to faster read operations and more predictable performance. Monitoring and managing compaction is a key responsibility for database administrators to ensure queries remain efficient as the database grows.
+--
+
+=== LSM Tree Structure
+[.text-left]
+* Data organized in levels L0 through L6
+* New data enters at L0 level first
+* Each level contains sorted string table (SST) files
+* Lower levels hold larger SSTs with older data
+* Compaction merges data downward through levels
+
+[.notes]
+--
+CockroachDB’s Pebble storage engine implements an LSM tree with levels from L0 to L6. New or recently updated data resides in L0, where writes are quickest but can accumulate many small SST files. Through compaction, these files are merged and moved into lower levels (L1, L2, and so on) which each contain fewer but larger SST files. This tiered approach maintains a balance between efficient writes (at higher levels) and efficient reads (at lower levels).
+
+As data progresses through compaction, older or less frequently updated rows move further down the levels. This design also helps CockroachDB handle large volumes of writes without overloading the system, as compaction distributes data more evenly over time.
+--
+
+=== Read Amplification
+[.text-left]
+* Occurs when multiple SSTs must be consulted for one read
+* Higher values indicate compaction may be needed
+* Monitored through DB Console's Storage dashboard
+* Single-digit values are optimal
+* Can worsen during heavy write workloads
+
+[.notes]
+--
+Read amplification measures how many SST files must be accessed to fulfill a single read request. In CockroachDB, high read amplification often occurs when compaction lags behind ongoing write activity, leaving many small SST files at higher levels.
+
+You can monitor read amplification in the DB Console’s Storage dashboard. Ideally, you want this metric to remain in single digits. If you notice it creeping into double digits, it signals that compaction might be overdue. Heavy write workloads, large bulk operations, or frequent updates can exacerbate read amplification if compactions aren’t keeping pace.
+--
+
+=== Write Amplification
+[.text-left]
+* Ratio of total values to live records
+* Calculated using range-level statistics
+* Indicates storage efficiency
+* Affected by update frequency
+* Higher values suggest need for compaction
+
+[.notes]
+--
+Write amplification reflects how many times data is written to storage compared
+to the number of live records. Frequent updates to the same rows generate
+multiple versions across SST files, especially if compactions aren’t performed
+promptly. Over time, this inflates storage usage and slows down the system.
+
+Range-level metrics in CockroachDB let you calculate approximate write
+amplification. For heavily updated tables, or those receiving constant upserts,
+you should track this ratio and consider triggering manual compactions if it
+grows too high, especially during maintenance windows.
+--
+
+=== Managing Compaction
+[.text-left]
+* Regular monitoring through DB Console
+* Force compaction during maintenance windows
+* Requires temporary node shutdown
+* Performed using cockroach debug compact
+* Results in improved read/write performance
+
+[.notes]
+--
+CockroachDB automatically compacts data in the background, but there are times when you may want to initiate manual compaction:
+
+1. **Performance Degradation**: If read or write amplification has become unacceptably high.
+2. **Maintenance Windows**: Compaction can be CPU and I/O intensive, so schedule it when the load is minimal.
+3. **Manual Command**:
++
+[source,bash]
+----
+cockroach debug compact /path/to/store
+----
++
+- This command must be run when the node is stopped.
+- Point it to the correct store directory for each node.
+
+After compaction completes, you’ll often see improved read performance and
+reduced write amplification. Although downtime is required, this proactive
+maintenance can extend the system’s longevity and sustain consistent performance
+as data grows.
+--
+
+=== Exercise Overview
+[.text-left]
+* Monitor read amplification via DB Console
+* Calculate write amplification using SQL
+* Create additional load to observe metrics
+* Perform manual compaction
+* Observe performance improvements
+
+[.notes]
+--
+In the exercise, you will:
+
+1. Monitor **read amplification** through the DB Console’s Storage dashboard.
+2. Use SQL queries to calculate approximate **write amplification** for specific ranges or tables.
+3. Generate additional load (e.g., with INSERTs or UPDATEs) to observe how these metrics change under stress.
+4. Perform a **manual compaction** using the `cockroach debug compact` command on a node's store directory.
+5. Confirm **performance improvements** by re-checking read and write amplification levels afterward.
+
+This hands-on activity will illustrate how compaction works in real-world scenarios and how to recognize when intervention is needed.
+--

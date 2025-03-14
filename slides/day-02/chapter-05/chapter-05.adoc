@@ -1,0 +1,225 @@
+== Planned Node Maintenance in CockroachDB
+
+=== Why Node Maintenance Matters
+
+* Database nodes require regular maintenance for updates, patches, and hardware upgrades
+* Improper maintenance can lead to data unavailability and application downtime
+* CockroachDB provides built-in features for graceful node maintenance
+* Proper procedures ensure continuous service availability
+* Critical for both planned maintenance and emergency scenarios
+
+[.notes]
+--
+Node maintenance is a crucial operational task that every database administrator needs to master. 
+Whether it's for routine OS upgrades, security patches, or hardware replacements, being able to 
+safely remove a node from the cluster and bring it back online helps ensure uninterrupted 
+service. CockroachDB's shared-nothing, distributed architecture is specifically designed to 
+tolerate node failures and handle rolling upgrades, provided the correct drain and decommission 
+procedures are followed. 
+
+For instance, when planning a rolling upgrade, you typically drain each node in sequence so it 
+stops accepting new traffic and gracefully transfers active leases and replicas. This prevents 
+disruptions to ongoing queries. When hardware upgrades are required, draining ensures in-flight 
+operations complete, minimizing the risk of data inconsistencies or query failures. 
+--
+
+=== Types of Node Maintenance
+
+* Temporary maintenance - node will rejoin with existing data store
+* Permanent removal - node decommissioning required
+* Rolling upgrades - systematic cluster-wide maintenance
+* Emergency maintenance - unplanned but controlled shutdown
+* Hardware replacement - permanent node replacement
+
+[.notes]
+--
+Different maintenance scenarios call for different operational procedures. A temporary 
+maintenance event might be something like upgrading an operating system on a node or performing 
+minor hardware fixes; in such a scenario, you drain the node, shut it down, and then restart it 
+with the same data. The node rejoins the cluster as if it had experienced a transient outage.
+
+For permanent removal—perhaps for decomissioning a node in a cloud environment or retiring old 
+hardware—CockroachDB's decommissioning process redistributes replicas off that node and frees 
+the cluster of that node's ID. This ensures data replication requirements remain fulfilled. 
+
+Rolling upgrades refer to upgrading the CockroachDB version one node at a time. CockroachDB's 
+multi-active availability design facilitates these upgrades without a full cluster outage, as 
+remaining nodes continue serving requests. 
+
+Emergency maintenance might be triggered by unexpected hardware failures or urgent security 
+patching. Even in these situations, if you have enough replication and carefully follow the 
+draining steps, the rest of the cluster remains operational while the problematic node is 
+addressed.
+
+Hardware replacement is similar to permanent removal followed by adding new nodes, ensuring 
+replication factors are maintained. The method chosen depends on the nature of the event, the 
+cluster topology, and the service-level objectives.
+--
+
+=== Prerequisites for Safe Maintenance
+
+* Load balancer health monitoring
+* Proper cluster settings configuration
+* Sufficient cluster capacity and replication factor
+* Connection and transaction timeout settings
+* Storage capacity for data redistribution
+
+[.notes]
+--
+Before beginning any maintenance tasks, it is vital to confirm that the cluster can handle the 
+temporary loss of one or more nodes. For example, ensure that you have the recommended 
+replication factor (usually 3 or 5) so that the cluster remains available if a node is taken 
+offline. 
+
+Load balancers (if used) must be configured to reroute traffic away from the node under 
+maintenance. Typically, health checks can be set to fail open connections or new requests 
+directed to the node being drained. 
+
+Cluster settings such as `server.shutdown.drain_wait` or timeouts for connections and queries 
+must be tuned so that draining does not abruptly kill active transactions. The cluster also 
+needs enough capacity and storage overhead to handle any temporary or permanent redistribution 
+of replicas that might occur.
+
+For example, you might run a quick check on under-replicated ranges before maintenance:
+
+----
+> cockroach sql --insecure -e "SHOW RANGES FROM TABLE mydb.mytable"
+----
+
+Ensuring minimal under-replicated ranges helps avoid unexpected data unavailability during 
+maintenance.
+--
+
+=== Node Draining Process
+
+* Phase 1: Unready phase - node stops accepting new connections
+* Phase 2: Connection drain - existing connections gracefully close
+* Phase 3: SQL drain - active queries complete or transfer
+* Phase 4: DistSQL drain - distributed queries complete
+* Controlled by specific timeout settings
+
+[.notes]
+--
+CockroachDB provides a `cockroach node drain` command (or the equivalent `cockroach quit` with 
+the `--drain` flag) to orchestrate node draining. During:
+
+- **Phase 1 (Unready phase)**: The node signals the load balancer and cluster that it's not 
+  accepting new connections. 
+- **Phase 2 (Connection drain)**: Existing connections are given a grace period to wrap up; 
+  no new sessions are accepted. 
+- **Phase 3 (SQL drain)**: In-flight transactions and queries finish execution or fail if they 
+  exceed the configured timeouts. 
+- **Phase 4 (DistSQL drain)**: Distributed SQL flows that might span multiple nodes are given 
+  time to complete. 
+
+Each phase of draining can be customized with timeouts. For instance:
+
+----
+$ cockroach node drain --certs-dir=certs --drain-wait=1m --insecure 1
+----
+
+This command waits up to one minute for the node with ID 1 to drain. Fine-tuning these timeouts 
+ensures graceful shutdown without stalling the entire cluster.
+--
+
+=== Critical Cluster Settings
+
+* `server.shutdown.drain_wait` - maximum drain wait time
+* `server.shutdown.connection_cancel_period` - connection drain period
+* `server.shutdown.query_wait` - query completion time
+* `--drain-wait` flag - overall drain timeout for CLI commands
+* `server.time_until_store_dead` - store retention period
+
+[.notes]
+--
+These cluster settings govern how CockroachDB handles node shutdown:
+
+- `server.shutdown.drain_wait`: The maximum time the server remains in a draining state before 
+  forcing a shutdown. This is especially important to let in-flight queries finish gracefully.
+- `server.shutdown.connection_cancel_period`: The grace period before established connections 
+  are forcibly canceled. 
+- `server.shutdown.query_wait`: Defines how long to wait for active queries to complete before 
+  forcibly terminating them.
+- `--drain-wait`: A CLI flag that can override the above settings on a per-command basis. This 
+  is used when running `cockroach node drain` or `cockroach quit --drain`.
+- `server.time_until_store_dead`: Controls how long a store (node) can be unresponsive before 
+  the cluster considers it “dead,” which triggers replica rebalancing or recovery.
+
+Verifying these settings is essential before performing maintenance because incorrect or 
+misaligned timeouts can abruptly kill critical transactions or prolong maintenance windows 
+unnecessarily.
+--
+
+=== Monitoring Maintenance Progress
+
+* Node status and liveness
+* Range statistics and distribution
+* Under-replicated ranges
+* Capacity usage across nodes
+* Decommissioning progress
+
+[.notes]
+--
+CockroachDB provides multiple ways to monitor maintenance operations:
+
+- **Node status and liveness**: Use the Admin UI or the `cockroach node status` CLI command to 
+  check a node's health and see if it's live. 
+- **Range statistics**: Monitoring range count and distribution helps ensure that critical data 
+  remains fully replicated. 
+- **Under-replicated ranges**: Check the Admin UI or run `SHOW UNDERREPLICATED RANGES;` in 
+  the SQL shell to identify any data ranges that might be missing enough replicas. 
+- **Capacity usage**: Monitoring store usage is especially important if data is being 
+  rebalanced from one node to others. A node hitting storage limits can slow or interrupt 
+  rebalancing. 
+- **Decommissioning progress**: When removing a node permanently, track the decommission status 
+  with `cockroach node decommission --status` to see how many replicas remain to be 
+  transferred off the node.
+
+This combination of CLI commands and the Admin UI ensures real-time visibility into the 
+cluster's condition and the progress of node maintenance.
+--
+
+=== Best Practices
+
+* Verify cluster health before maintenance
+* Monitor system during maintenance operations
+* Maintain sufficient node capacity for data redistribution
+* Document maintenance procedures
+* Test procedures in non-production environment
+
+[.notes]
+--
+Following best practices is critical for avoiding unplanned downtime:
+
+- **Verify cluster health**: Run checks on replication, node statuses, and range distribution 
+  before pulling any node out for maintenance. 
+- **Monitor system continuously**: Keep an eye on logs, Admin UI metrics, and CLI outputs to 
+  detect anomalies early. 
+- **Ensure sufficient capacity**: Draining or decommissioning a node redistributes replicas. 
+  Having extra node capacity prevents sudden overloads on remaining nodes. 
+- **Document maintenance**: Establish internal runbooks detailing the entire sequence of 
+  commands and checks. This allows rapid troubleshooting if something goes wrong. 
+- **Test in non-production**: Especially for upgrades, a staging or test environment can help 
+  you discover misconfigurations without risking production workloads.
+--
+
+=== Exercise Preview
+
+* Practice both temporary and permanent node maintenance
+* Configure and verify maintenance prerequisites
+* Perform node drain and shutdown procedures
+* Monitor maintenance progress
+* Verify cluster health throughout the process
+
+[.notes]
+--
+In the upcoming lab exercise, you'll perform hands-on node maintenance in a multi-node cluster. 
+You'll begin by validating key cluster settings like `server.shutdown.drain_wait` and
+`server.time_until_store_dead`, then proceed to drain a node for a temporary maintenance
+scenario. You'll observe how queries complete, how connections are closed, and how to bring 
+the node back into service. 
+
+Next, you'll decommission a node permanently, monitoring how data is relocated and ensuring 
+there are no under-replicated ranges left. By the end, you'll be well-versed in both short-term 
+maintenance and the full decommission process, preparing you for real-world scenarios.
+--

@@ -1,0 +1,160 @@
+== Garbage Collection and TTL in CockroachDB
+
+=== Why Data Cleanup Matters
+
+* Prevents unbounded storage growth
+* Maintains consistent performance
+* Supports MVCC functionality
+* Optimizes resource utilization
+* Reduces operational costs
+
+[.notes]
+--
+Garbage collection is a fundamental component of CockroachDB’s architecture. Because the database uses MVCC, multiple versions of the same row can accumulate over time. Without garbage collection, this data would grow indefinitely, affecting query performance and increasing storage costs. GC reclaims storage by removing obsolete row versions once they are no longer needed by active transactions or time-travel queries.
+
+Maintaining an optimal GC policy directly impacts:
+
+* *Performance*: The presence of outdated row versions can slow down queries.
+* *Storage Efficiency*: Failing to remove stale versions leads to unnecessary data bloat and costs.
+* *System Health*: Proper cleanup ensures system resources (like memory and disk) are effectively utilized.
+
+For example, if a table receives frequent updates, rows quickly accumulate historical versions. With a well-configured GC process, these old versions will be automatically discarded after a suitable retention period, preserving performance and stability.
+--
+
+=== Multi-Version Concurrency Control (MVCC)
+
+* Maintains multiple versions of data
+* Enables lock-free reads
+* Supports serializable transactions
+* Requires version cleanup
+* Impacts storage utilization
+
+[.notes]
+--
+CockroachDB uses MVCC to allow simultaneous read and write operations without blocking. When a transaction updates a row, the database creates a new version tagged with the transaction’s commit timestamp, while older versions remain for readers that might need them. This mechanism supports serializable isolation without requiring explicit read locks, improving concurrency.
+
+However, each new version consumes storage until it is cleaned up. Over time, these versions accumulate, making regular garbage collection essential to reclaim space from out-of-date rows. If GC is not tuned correctly, tables with frequent writes can become bloated, affecting performance and eventually leading to excessive disk usage.
+
+*Technical Example:* A long-running analytical transaction may read older row versions while short transactions continue to update the same rows. MVCC ensures the analytical query sees consistent data at its start timestamp. GC will only remove older row versions that are not needed by any active transaction or potential *AS OF SYSTEM TIME* query.
+--
+
+=== Understanding gc.ttlseconds
+
+* Controls retention period for old versions
+* Affects cleanup scheduling
+* Balances storage vs functionality
+* Defaults to 4 hours (14400 seconds)
+* Configurable per database/table
+
+[.notes]
+--
+The *gc.ttlseconds* parameter defines how long outdated row versions are kept before they become eligible for garbage collection. The default of *14400 seconds* (4 hours) accommodates most workloads by providing enough time for long-running queries or backups to reference historical data.
+
+You can configure this setting at the table level via zone configurations. For example, to set *gc.ttlseconds* to 7200 (2 hours) for a table named *users*:
+
+[source,sql]
+----
+ALTER TABLE users
+CONFIGURE ZONE USING gc.ttlseconds = 7200;
+
+SHOW ZONE CONFIGURATION FOR TABLE users;
+----
+
+Adjusting this value requires careful consideration of:
+
+* *Transaction Durations*: Long-running transactions may need older versions for reads.
+* *Backup and Recovery Strategy*: Longer retention might be necessary to allow for point-in-time recovery or historical queries.
+* *Storage Costs*: Holding onto old versions for too long increases disk usage, so striking a balance is critical.
+--
+
+=== Storage Impact of Database Operations
+
+* Index creation doubles storage temporarily
+* Deleted data remains until GC
+* DDL operations affect space usage
+* Background cleanup is automatic
+* Monitoring is essential
+
+[.notes]
+--
+Different database operations can significantly affect storage consumption:
+
+* *Index Creation*: Building a new index involves backfilling data, which temporarily increases storage usage.
+* *Delete Operations*: When you delete rows, CockroachDB marks those row versions as deleted, but they are not physically removed until GC. This is why immediate space savings may not be seen right after large deletions.
+* *DDL Changes*: Dropping columns or tables leaves behind obsolete metadata and row versions that remain until GC processes them.
+
+CockroachDB manages these cleanups automatically, but monitoring is crucial to understand if changes in workload or large DDL operations create storage spikes. If you notice sustained high storage usage, verify that GC is running effectively and is appropriately configured.
+--
+
+=== Monitoring Garbage Collection
+
+* Track storage usage metrics
+* Observe cleanup timing
+* Monitor GC process
+* Verify space reclamation
+* Check system impact
+
+[.notes]
+--
+Monitoring GC behavior helps validate that older versions are being cleaned up in a timely manner. You can track:
+
+* *DB Console Metrics*: Review storage usage graphs to see whether disk consumption decreases after rows are deleted or after large data modifications.
+* *GC-Related Metrics*: Look for specific GC counters (e.g., how many keys are awaiting GC).
+* *System Impact*: Observe CPU and memory usage during GC processes to ensure that cleanup jobs do not degrade overall performance.
+* *SHOW JOBS Output*: Some GC processes or large-scale schema changes appear as background jobs in CockroachDB. If these jobs hang, older versions might persist.
+
+Regular reviews of these metrics confirm whether your *gc.ttlseconds* values are appropriate for the workload or need adjustments.
+--
+
+=== Best Practices for Production
+
+* Maintain default gc.ttlseconds when possible
+* Consider workload patterns
+* Plan for storage fluctuations
+* Monitor cleanup effectiveness
+* Account for backup requirements
+
+[.notes]
+--
+Default settings often balance stability and space efficiency, so it’s advisable to keep the *gc.ttlseconds* at *14400* unless your workload dictates otherwise. Important considerations include:
+
+* *Workload Profile*: High write throughput or frequent schema changes might require more proactive monitoring or higher TTL to accommodate longer transactions.
+* *Backup Windows*: If your backups rely on consistent snapshots, ensure the TTL is sufficient to include all versions needed for those backups.
+* *Peak Usage Planning*: During major migrations or index backfills, storage usage may spike. Ensure you have capacity for these temporary surges.
+* *Regular Monitoring*: Continuously check that GC is removing old row versions as expected. If you see unexpectedly high disk usage, investigate whether GC or user-defined zone configurations need tuning.
+--
+
+=== Summary
+
+* GC maintains storage efficiency
+* MVCC requires version cleanup
+* Settings balance needs
+* Operations impact storage
+* Monitoring ensures effectiveness
+
+[.notes]
+--
+Garbage collection is indispensable for controlling storage usage in CockroachDB’s MVCC model.
+By removing obsolete row versions, GC maintains performance and prevents unbounded data growth.
+
+The *gc.ttlseconds* configuration governs how long these versions persist, offering a balance between operational needs (long-running queries, backups) and storage efficiency.
+
+Understanding and monitoring the GC lifecycle ensures your CockroachDB clusters remain performant and cost-effective.
+--
+
+=== Exercise Preview
+* Configure GC settings
+* Observe storage impact
+* Create and drop indexes
+* Monitor cleanup process
+* Verify space reclamation
+
+[.notes]
+--
+In the upcoming exercise, you’ll:
+
+* Adjust *gc.ttlseconds* on a specific table and observe how it influences the retention of old row versions.
+* Perform index creation and deletion to monitor how storage usage spikes, then recedes as GC runs.
+* Examine metrics via the DB Console or SQL commands, such as `SHOW JOBS`, to confirm GC is reclaiming space.
+* Gain practical experience in tuning and validating garbage collection in a real CockroachDB environment.
+--

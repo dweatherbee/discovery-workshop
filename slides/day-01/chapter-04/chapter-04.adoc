@@ -1,0 +1,142 @@
+== Running and Monitoring Workloads in CockroachDB
+=== Why Workload Monitoring Matters
+[.text-left]
+
+* Ensures optimal performance
+* Identifies potential bottlenecks
+* Facilitates capacity planning
+* Enables proactive maintenance
+* Validates system health
+
+[.notes]
+--
+Workload monitoring is essential for *maintaining and tuning cluster
+performance*. It provides real-time visibility into query throughput, resource
+usage, and latency. By identifying bottlenecks early, you can scale hardware or
+adjust configurations proactively instead of reacting to an outage. This
+practice also supports *capacity planning*: knowing when to add nodes or adjust
+replication settings to keep up with growth. Finally, consistent monitoring
+validates that the system is healthy enough to meet *SLAs* or internal
+performance goals.
+--
+
+=== Understanding Workloads
+[.text-left]
+
+* Built-in workload generators
+* Configurable parameters
+* Realistic data patterns
+* Performance testing capability
+* Load simulation tools
+
+[.notes]
+--
+CockroachDB ships with several built-in workload generators (e.g., `movr`,
+`bank`, `tpcc`, `kv`) to help you *simulate real-world usage* and stress test
+your cluster. For instance, the `movr` workload simulates a ride-sharing or
+vehicle-sharing application, including multiple tables (users, vehicles, rides)
+with realistic transaction patterns. Parameters such as *duration*,
+*concurrency*, and *connection strings* can be tailored to mimic actual
+deployment scenarios.
+
+Example for initializing the `movr` workload:
+[source,bash]
+----
+cockroach workload init movr 'postgresql://root@haproxy:26257?sslmode=disable'
+----
+This creates the `movr` schema and populates it with seed data. Adjust the
+connection string if you’re using TLS or certificate-based authentication.
+--
+
+=== DB Console Overview
+[.text-left]
+
+* Real-time performance metrics
+* SQL activity monitoring
+* Hardware resource tracking
+* Database size analysis
+* Custom time range selection
+
+[.notes]
+--
+The *DB Console* is the primary monitoring interface for CockroachDB. After
+visiting `http://<node-address>:8080`, you can explore:
+
+* *Metrics Page:* CPU, memory, disk I/O, and SQL-specific stats.
+* *SQL Activity / Statements Page:* Shows queries being executed, their frequency, and latency distribution.
+* *Hardware/Nodes Page:* Detailed view of node status, storage usage, and localities.
+* *Database/Schema Page:* Summaries of database objects (tables, indexes, schemas) and their sizes.
+* *Time Range Filter:* Zoom in on a specific window to investigate spikes or anomalies.
+
+This console is updated in near real time, making it a powerful tool for diagnosing performance issues under load.
+--
+
+=== Performance Metrics
+[.text-left]
+
+* CPU utilization tracking
+* SQL statement analysis
+* Transaction throughput
+* Storage utilization
+* Query performance statistics
+
+[.notes]
+--
+Important performance metrics to watch:
+
+* *CPU Utilization:* High CPU usage could mean the nodes are under heavy load or queries are computationally expensive.
+* *SQL Statement Analysis:* The DB Console can show *top slow statements*, letting you pinpoint queries causing bottlenecks.
+* *Transaction Throughput (TPS/QPS):* Track how many transactions or queries per second your cluster can handle.
+* *Storage Utilization:* Monitor disk usage to avoid running out of space or encountering slow writes as disks near capacity.
+* *Query Latency Stats:* Latency percentile charts (p50, p95, p99) help identify occasional slow queries that may affect user experience.
+
+Review these metrics regularly or integrate them into external monitoring systems (e.g., Prometheus, Datadog, Grafana) for longer historical views and alerting.
+--
+
+=== Workload Management
+[.text-left]
+
+* Controlled load generation
+* Duration configuration
+* Load balancer integration
+* Performance validation
+* Resource utilization monitoring
+
+[.notes]
+--
+Managing workloads involves tailoring parameters to represent realistic usage. You can specify concurrency, duration, or data scale:
+
+[source,bash]
+----
+cockroach workload run movr --duration=1m \
+    'postgresql://root@haproxy:26257?sslmode=disable'
+----
+This example runs the `movr` workload for *1 minute*, passing traffic through an HAProxy load balancer. During the test, you can:
+
+* *Validate performance* by checking latency and throughput in the DB Console.
+* *Monitor Resource Usage* (CPU, memory) to ensure no single node is overloaded.
+* *Spot Slow Queries* or potential hotspots in tables or indexes.
+* *Confirm Scalability* by adjusting concurrency or adding more nodes to see if the cluster handles increased load effectively.
+--
+
+=== Exercise Overview
+[.text-left]
+
+* Initialize sample workload
+* Configure test parameters
+* Monitor performance metrics
+* Analyze system behavior
+* Validate cluster health
+
+[.notes]
+--
+In the upcoming exercise, you’ll:
+
+* *Initialize* the `movr` workload in your cluster to create relevant tables and seed data.
+* *Run Configurable Tests* using different durations and concurrency settings, possibly via a load balancer like HAProxy.
+* *Monitor* the cluster in real-time with the DB Console, focusing on *Statements*, *Metrics*, and *Nodes* pages.
+* *Analyze* throughput, latency, and resource usage to understand how your cluster handles various levels of demand.
+* *Validate* that the database remains healthy, queries complete successfully, and no severe bottlenecks or errors emerge.
+
+By the end of this exercise, you’ll have hands-on knowledge of how to run workloads against a CockroachDB cluster and systematically monitor performance and capacity. 
+--

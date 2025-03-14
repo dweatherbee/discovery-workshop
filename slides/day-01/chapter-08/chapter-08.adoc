@@ -1,0 +1,147 @@
+== Securing a CockroachDB Cluster
+=== Why Security Matters
+[.text-left]
+
+* Protects sensitive data from unauthorized access
+* Ensures node-to-node communication integrity
+* Prevents man-in-the-middle attacks
+* Enables compliance with security standards
+* Establishes trust between cluster components
+
+[.notes]
+--
+Security is a *critical* component for maintaining a robust CockroachDB
+deployment. *TLS encryption* ensures that data in transit remains private and
+unmodified, both between nodes (node-to-node) and between clients and nodes
+(client-to-node). By implementing certificate-based authentication, you also
+establish *trusted identities* for each participant in the system, mitigating
+the risk of malicious intrusion or data interception. 
+
+Additionally, a secure configuration is often *required* for compliance with
+standards like PCI DSS, SOC 2, and HIPAA. By enforcing TLS and certificate
+checks, CockroachDB provides a *zero-trust* security model, where every
+connection is validated and unauthorized access is blocked.
+--
+
+=== Certificate Authority (CA) Setup
+[.text-left]
+
+* Central trust anchor for the cluster
+* Signs all node and client certificates
+* Validates certificate authenticity
+* Controls certificate issuance
+* Manages certificate lifecycle
+
+[.notes]
+--
+The *Certificate Authority (CA)* is the cornerstone of CockroachDB’s security model. It signs every certificate (both node and client), ensuring that only authenticated entities can join or access the cluster. You create a CA certificate and key using:
+
+[source,bash]
+----
+cockroach cert create-ca --certs-dir=certs --ca-key=my-safe-directory/ca.key
+----
+
+* *Security Note:* Keep the CA private key offline or in a secure location (e.g., an HSM or a password-protected file system). If the CA key is compromised, *all* certificates it signed become untrustworthy.
+* *External CA Integration:* In production, you may integrate with an existing CA infrastructure rather than using a self-signed CA, allowing centralized certificate management.
+--
+
+=== Node Certificates
+[.text-left]
+
+* Unique per node identity
+* Contains node addresses and aliases
+* Enables mutual TLS authentication
+* Signed by cluster CA
+* Requires secure private key storage
+
+[.notes]
+--
+Each node in the cluster *must* have its own certificate, signed by the same CA. Node certificates store:
+
+* *Node Identity:* The node’s fully qualified domain name (FQDN) or IP addresses.
+* *Mutual TLS Authentication:* Ensures each node trusts and verifies the identity of the other nodes it communicates with.
+* *Validity Period:* Typically set to a fixed duration. Renew certificates before expiration to avoid cluster downtime.
+
+Generate node certificates using:
+
+[source,bash]
+----
+cockroach cert create-node <nodeHostnames/IPs> \
+--certs-dir=certs --ca-key=my-safe-directory/ca.key
+----
+
+Always store the node’s private key files with restricted permissions (e.g., *chmod 600*) accessible only by the CockroachDB process.
+--
+
+=== Client Authentication
+[.text-left]
+
+* Client certificates for user authentication
+* Root user certificate required
+* Supports multiple authentication methods
+* Enables fine-grained access control
+* Maintains secure client connections
+
+[.notes]
+--
+Client certificates authenticate users (e.g., *root*, *app*, *service-account*) to the cluster:
+
+[source,bash]
+----
+cockroach cert create-client root \
+--certs-dir=certs --ca-key=my-safe-directory/ca.key
+----
+
+Key points:
+
+* *Root Certificate:* Typically used by cluster administrators for full access. 
+* *Access Control:* When combined with CockroachDB’s Role-Based Access Control (RBAC), you can limit what each user can do within the cluster.
+* *Alternatives:* Password-based authentication is also possible, but certificate-based authentication is generally more secure and recommended for production. 
+--
+
+=== Certificate Distribution
+[.text-left]
+
+* Secure distribution to all nodes
+* Proper file permissions required
+* CA certificate shared cluster-wide
+* Node-specific certificate pairs
+* Client certificates for authentication
+
+[.notes]
+--
+Distributing certificates securely is *vital*. Every node needs:
+
+* *CA Certificate:* Allows nodes and clients to verify connections.
+* *Node Certificate & Key:* Unique per node, used for mutual TLS.
+* *Locked-down Permissions:* Keys should be readable only by the CockroachDB process owner. Use permissions like *600* on private key files.
+
+Clients need:
+
+* *CA Certificate:* To validate the cluster’s node certificates.
+* *Client Certificate & Key (If Using TLS Auth):* Ensures the user’s identity is trusted by the cluster.
+
+Transport these files via secure channels (e.g., *scp* over SSH with key-based authentication).
+--
+
+=== Exercise Overview
+[.text-left]
+
+* Generate and configure certificates
+* Set up secure cluster communication
+* Start nodes with security enabled
+* Validate cluster security
+* Test secure operations
+
+[.notes]
+--
+In this exercise, you will:
+
+* *Create a CA* and understand its role in signing certificates.
+* *Generate node certificates* for each CockroachDB node and distribute them securely.
+* *Configure secure communication* by enabling *--certs-dir* and *--secure* flags when starting nodes.
+* *Validate the cluster* to confirm all nodes are securely connected via mutual TLS.
+* *Run secure client operations* (e.g., using `cockroach sql` or `cockroach workload`) to ensure that client-to-node communication is also encrypted and authenticated.
+
+Completing these steps will reinforce the importance of certificate-based security in CockroachDB, preparing you to maintain a robust, compliant production environment.
+--

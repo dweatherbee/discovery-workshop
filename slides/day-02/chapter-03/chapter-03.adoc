@@ -1,0 +1,188 @@
+== Data Distribution and Rebalancing in CockroachDB
+
+=== Why Data Distribution Matters
+
+[.text-left]
+* Ensures balanced workload across nodes
+* Optimizes resource utilization
+* Maintains consistent performance
+* Enables horizontal scalability
+* Supports high availability
+
+[.notes]
+--
+Proper data distribution underpins CockroachDB's ability to scale horizontally while maintaining high performance and fault tolerance.
+When data is evenly spread across nodes, it prevents single nodes from becoming hot spots under heavy workloads.
+This design also ensures that when you add more nodes, the cluster can automatically rebalance data to make use of the new resources.
+
+CockroachDB’s approach to replication ensures that if one node fails, data remains accessible on other nodes, supporting high availability.
+By distributing data into “ranges” and placing replicas of each range across different nodes, CockroachDB eliminates single points of failure and utilizes each node’s storage and processing capacity more effectively.
+--
+
+=== Understanding Ranges
+
+[.text-left]
+Ranges are the fundamental unit of data distribution, replicated across nodes. They automatically split when they exceed size limits and can merge when they are small.
+
+[.text-left]
+Default size limits apply (commonly 512MB), and zone configurations let you manage range placement and replication.
+
+[.notes]
+--
+Ranges are contiguous chunks of the keyspace that CockroachDB uses to break down large datasets into more manageable pieces. Each range is a *Raft* replication group, meaning all replicas stay in sync through the Raft consensus protocol. When a range grows beyond the default size limit (512MB, though this can vary by version), it automatically splits into two or more smaller ranges. Conversely, small ranges can merge to maintain efficiency.
+
+Zone configurations control how many replicas each range will have and where they should be placed geographically or within specific nodes. This allows fine-grained control over data placement to meet performance, compliance, or fault-tolerance requirements. Because CockroachDB automatically splits and merges ranges, the system continually adapts to changing data distribution needs.
+--
+
+=== Range Distribution Mechanics
+
+CockroachDB offers *automatic* balancing, but also supports manual operations such as *splits* and *replica placement rules*.
+
+Each range has a lease holder for reads.
+Overall storage is balanced across the cluster.
+
+[.notes]
+--
+CockroachDB automatically balances ranges across nodes to optimize both performance and resource usage. The *allocator* process monitors node capacity, load, and existing replicas to decide which ranges should be moved or split. Some key aspects:
+
+
+* *Automatic Balancing:* The cluster automatically rebalances replicas to distribute load and storage usage across all available nodes.
+* *Manual Splits:* You can explicitly split a range when you know a key boundary will receive high traffic. For instance:
+
+[source,sql]
+----
+ALTER TABLE orders SPLIT AT VALUES ('order100000');
+----
+
+This can prevent a particular range from becoming a bottleneck if you anticipate large amounts of reads or writes on certain keys.
+
+* *Replica Placement Rules:* Zone configurations define which nodes or regions can hold replicas. This helps comply with data locality or regulatory constraints.
+* *Lease Holder Management:* Each range has a *lease holder* replica that handles read requests and coordinates writes. The system tries to place the lease holder close to the majority of requests, enhancing performance.
+* *Balanced Storage:* As data grows, the allocator moves replicas to avoid filling up any single node’s disk or overwhelming its CPU resources.
+--
+
+=== Zone Configurations
+
+* Control replication factor
+* Define replica constraints
+* Set storage parameters
+* Manage lease preferences
+* Override system defaults
+
+[.notes]
+--
+Zone configurations let you customize the distribution and replication settings for specific databases, tables, or even subsets of data within a table:
+
+
+* *Replication Factor:* Specify how many replicas each range should have, such as 3 or 5, balancing redundancy and cost.
+* *Replica Constraints:* Place replicas in certain regions or on certain nodes. For example, ensuring data resides in both US and EU regions for compliance or latency reasons.
+* *Storage Parameters:* Configure attributes like the *gc.ttlseconds* or other advanced settings to control how quickly old data is removed or how frequently backups might be required.
+* *Lease Preferences:* Indicate where the lease holder should reside, which is useful for read-heavy tables that must serve low-latency queries from a specific region.
+* *Override System Defaults:* While CockroachDB defaults work well in many cases, zone configs allow you to override them to optimize for your unique workload.
+
+Example of changing zone config:
+
+[source,sql]
+----
+ALTER RANGE default
+CONFIGURE ZONE USING
+  num_replicas = 5,
+  constraints = '{+region=us-east: 1, +region=us-west: 1, +region=eu-west: 1}';
+SHOW ZONE CONFIGURATION FOR RANGE default;
+----
+--
+
+=== Monitoring Distribution
+
+[.text-left]
+Monitoring your cluster involves checking:
+
+[.text-left]
+* range statistics
+* replica counts
+* observing storage balance
+
+IMPORTANT: Ensuring lease distribution is even can improve read performance.
+
+=== !
+
+[.h4-style]
+You should also track split and merge activity over time
+
+[.h4-style]
+Excessive splits might indicate hotspots, while merges can consolidate small ranges for better efficiency
+
+[.notes]
+--
+Monitoring distribution is essential to ensure data remains balanced and performance is optimal. Tools and techniques:
+
+
+* *DB Console:* Provides a visual overview of ranges, their replicas, and node usage. It also shows if certain nodes are under higher load.
+* *Replica Counts:* Track how many replicas each node holds, ensuring the cluster remains balanced.
+* *Storage Balance:* Watch for skew in disk usage. If one node’s usage starts to grow faster than others, rebalancing might be needed.
+* *Lease Distribution:* Verify that lease holders are appropriately distributed. If a single node holds too many lease holders, it can become a bottleneck for reads.
+* *Split/Merge Activity:* Regular splits and merges indicate the cluster is adapting to data volume changes. Excessive splits might mean your data is rapidly growing or receiving heavy writes in a small key space.
+--
+
+=== Manual Operations
+
+* Split ranges explicitly
+* Force rebalancing
+* Adjust zone configs
+* Verify changes
+* Monitor progress
+
+[.notes]
+--
+While CockroachDB automates most distribution tasks, manual intervention can help tackle specific challenges:
+
+* *Explicit Split:* When you know a certain key range will become very large or heavily accessed, manually split it to preemptively distribute load.
+
+[source,sql]
+----
+ALTER TABLE user_logs SPLIT AT VALUES ('user5000');
+----
+
+* *Force Rebalancing:* If the system lags behind in redistribution, you can use SQL statements (or certain CLI commands) to expedite rebalancing. However, typically CockroachDB handles this automatically.
+* *Zone Config Adjustments:* Adjust constraints, replicas, or lease preferences for special cases, such as storing data in multiple regions or meeting compliance needs.
+* *Verification:* Always confirm changes by running `SHOW ZONE CONFIGURATION` or `SHOW RANGES FROM TABLE tablename;` to see if your updates took effect.
+* *Monitoring Progress:* Watch the DB Console or relevant logs to ensure data rebalancing completes successfully and performance improves as expected.
+--
+
+=== Summary
+
+[.text-left]
+Ranges enable distribution, with **zone configuration**s controlling their behavior and ensuring an even workload.
+
+[.text-left]
+Monitoring the cluster's range balances and replica counts is *crucial*.
+
+[.text-left]
+Manual operations let you control splits and rebalancing. Always verify changes and regularly check performance.
+
+[.notes]
+--
+Data distribution in CockroachDB hinges on the *range* concept, with automation driven by zone configurations and an internal allocator.
+In most cases, CockroachDB’s defaults and automatic splits/rebalancing keep the system balanced.
+However, complex workloads or strict regulatory requirements may demand manual interventions, advanced zone config rules, or frequent monitoring.
+By proactively verifying distribution and rebalancing outcomes, you ensure stable performance and robust fault tolerance across your cluster.
+--
+
+=== Exercise Preview
+
+* Analyze range distribution
+* Configure manual splits
+* Modify zone configurations
+* Monitor distribution changes
+* Verify system behavior
+
+[.notes]
+--
+In the upcoming exercise, you will:
+
+* Inspect your current range distribution to see how data is split and replicated.
+* Apply manual splits to preemptively distribute large or frequently accessed data segments.
+* Modify zone configurations to customize replication factors and replica placement.
+* Observe changes in the DB Console, confirming that new splits and configs are adopted.
+* Verify the system’s overall behavior to ensure that your adjustments yield improved performance and balanced resource usage.
+--

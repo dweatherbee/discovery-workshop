@@ -1,0 +1,179 @@
+== Network, Hardware, and OS Configuration for CockroachDB
+
+=== Why Configuration Matters
+
+* Proper configuration ensures reliable database operations and optimal performance
+* Misconfiguration can lead to performance degradation or system failures
+
+[.notes]
+--
+Configuration is crucial for CockroachDB's distributed architecture. In a shared-nothing design like CockroachDB, each node handles its own workload and data, so network, hardware, and OS misconfigurations can ripple through the entire cluster. For example, a single node suffering from poor network performance can impede data replication, slow down queries, or even disrupt consensus-based transactions.
+--
+
+=== Configuration Focus
+
+* Network connectivity affects data replication and cluster communication
+* Hardware resources directly impact query performance and data processing capability
+* OS settings can significantly affect database stability and reliability
+
+[.notes]
+--
+Proper configuration includes:
+
+- *Network:* Ensuring all nodes can consistently communicate with each other. Even small latency spikes can affect transaction performance and data consistency.
+- *Hardware:* Adequate CPU and memory prevent bottlenecks, and balanced node configurations maintain predictable performance across the cluster.
+- *OS Settings:* Incorrect kernel parameters, such as virtual memory over-commitment or aggressive swapping, can cause unpredictable performance and even node crashes.
+
+By understanding and tuning all three layers—network, hardware, and operating system—you ensure reliable operation, maintain high performance, and minimize troubleshooting complexity. It’s a best practice to document all changes so they can be replicated or audited later.
+
+Below is an example command to check cluster health from a node’s perspective:
+
+[source,bash]
+----
+cockroach node status --certs-dir=certs
+----
+This provides an overview of node statuses and helps verify that all nodes are operating correctly.
+--
+
+=== Network Reqs
+
+* Port 26257 required for inter-node and client-node communication
+* Port 8080 needed for Admin UI access
+* Low latency between nodes (< 10ms recommended)
+* Symmetric routing between all nodes
+* No NAT between cluster nodes
+
+[.notes]
+--
+Network configuration is critical for CockroachDB because every node must continuously communicate to maintain data consistency. Port *26257* is the primary port for both inter-node communication (replication and gossip) and client connections. Port *8080* is used by the Admin UI, which is essential for monitoring cluster health, node metrics, and overall performance.
+
+*Low latency* (< 10ms round trip) is recommended for maintaining strong consistency guarantees and timely replication of data across nodes. *Symmetric routing* ensures traffic between any two nodes follows the same path in both directions, helping avoid unpredictable latencies or routing loops.
+
+NAT or other forms of address translation between cluster nodes can break CockroachDB’s communication and cause significant issues in node discovery or replication. Instead, each node should have a routable IP address reachable directly from other nodes.
+
+You can quickly test basic network connectivity with commands such as:
+
+[source,bash]
+----
+ping <NODE_IP>
+----
+for latency checks, or
+
+[source,bash]
+----
+nc -vz <NODE_IP> 26257
+----
+to validate that port 26257 is open and accessible.
+--
+
+=== Hardware Reqs: CPU and Memory
+
+* Minimum 4 vCPUs recommended per node
+* 4 GB RAM per vCPU recommended for production
+* Memory should be identical across all nodes
+* Avoid memory swapping for consistent performance
+* Scale resources based on workload requirements
+
+[.notes]
+--
+CPU and memory resources directly influence how many concurrent operations CockroachDB can handle and how quickly they complete. A *minimum of 4 vCPUs* per node helps ensure that background processes, such as garbage collection and replication, do not overwhelm the node under typical production workloads. Pairing *4 GB of RAM per vCPU* strikes a balance between memory-intensive operations (e.g., large transactions, complex queries, in-memory sorts) and overall system resource usage.
+
+Keeping *memory configurations consistent* across all nodes maintains uniform performance and avoids creating hotspots or slow links in the cluster. For instance, if one node has significantly less RAM, complex queries that land on that node might underperform or fail, affecting overall cluster throughput.
+
+To monitor CPU and memory usage in real time, you can use native OS tools:
+
+[source,bash]
+----
+top
+htop
+free -m
+----
+These commands help you identify whether you’re approaching bottlenecks and guide decisions on when to scale.
+--
+
+=== Storage Configuration
+
+* 300 GB per vCPU recommended for production
+* IOPS minimum of 500 per vCPU required
+** Storage latency should remain under 5ms
+* Use dedicated volumes for data stores
+** Separate volumes for logs recommended
+
+[.notes]
+--
+CockroachDB’s performance depends heavily on storage throughput and latency. The *300 GB per vCPU* guideline ensures there is enough capacity for data growth without risking out-of-disk errors, while *500 IOPS per vCPU* helps the database handle random read/write patterns typical of transactional workloads.
+
+Maintaining *storage latency under 5ms* minimizes delays in commit operations and maintains transactional performance, particularly important for multi-region or highly concurrent workloads. *Dedicated volumes* for the CockroachDB data directory help isolate database files from other I/O processes. Separating *logs* onto their own volume further reduces potential I/O contention, especially under heavy logging scenarios or when analyzing logs.
+
+Monitoring disk performance can be done with tools like *fio* or *ioping*:
+
+[source,bash]
+----
+fio --name=randwrite --ioengine=libaio --iodepth=64 --rw=randwrite --bs=4k \
+    --direct=1 --size=4G --numjobs=4 --runtime=60 --group_reporting
+----
+This example helps you evaluate random write performance and ensure your storage meets or exceeds recommended thresholds.
+--
+
+=== OS Configuration: Memory Management
+
+* Set `vm.swappiness` to 1 to minimize memory swapping
+* Maintain default `overcommit_memory` setting of 0
+* Monitor system memory usage regularly
+* Ensure sufficient free memory for operations
+* Avoid memory overcommitment
+
+[.notes]
+--
+Proper OS-level memory management avoids unpredictable performance. Setting *vm.swappiness* to *1* discourages the system from swapping, keeping critical CockroachDB pages in RAM as long as possible. The *overcommit_memory=0* default strikes a balance by allowing some overcommit but generally avoiding extreme allocations.
+
+Use sysctl commands to check or set these parameters:
+
+[source,bash]
+----
+sysctl -w vm.swappiness=1
+sysctl -w vm.overcommit_memory=0
+----
+Regularly monitor memory usage with tools like *free*, *vmstat*, or the CockroachDB Admin UI, watching for spikes that might indicate a need for more resources or additional tuning. Overcommitting memory can lead to OOM (out-of-memory) kills, which can cause node crashes and disrupt the cluster.
+--
+
+=== Summary
+
+* Network, hardware, and OS configuration are foundational for CockroachDB
+* Follow recommended specifications for reliable operation
+* Monitor and maintain proper configuration
+* Regular validation ensures continued proper operation
+* Document all configuration changes
+
+[.notes]
+--
+*Key Takeaways:*
+- Proper network settings, including correct ports, low latency, and symmetric routing, are crucial for distributed databases like CockroachDB.
+- Sufficient and balanced hardware (CPU, memory, storage) across nodes maintains cluster-wide performance and consistency.
+- Tuning OS-level parameters prevents resource contention, I/O bottlenecks, and unplanned downtime.
+- Continuous monitoring and periodic validation of these configurations help detect regressions before they become problems.
+- Maintaining thorough documentation of each configuration change ensures reproducibility and eases troubleshooting when unexpected behavior occurs.
+
+By applying these guidelines and best practices, you can deploy and manage a stable, high-performance CockroachDB cluster.
+--
+
+=== Introduction to the Exercise
+
+* Verify network connectivity between cluster nodes
+* Validate hardware resource availability
+* Configure OS parameters for optimal performance
+* Test storage performance
+* Document baseline configurations
+
+[.notes]
+--
+In this exercise, you will confirm that your environment is properly set up to run CockroachDB. Specifically, you will:
+
+1. *Verify Network Connectivity:* Ensure that all nodes can communicate on ports 26257 and 8080, check for acceptable round-trip times, and confirm no NAT issues are present.
+2. *Validate Hardware Resource Availability:* Confirm each node meets the minimum CPU and memory specs (4 vCPUs, 4 GB RAM per vCPU). Ensure no node is already heavily utilized.
+3. *Configure OS Parameters:* Make sure *vm.swappiness* and *overcommit_memory* are set appropriately, and review other sysctl settings that might affect performance.
+4. *Test Storage Performance:* Use simple I/O tests (such as *fio*) to verify that each node’s storage meets recommended throughput and latency targets.
+5. *Document Baseline Configurations:* Capture all relevant system settings, so you have a known-good state for future reference or troubleshooting.
+
+By completing these steps, you’ll have a stable foundation to run CockroachDB efficiently and reliably.
+--

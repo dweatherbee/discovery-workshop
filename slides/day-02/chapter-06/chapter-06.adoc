@@ -1,0 +1,208 @@
+== Unplanned Node Outages in CockroachDB
+
+=== Why Understanding Node Outages Matters
+* Unplanned outages can occur at any time due to hardware failures, network issues, or system crashes
+* Proper configuration and monitoring are crucial for maintaining data availability
+* Quick response to failures prevents cascading issues and minimizes downtime
+* Understanding failure states helps make informed recovery decisions
+* Well-configured clusters can often self-heal without manual intervention
+
+[.notes]
+--
+Unplanned node outages are a reality in distributed systems. CockroachDB uses a distributed architecture built on the Raft consensus protocol to handle node failures gracefully. However, proper configuration and monitoring are essential to ensure uninterrupted service and data integrity. This module covers how to prepare for, detect, and respond to unexpected node failures.
+
+Understanding node outages is critical because:
+
+- They can happen without warning and at inconvenient times, such as high-traffic moments or during maintenance windows.
+- Poor configuration, like incorrectly set timeouts or insufficient replication factors, can lead to unnecessary data movement or delayed recovery.
+- Quick, informed responses prevent minor issues—like a temporary network partition—from becoming major problems, such as data unavailability or query failures.
+- Well-configured clusters often handle failures automatically, maintaining consensus on data and offering continuous availability for most workloads.
+
+Key technical considerations include:
+
+- Ensuring an appropriate replication factor for fault tolerance (e.g., using three replicas across three nodes).
+- Monitoring liveness heartbeats, which let the cluster know which nodes are active.
+- Understanding the difference between short-lived outages (like a transient network glitch) versus permanent node failures (like a complete hardware meltdown).
+--
+
+=== Key Cluster Settings for Failure Detection
+* `server.time_until_store_dead` controls transition from suspect to dead state
+* Default 5-minute wait period allows for temporary failures to resolve
+* Shorter times trigger faster recovery but risk unnecessary data movement
+* Longer times reduce unnecessary rebalancing but delay recovery
+* Setting should align with your infrastructure's typical failure patterns
+
+[.notes]
+--
+The `server.time_until_store_dead` setting is the primary control for how CockroachDB responds to node failures:
+
+- When a node stops responding, it enters a "suspect" state, tracked by node liveness heartbeats.
+- The cluster waits for the configured time before declaring the node "dead."
+- During the suspect period, replicas remain in place to avoid unnecessary data movement, which reduces churn if the node comes back quickly.
+- After the dead state is declared, the cluster begins redistributing data to maintain quorum and availability.
+
+Typical tuning involves balancing the risk of waiting too long (leading to slower recovery) versus reacting too quickly (leading to extra data rebalancing). In many production deployments, the default value (5 minutes) is a good starting point. However, you may need to adjust it based on hardware reliability and network conditions. For example, if your nodes often experience transient network hiccups, you might opt for a slightly longer window.
+
+Example of changing `server.time_until_store_dead` using SQL:
+
+[source,sql]
+----
+ALTER CLUSTER SETTING server.time_until_store_dead = '3m';
+----
+
+Example of verifying the current setting:
+
+[source,sql]
+----
+SHOW CLUSTER SETTING server.time_until_store_dead;
+----
+
+--
+
+=== Node States and Cluster Behavior
+* Nodes transition through states: Live → Suspect → Dead
+* Suspect state preserves data location for quick recovery
+* Dead state triggers automatic data redistribution
+* State transitions influence resource utilization
+* Monitoring tools track state changes and cluster health
+
+[.notes]
+--
+Understanding node states is crucial for effective operations:
+
+Live State:
+
+- The node is fully functional, actively participating in Raft replication, and servicing queries.
+- Regular heartbeat communication with other nodes confirms its status to the cluster.
+
+Suspect State:
+
+- The node stops responding to heartbeats, but it might be experiencing only a transient failure, such as a momentary network partition.
+- Replicas remain on the node in hopes it will recover quickly, avoiding unnecessary rebalancing operations.
+
+Dead State:
+
+- The node is considered lost permanently after exceeding the `server.time_until_store_dead` threshold.
+- The cluster will promptly begin rebalancing data to maintain the desired replication factor and quorum.
+- Additional system resources, such as CPU and disk I/O, may be consumed significantly during rebalancing.
+
+Monitoring the transitions between these states is vital. Operations teams often use the CockroachDB Admin UI, CLI commands, or external monitoring systems (e.g., Prometheus/Grafana) to observe node liveness changes in real time. This ensures swift action when a node experiences persistent issues.
+--
+
+=== Critical Monitoring Metrics
+* Under-replicated ranges indicate recovery needs
+* CPU and disk I/O show resource pressure
+* Available storage capacity affects recovery speed
+* Node liveness heartbeats track cluster health
+* These metrics guide intervention decisions
+
+[.notes]
+--
+Key metrics to monitor during node failures:
+
+Store Metrics:
+
+- Under-replicated ranges: A direct indicator that the cluster is missing replicas and is in the process of rebalancing or waiting for a node to come back online.
+- Storage capacity: Ensures each node can handle the extra replicas when a node fails. Low available storage can slow down or even block recovery.
+
+System Metrics:
+
+- CPU usage: Elevated usage can occur during rebalancing, compactions, or when queries are rerouted away from the failed node.
+- Disk I/O: Data movement generates additional read/write activity, potentially causing performance impacts.
+- Memory usage: Rebalancing and increased workload can strain memory resources if the cluster is undersized.
+- Heartbeat success: Monitors node liveness. A significant drop indicates possible communication issues, resource exhaustion, or node failures.
+
+Use these metrics to determine:
+
+- Whether the cluster’s self-healing process (automatic rebalancing of replicas) is progressing efficiently.
+- If additional capacity or manual intervention is required to maintain performance.
+- When it is safe to remove or recommission nodes based on the success or failure of recovery steps.
+--
+
+=== Recovery Strategies and Best Practices
+* Configure monitoring alerts for early detection
+* Assess resource capacity before recovery actions
+* Add nodes when self-healing is overwhelmed
+* Remove dead nodes only after confirming state
+* Verify full recovery through testing
+
+[.notes]
+--
+Best practices for handling unplanned outages:
+
+Preparation:
+- Configure appropriate monitoring dashboards and alerts (e.g., alert on under-replicated ranges or node liveness heartbeat failures).
+- Understand normal cluster performance metrics to detect anomalies quickly.
+- Plan for adequate capacity, ensuring that each node can absorb extra replicas in the event another node fails.
+- Document clear recovery procedures to reduce downtime during critical events.
+
+Recovery Process:
+1. Detect and confirm the failure, using heartbeat metrics and system logs.
+2. Monitor self-healing progress by observing under-replicated ranges and cluster logs.
+3. Scale out by adding nodes if rebalancing saturates existing resources (e.g., CPU, disk I/O).
+4. Remove dead nodes from the cluster once certain they won’t rejoin. In CockroachDB, you might decommission a node via:
++
+[source,bash]
+----
+cockroach node decommission <node-id> --host=<host> --port=<port>
+----
++
+5. Verify cluster stability by confirming that under-replicated ranges have returned to normal and that no remaining errors persist.
+
+Key considerations:
+
+- Balancing quick recovery with overall cluster stability is essential. A cluster that rebalances too aggressively can degrade performance.
+- Proactively monitor resource usage during recovery to avoid compounding issues.
+- Validate that all impacted replicas have been restored to the desired replication factor and that the cluster remains consistent and responsive.
+--
+
+=== Summary
+* Unplanned outages require balanced recovery strategies
+* Proper configuration prevents unnecessary data movement
+* Monitoring guides intervention decisions
+* Quick response prevents cascading issues
+* Testing ensures complete recovery
+
+[.notes]
+--
+Key takeaways:
+1. Configuration impacts recovery behavior: Adjust settings like `server.time_until_store_dead` for optimal failover detection.
+2. Monitoring is essential: Stay ahead of failures with alerts on node liveness, storage capacity, and under-replicated ranges.
+3. Quick response prevents bigger problems: A timely reaction can avoid data availability issues and performance degradation.
+4. Testing confirms full recovery: Always validate that ranges are fully replicated and that no critical alerts remain.
+5. Documentation supports consistent responses: Keep detailed runbooks so operators can confidently follow established procedures.
+
+Remember:
+- Balance speed with stability when tuning failure detection settings.
+- Monitor key metrics (CPU, disk I/O, memory, node liveness) before, during, and after a failure.
+- Add capacity when needed to accommodate data rebalance.
+- Verify full recovery by ensuring all replicas are re-established.
+- Document and review each outage event to improve future response strategies.
+--
+
+=== Exercise Preview: Handling Node Failures
+* Practice configuring failure detection settings
+* Monitor cluster behavior during node failure
+* Implement emergency scale-out procedures
+* Remove dead nodes safely
+* Verify cluster recovery and stability
+
+[.notes]
+--
+The upcoming exercise will provide hands-on experience with node failure handling in CockroachDB:
+
+Learning Objectives:
+- Configure critical cluster settings (e.g., adjusting `server.time_until_store_dead`).
+- Monitor cluster health (via CockroachDB Admin UI or external monitoring) to detect and evaluate the impact of a node failure.
+- Execute emergency scale-out procedures: add one or more nodes to handle rebalancing load.
+- Safely remove dead or decommissioned nodes after confirming they cannot rejoin.
+- Verify the cluster’s recovery, ensuring replicas are fully up-replicated and performance is stable.
+
+You will:
+1. Configure `server.time_until_store_dead` to a value suitable for your environment.
+2. Observe cluster behavior and metrics (under-replicated ranges, node liveness).
+3. Add nodes if rebalancing or capacity constraints require additional resources.
+4. Use `cockroach node decommission` to remove a permanently failed node.
+5. Check under-replicated ranges and metrics to confirm the cluster has stabilized.
+--
+

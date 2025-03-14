@@ -1,0 +1,131 @@
+== Authentication and Authorization in CockroachDB
+=== Why Security Matters
+[.text-left]
+
+* Protects sensitive data from unauthorized access
+* Helps with regulatory compliance (GDPR, HIPAA)
+* Enables fine-grained access control
+* Prevents accidental data modifications
+* Supports enterprise security requirements
+
+[.notes]
+--
+Security is fundamental in database systems. *Authentication* verifies a user's identity, while *authorization* controls the actions that authenticated users can perform. CockroachDB uses *certificate-based authentication* and *role-based access control* (RBAC) to offer enterprise-grade security. By enforcing strict authentication and granular permissions, CockroachDB helps organizations meet compliance standards and protect sensitive data against unauthorized access or modification.
+
+CockroachDB’s security model supports mutual TLS (mTLS), ensuring both clients and servers present valid certificates. This approach establishes trust between nodes and any connecting client, which is critical in distributed environments or when meeting strict regulatory requirements.
+--
+
+=== Certificate-Based Authentication
+[.text-left]
+
+* Uses TLS certificates for secure client authentication
+* Eliminates password management risks
+* Provides cryptographic security guarantees
+* Integrates with existing PKI infrastructure
+* Supports client certificate rotation
+
+[.notes]
+--
+CockroachDB implements certificate-based authentication using TLS certificates, which is more secure than traditional passwords. Each client is given a unique certificate signed by the cluster CA, ensuring cryptographic proof of identity:
+
+[source,bash]
+----
+cockroach cert create-client alice \
+--certs-dir=certs \
+--ca-key=ca.key
+----
+
+* *No Passwords Required:* Instead of storing and validating passwords, CockroachDB relies on verifying the client’s certificate chain.
+* *Certificate Rotation:* You can generate new client certificates periodically to maintain security. Because CockroachDB validates certificates at connection time, old certificates can be revoked without causing downtime.
+* *Integration with PKI:* You can integrate with an existing Public Key Infrastructure (PKI) to manage certificate issuance and revocation at scale.
+--
+
+=== User Management
+[.text-left]
+
+* Create users with certificate authentication
+* Set password to NULL for certificate-only auth
+* Map certificates to specific database users
+* Manage user lifecycles effectively
+* Support multiple authentication methods
+
+[.notes]
+--
+User management in CockroachDB involves creating database users and pairing them with client certificates. When using certificate-based auth, you typically set the user’s password to NULL:
+
+[source,sql]
+----
+CREATE USER alice WITH PASSWORD NULL;
+----
+
+This ensures that *only* the valid client certificate for *alice* can gain access. CockroachDB maintains mappings between client certificate *Common Names* (CN) and database user names. This helps in controlling access programmatically and integrating with automation pipelines. You can still opt to use traditional password-based auth in certain scenarios, but certificate-based methods reduce risk by eliminating password storage.
+--
+
+=== Role-Based Access Control
+[.text-left]
+
+* Grant specific privileges to users
+* Control access at database and table levels
+* Support principle of least privilege
+* Enable fine-grained permission management
+* Separate duties through different roles
+
+[.notes]
+--
+Role-Based Access Control (RBAC) allows you to map privileges to roles and assign those roles to users. This ensures a consistent and auditable approach to managing permissions:
+
+[source,sql]
+----
+-- Create a custom role with SELECT and INSERT privileges
+CREATE ROLE data_analyst;
+GRANT SELECT, INSERT ON mydb.customers TO data_analyst;
+
+-- Assign the role to a user
+GRANT data_analyst TO alice;
+----
+
+* *Principle of Least Privilege:* Only grant the privileges necessary for a user’s tasks. This reduces attack surface if an account is compromised.
+* *Hierarchical Roles:* You can nest roles within other roles to group privileges together, simplifying privilege management in larger organizations.
+--
+
+=== Implementing Access Control
+[.text-left]
+
+* Define clear access policies
+* Grant minimum required privileges
+* Regularly audit access patterns
+* Implement role hierarchy
+* Monitor authorization failures
+
+[.notes]
+--
+Effective access control requires:
+
+* *Policy Definition:* Determine which operations each role should perform based on business requirements.
+* *Minimal Privileges:* Avoid granting `ALL` privileges unless necessary. Instead, grant only the specific actions (SELECT, INSERT, UPDATE, DELETE) required by the user or role.
+* *Audit and Logs:* Use `SHOW GRANTS` to review current privileges. Monitoring logs or using CockroachDB’s Admin UI can reveal suspicious access or privilege misuse.
+* *Role Hierarchies:* For large organizations, create layered roles (e.g., read-only roles, read-write roles, admin roles) to simplify onboarding and changes.
+* *Failure Monitoring:* Repeated authorization failures can indicate malicious activity or misconfigured clients.
+--
+
+=== Exercise Overview
+[.text-left]
+
+* Create and manage client certificates
+* Set up users with certificate authentication
+* Configure role-based access control
+* Test different privilege levels
+* Verify security enforcement
+
+[.notes]
+--
+In this exercise, you will:
+
+* *Generate client certificates* and associate them with users in CockroachDB.
+* *Create multiple users* and test certificate-only authentication versus password authentication.
+* *Configure RBAC* to grant and revoke privileges on specific databases or tables.
+* *Experiment with privilege levels* by running queries as different users.
+* *Validate security measures* through attempted unauthorized actions, ensuring that CockroachDB enforces your rules effectively.
+
+These tasks will help you gain practical experience with CockroachDB’s authentication and authorization workflows, reinforcing the importance of a well-structured security model in a distributed SQL database.
+--
