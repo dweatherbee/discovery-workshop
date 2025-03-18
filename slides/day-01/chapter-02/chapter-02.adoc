@@ -333,7 +333,7 @@ Knowledge management applications leverage LLMs' ability to process and retrieve
 The most effective business implementations typically combine LLM capabilities with human oversight, using the models to generate initial drafts or suggestions that humans then review, edit, and approve. This human-in-the-loop approach mitigates the risk of hallucinations or errors while still capturing the efficiency benefits.
 --
 
-=== Chain-of-Thought Reasoning LLMs
+=== Chain-of-Thought (CoT) Reasoning LLMs
 
 * Specifically trained or prompted to show explicit reasoning steps
 * Process complex problems by breaking them into logical sequences
@@ -355,7 +355,7 @@ Chain-of-thought reasoning can be elicited in two primary ways: through specific
 --
 
 
-=== Chain-of-Thought Reasoning: Strengths & Limitations
+=== CoT Reasoning: Strengths & Limitations
 
 * Strengths:
   ** Superior mathematical and logical reasoning
@@ -378,7 +378,7 @@ However, these models have limitations. They typically require more computationa
 A key development in this area is the concept of "test-time compute" as a scaling law. Research has shown that allowing models more computation time to think through problems step by step can significantly improve performance, even without increasing model size. This insight suggests that future models may become increasingly capable of complex reasoning tasks simply by allocating more computational resources at inference time.
 --
 
-=== Chain-of-Thought Reasoning: Business Applications
+=== CoT Reasoning: Business Applications
 
 * Financial analysis and modeling
 * Complex decision support with transparent rationale
@@ -409,9 +409,9 @@ Understanding the capabilities and limitations of CoT reasoning is crucial for i
 === Comparing LLM Approaches
 
 * Probabilistic models excel at fluent generation and broad knowledge tasks
-* Reasoning models perform better on complex problem-solving requiring logical steps
-* Cost considerations: Reasoning approaches may require more computational resources
-* Response time: Step-by-step reasoning typically takes longer than direct generation
+* CoT Reasoning models perform better on complex problem-solving requiring logical steps
+* Cost considerations: CoT Reasoning approaches may require more computational resources
+* Response time: Step-by-step CoT reasoning typically takes longer than direct generation
 * Hybrid approaches often provide the best results for complex business applications
 
 [.notes]
@@ -442,31 +442,190 @@ Understanding these enhancement techniques is crucial for identifying the full r
 By the end of this module, you'll understand how these techniques work at a conceptual level and be able to identify business scenarios where they would add significant value. This knowledge will expand the range of processes you can consider for AI enhancement during the workshop.
 --
 
-=== Retrieval-Augmented Generation (RAG)
+=== Retrieval-Augmented Generation (RAG): The Basics
 
-* Combines LLMs with the ability to retrieve and reference specific information
-* Addresses the limitation of LLMs being restricted to their training data
-* Process: Query → Retrieve relevant documents → Incorporate into context → Generate response
-* Enables access to proprietary information, recent data, and specialized knowledge
-* Business applications: Knowledge management, customer support, compliance, research
+* Combines LLMs with ability to access specific information sources
+* Addresses key limitation: LLMs only know what was in their training data
+* Allows AI to use your organization's proprietary information
 
 [.notes]
 --
 Retrieval-Augmented Generation (RAG) represents one of the most important enhancements to LLM capabilities, particularly for business applications:
 
-RAG combines the generative capabilities of LLMs with the ability to retrieve and reference specific information from external sources. This hybrid approach leverages the strengths of both technologies - the language understanding and generation abilities of LLMs and the precision and currency of information retrieval systems. The result is a system that can generate responses grounded in specific, retrievable information rather than relying solely on patterns learned during training.
+RAG combines the generative capabilities of LLMs with the ability to retrieve and reference specific information from external sources. This hybrid approach leverages the strengths of both technologies - the language understanding and generation abilities of LLMs and the precision and currency of information retrieval systems.
 
-This approach directly addresses one of the most significant limitations of standalone LLMs: their restriction to information available in their training data. LLMs don't have access to real-time information, proprietary company data, or specialized knowledge unless it was included in their training. RAG overcomes this limitation by allowing the model to access and incorporate external information at the time of response generation.
+This approach directly addresses one of the most significant limitations of standalone LLMs: their restriction to information available in their training data. Standard LLMs don't have access to your company's proprietary information, recent developments, or specialized knowledge unless it happened to be included in their public training data.
 
-The RAG process typically follows several steps: First, the system analyzes the user query to understand what information is needed. Next, it retrieves relevant documents or data from specified sources such as company databases, knowledge bases, or document repositories. These retrieved documents are then incorporated into the context provided to the LLM. Finally, the LLM generates a response that incorporates both its general language capabilities and the specific information retrieved.
+Think of RAG as giving an AI assistant the ability to look things up in your company's documents before answering questions, rather than just relying on what it learned during its general training.
+--
 
-From a business perspective, RAG enables access to three critical categories of information: proprietary company data that wouldn't be in public training sets (like internal policies, product specifications, or customer records); recent information that postdates the model's training cutoff (like current market conditions or updated regulations); and specialized knowledge that might be too niche to be well-represented in general training data (like industry-specific terminology or procedures).
 
-RAG is particularly valuable for business applications like knowledge management (creating systems that can answer questions about company-specific information), customer support (providing accurate responses about products, services, and policies), compliance (ensuring responses reflect current regulations and company guidelines), and research (synthesizing information from multiple sources to answer complex questions).
+=== What Information Can RAG Access?
 
-The implementation of RAG requires several components: a document storage system, a method for converting documents into a format suitable for retrieval (typically vector embeddings), a retrieval mechanism to find relevant information, and integration with an LLM for response generation. While these technical details are important for implementation, business professionals primarily need to understand the capabilities RAG enables and the types of information it can incorporate.
+* Proprietary company data:
+  ** Internal policies and procedures
+  ** Product specifications
+  ** Customer records
+* Recent information:
+  ** Current market conditions
+  ** Updated regulations
+  ** Latest company announcements
+* Specialized knowledge:
+  ** Industry-specific terminology
+  ** Technical documentation
+  ** Proprietary processes
 
-By understanding RAG, you can identify business processes where access to specific information would significantly enhance the value of AI assistance - a crucial consideration when evaluating automation candidates during our workshop.
+[.notes]
+--
+From a business perspective, RAG enables access to three critical categories of information that standard LLMs typically can't reference:
+
+First, proprietary company data that wouldn't be in public training sets - this includes your internal policies, product specifications, customer records, strategic plans, and other confidential information that gives your business its unique identity and competitive advantage.
+
+Second, recent information that postdates the model's training cutoff - this includes current market conditions, updated regulations, latest company announcements, and other time-sensitive information that may have changed since the LLM was last trained.
+
+Third, specialized knowledge that might be too niche to be well-represented in general training data - this includes industry-specific terminology, technical documentation, and proprietary processes that may be unique to your organization or sector.
+
+By connecting an LLM to these information sources, RAG creates AI systems that can provide responses that are both contextually appropriate (thanks to the LLM's language capabilities) and factually accurate based on your specific information (thanks to the retrieval component).
+--
+
+=== How RAG Works
+
+1. User asks a question
+2. System searches your documents for relevant information
+3. Found information is provided to the AI as context
+4. AI generates response using both its training and your specific information
+
+[.notes]
+--
+The RAG process can be explained in four straightforward steps:
+
+First, a user asks a question or makes a request. This could be anything from "What's our refund policy for premium customers?" to "Summarize our Q2 sales performance."
+
+Second, the system searches through your documents, databases, or knowledge repositories to find information relevant to the query. This search process uses advanced techniques to understand the meaning behind the question and match it with the most appropriate content.
+
+Third, the relevant information that was found is provided to the AI as additional context. This is like giving the AI a "cheat sheet" of specific facts to reference when formulating its response.
+
+Finally, the AI generates a response that incorporates both its general language capabilities (from its training) and the specific information retrieved from your documents. The result is a response that sounds natural and helpful while being grounded in your organization's actual information.
+
+This process happens quickly, often in just seconds, creating the experience of conversing with an AI that somehow knows your organization's specific information.
+--
+
+=== RAG Building Blocks
+
+* Document storage: Where your information lives
+* Vector embeddings: How content is prepared for searching
+* Retrieval mechanism: How relevant information is found
+* LLM integration: How everything comes together
+* Integral AI Studio provides these through a no-code **Memory Management** UI interface
+
+[.notes]
+--
+While business users don't need to understand all the technical details, it's helpful to know the basic building blocks of a RAG system:
+
+Document storage is where your information lives - this could be document repositories, databases, knowledge bases, or other structured and unstructured data sources within your organization.
+
+Vector embeddings are how content is prepared for searching - this involves converting text into numerical representations that capture meaning, allowing the system to find information based on concepts rather than just keywords.
+
+The retrieval mechanism is how relevant information is found when a query comes in - it matches the query with the most semantically similar content in your knowledge base.
+
+LLM integration is how everything comes together - connecting the retrieved information with the language model to generate coherent, accurate responses.
+
+Platforms like Integral AI Studio simplify this process through user-friendly interfaces like Memory Management, allowing business users to implement RAG systems without needing to understand all the technical components. These tools handle the complex work of processing documents, creating embeddings, and connecting everything to the LLM.
+
+IMAGE TODO: RAG Building Blocks Visualization
+
+Here's a suggested visualization diagram for your RAG Building Blocks slide:
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                      RAG ARCHITECTURE                        │
+│                                                             │
+│  ┌───────────────┐      ┌───────────────┐                   │
+│  │  DOCUMENT     │      │   VECTOR      │                   │
+│  │  STORAGE      │─────▶│   EMBEDDINGS  │                   │
+│  │               │      │               │                   │
+│  │ [Document     │      │ [Mathematical │                   │
+│  │  icons/files] │      │  representation]                  │
+│  └───────────────┘      └───────┬───────┘                   │
+│                                 │                           │
+│                                 ▼                           │
+│  ┌───────────────┐      ┌───────────────┐     ┌──────────┐ │
+│  │    USER       │      │  RETRIEVAL    │     │          │ │
+│  │    QUERY      │─────▶│  MECHANISM    │────▶│   LLM    │ │
+│  │               │      │               │     │          │ │
+│  │ [Question     │      │ [Search       │     │ [Brain   │ │
+│  │  mark icon]   │      │  icon]        │     │  icon]   │ │
+│  └───────────────┘      └───────────────┘     └────┬─────┘ │
+│                                                    │       │
+│                                                    ▼       │
+│                                            ┌───────────────┐│
+│                                            │   RESPONSE    ││
+│                                            │               ││
+│                                            │ [Answer       ││
+│                                            │  document]    ││
+│                                            └───────────────┘│
+└─────────────────────────────────────────────────────────────┘
+   ┌───────────────────────────────────────────────────────┐
+   │       INTEGRAL AI STUDIO MEMORY MANAGEMENT            │
+   │       [Simple UI interface representation]            │
+   └───────────────────────────────────────────────────────┘
+```
+
+## Key Elements to Include:
+
+1. **Document Storage**: Show document icons or file folders to represent your organization's information repositories.
+
+2. **Vector Embeddings**: Visualize this with a mathematical representation - perhaps document text transforming into numerical vectors (could be shown as document icons converting to number sequences).
+
+3. **Retrieval Mechanism**: Depict this as a search or matching function that connects user queries with the vector database.
+
+4. **LLM Integration**: Show this as the AI brain that processes both the query and the retrieved information.
+
+5. **Response Generation**: The final output that combines the LLM's knowledge with the retrieved information.
+
+6. **Flow Arrows**: Clear directional arrows showing the process flow from documents to embeddings to retrieval to LLM to response.
+
+7. **Integral AI Studio Interface**: Show this as a simplified UI layer at the bottom that abstracts all the complexity above into a user-friendly interface.
+
+## Design Recommendations:
+
+1. Use a color scheme that differentiates the four main building blocks (document storage, embeddings, retrieval, LLM).
+
+2. Keep the visual clean and minimalist - business users need to understand the concept, not technical details.
+
+3. Consider using icons that intuitively represent each component (documents, mathematical symbols for embeddings, magnifying glass for retrieval, brain for LLM).
+
+4. Add a "No-Code UI" label or visual element to emphasize that Integral AI Studio makes this accessible without technical expertise.
+
+This visualization will help business users understand the components of RAG while emphasizing that they don't need to manage the technical complexity themselves thanks to the Memory Management interface.
+--
+
+=== RAG: Business Applications
+
+* *Knowledge management*: Making company information easily accessible
+* *Customer support*: Accurate responses about products and policies
+* *Compliance*: Ensuring responses reflect current regulations
+* *Research*: Finding insights across multiple documents
+* *Documentation*: Creating and maintaining technical materials
+* *Training*: Developing customized learning resources
+
+[.notes]
+--
+RAG enables numerous valuable business applications:
+
+Knowledge management applications make vast repositories of organizational knowledge accessible through simple questions. Employees can ask about internal policies, procedures, or historical decisions and receive accurate answers without having to search through multiple documents.
+
+For customer support, RAG enables more accurate responses by grounding AI outputs in your actual product documentation and company policies. This reduces the risk of incorrect information being provided to customers.
+
+Compliance applications benefit from RAG's ability to incorporate the latest regulatory information, ensuring that AI-generated content adheres to current requirements and standards.
+
+Research applications use RAG to find connections across multiple documents, identifying insights that might be difficult to discover when dealing with large volumes of information.
+
+Documentation applications help create and maintain technical and process documentation, ensuring consistency while reducing manual effort.
+
+Training applications can develop customized learning materials that incorporate organizational knowledge and best practices, making skill development more effective.
+
+The common thread across all these applications is that they become possible when AI can access, understand, and utilize your organization's specific information - which is exactly what RAG enables.
 --
 
 === Tools and Function Calling
