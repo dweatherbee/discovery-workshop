@@ -2,7 +2,7 @@
 
 ++++
 
-<div class="courses-container">
+<div class="course-tile-container">
   <div class="course-tile">
     <div class="course-icon">
       <img src="assets/images/ai-head.svg" height="50">
