@@ -1,3 +1,0 @@
-= Day 1 Chapter 5
-
-include::chapter-05/chapter-05.adoc[]

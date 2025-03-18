@@ -1,3 +1,0 @@
-= Day 1 Chapter 8
-
-include::chapter-08/chapter-08.adoc[]

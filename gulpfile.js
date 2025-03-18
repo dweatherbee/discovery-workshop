@@ -48,7 +48,7 @@ gulp.task('create-docinfo', (done) => {
     const dayFolders = glob.sync(`${basePath}/day-*`);
 
     const createDocinfoFile = (folder, relativePath) => {
-        const backgroundUrl = `background: url(${relativePath}assets/images/CockroachLabs_Logo-Mark_Full-Color-Dark-BG.svg);`;
+        const backgroundUrl = `background: url(${relativePath}assets/images/App_icon.svg);`;
         const homeUrl = relativePath ? `${relativePath}index.html` : 'index.html';
         const docinfoContent = `
         <a href="${homeUrl}" id="cockroachDBLogo" style="${backgroundUrl}

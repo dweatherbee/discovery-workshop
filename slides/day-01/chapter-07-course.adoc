@@ -1,3 +1,0 @@
-= Day 1 Chapter 7
-
-include::chapter-07/chapter-07.adoc[]

@@ -1,156 +1,585 @@
-== Clock Synchronization in CockroachDB
+== AI Fundamentals for Business Professionals
 
-=== ! 
+Understanding the Value of AI in Business
+
+=== Overview
+
+* Focus on AI fundamentals with emphasis on large language models (LLMs)
+* Provide conceptual understanding of LLMs without requiring programming knowledge
+** LLMs are a foundational part of Agentic AI
+* Prepare participants to identify Agentic AI opportunities in their business processes
+
+[.notes]
+--
+Welcome to our training module on AI Fundamentals for Business Professionals. This session is designed specifically for business professionals without technical backgrounds who want to understand how AI, particularly large language models, can create value in business contexts.
+
+We'll explore the fundamentals of AI with a focus on practical business applications rather than technical implementation details. You don't need any programming knowledge to benefit from this training - we'll focus on concepts and applications rather than code.
+
+This module serves as the foundation for the remainder of our workshop, where you'll identify business processes that could benefit from AI agent automation. The concepts we cover today will directly inform your ability to recognize valuable AI opportunities in your specific business context.
+
+By the end of this session, you'll have a solid conceptual understanding of modern AI systems, particularly large language models, and be able to evaluate their potential applications in your work. This knowledge will prepare you for the more applied sessions in the coming days.
+--
+
+=== Learning Objectives
+
+* Explain the evolution and key concepts of modern AI systems
+* Differentiate between types of LLMs and their capabilities
+* Evaluate potential business applications for AI technologies
+* Formulate effective prompts for different types of LLMs
+* Assess when to use different AI enhancement techniques like RAG and tools
+
+[.notes]
+--
+Let's review what we aim to accomplish in this session. By the end of this training, you'll be able to:
+
+First, explain the evolution and key concepts of modern AI systems. You'll understand how AI has developed over time and grasp the fundamental concepts that drive today's AI technologies, particularly large language models.
+
+Second, differentiate between types of LLMs and their capabilities. You'll learn about different approaches to language models, including probabilistic models like GPT-4o and reasoning-based models like Claude 3 Opus, and understand when each might be most appropriate for different business needs.
+
+Third, evaluate potential business applications for AI technologies. You'll develop the ability to identify opportunities where AI can create value in your specific business context, focusing on practical applications rather than theoretical possibilities.
+
+Fourth, formulate effective prompts for different types of LLMs. You'll learn the basics of prompt engineering - how to effectively communicate with AI systems to get the results you need for business tasks.
+
+Finally, assess when to use different AI enhancement techniques. You'll understand approaches like Retrieval-Augmented Generation (RAG) and tools that extend AI capabilities, and be able to determine when these techniques might add value to your AI implementations.
+
+These objectives align with Bloom's Taxonomy of learning, progressing from basic understanding to more complex application and evaluation skills. This structured approach ensures you'll develop practical knowledge you can apply immediately in your business context.
+--
+
+== The Evolution of AI
+
+[.notes]
+--
+We'll begin our exploration of AI fundamentals by looking at how artificial intelligence has evolved over time. Understanding this history provides important context for appreciating the capabilities and limitations of today's AI systems, particularly large language models.
+
+In this module, we'll trace the development of AI from early rule-based systems through the AI winters and into the current era of machine learning and deep learning. We'll pay particular attention to the emergence of large language models, which represent a significant advancement in AI capabilities with broad business applications.
+
+This historical perspective will help you understand why today's AI systems are fundamentally different from previous generations of technology and why they're creating unprecedented opportunities for business transformation.
+--
+
+=== Brief History of AI
+
+* Early AI (1950s-1980s): Rule-based systems with explicit programming
+* AI Winters (Late 1970s, Late 1980s-Early 1990s): Periods of reduced funding and interest due to unmet expectations
+* Machine Learning Revolution (1990s-2000s): Systems that learn from data rather than explicit rules
+* Deep Learning Breakthrough (2012-2018): Neural networks with multiple layers enabling complex pattern recognition
+* Current Era (2019-Present): Foundation models trained on massive datasets with broad capabilities
+
+[.notes]
+--
+IMAGE TODO - Timeline with Milestones: Create a horizontal timeline showing the progression of AI development with key milestones marked. Use different colors for each era and include small icons representing the dominant technology of each period (e.g., flowcharts for rule-based systems, neural network diagrams for deep learning).  This slide may need to be split into two.
+
+The history of artificial intelligence spans several decades, with distinct phases that have shaped today's landscape:
+
+Early AI, from roughly the 1950s through the 1980s, focused primarily on rule-based systems that relied on explicit programming. These systems followed logical rules created by human experts to solve specific problems. Examples included expert systems for medical diagnosis or chess-playing programs that used predefined strategies. While impressive for their time, these systems were limited by their inability to handle exceptions or learn from experience.
+
+The field experienced several "AI Winters" - periods of reduced funding and interest when the technology failed to meet inflated expectations. These occurred notably in the late 1970s and again in the late 1980s/early 1990s. During these periods, many believed AI had fundamental limitations that would prevent it from achieving its promised potential.
+
+The Machine Learning Revolution marked a significant shift in approach. Rather than programming explicit rules, systems were designed to learn patterns from data. This approach proved more flexible and scalable, enabling AI to tackle problems that were too complex for rule-based approaches. Statistical methods and algorithms like support vector machines and random forests demonstrated impressive capabilities in specific domains.
+
+The Deep Learning Breakthrough, beginning around 2012, represented another fundamental advancement. Neural networks with multiple layers (hence "deep" learning) demonstrated unprecedented abilities in pattern recognition tasks. The key innovation was the ability to automatically learn hierarchical features from data, eliminating the need for human feature engineering. This approach dramatically improved performance in image recognition, speech processing, and eventually language understanding.
+
+The Current Era is characterized by foundation models - large AI systems trained on massive datasets that can be adapted to a wide range of tasks. These models, particularly large language models like GPT-4, Claude, and Gemini, demonstrate broad capabilities across domains without task-specific training. They represent a shift from specialized AI systems to general-purpose technologies with applications across virtually every business function.
+
+This evolution from narrow, rule-based systems to flexible, learning-based approaches has dramatically expanded the potential applications of AI in business contexts. Understanding this trajectory helps explain why today's AI capabilities represent such a significant opportunity for business transformation.
+--
+
+=== The Rise of Large Language Models
+
+* Word embeddings: Representing words as mathematical vectors
+* Transformer architecture (2017): Revolutionary approach enabling parallel processing of text
+* Key breakthroughs: BERT (2018), GPT series (2018-present), Claude, Gemini
+* Scaling laws (2020-2023): Performance improvements correlate with model size and training data
+* Emergent capabilities (2022-present): Advanced reasoning and problem-solving appearing at scale
+* Test Time Compute scaling (2023-present): Performance improvements through increased inference computation
+
+[.notes]
+--
+IMAGE TODO - Timeline with Milestones: may also use a timeline plus Split Into two.
+
+Large Language Models (LLMs) represent one of the most significant developments in artificial intelligence, with a trajectory of rapid advancement over the past decade:
+
+Word embeddings marked an important early step in natural language processing. These techniques, like Word2Vec (2013) and GloVe (2014), represented words as mathematical vectors in a way that captured semantic relationships. Words with similar meanings would be positioned close together in this mathematical space. This approach allowed algorithms to understand relationships between words, but still had limitations in understanding context.
+
+The Transformer architecture, introduced in the 2017 paper "Attention is All You Need," represented a revolutionary approach to processing text. Unlike previous sequential models, transformers could process all words in a text simultaneously, using a mechanism called "attention" to weigh the importance of different words in relation to each other. This parallel processing capability enabled much more efficient training on larger datasets.
+
+Key breakthroughs followed rapidly. BERT (Bidirectional Encoder Representations from Transformers), released by Google in 2018, demonstrated unprecedented performance on language understanding tasks. The GPT (Generative Pre-trained Transformer) series from OpenAI, beginning in 2018 and continuing through GPT-4 and beyond, showed increasingly impressive text generation capabilities. Other models like Claude from Anthropic and Gemini from Google have further advanced the field.
+
+Scaling laws have emerged as a crucial insight in LLM development. Researchers discovered that performance improvements correlate predictably with increases in model size (number of parameters) and training data volume. This finding led to a race to build ever-larger models, with sizes increasing from millions to billions and now trillions of parameters.
+
+Perhaps most surprisingly, emergent capabilities have appeared as models reached certain scale thresholds. Advanced reasoning, problem-solving, and even coding abilities weren't explicitly programmed but emerged as models grew larger and were trained on more diverse data. These emergent capabilities have dramatically expanded the potential business applications of LLMs.
+
+Test Time Compute scaling represents one of the newest frontiers in LLM advancement. Research from 2023 onward has demonstrated that model performance can be significantly improved not just by increasing model size or training data, but by allocating more computational resources during inference (when the model is actually generating responses). Techniques like speculative decoding, tree-of-thought reasoning, and self-consistency sampling allow models to explore multiple reasoning paths or potential responses before selecting the best one. This approach effectively trades inference speed for quality, enabling even existing models to achieve better performance on complex reasoning tasks without retraining. For businesses, this means that model capabilities can continue to improve through algorithmic innovations even without building larger models, potentially offering more cost-effective paths to enhanced AI performance.
+
+The rapid evolution of LLMs has transformed them from academic curiosities to powerful business tools in just a few years. Understanding this trajectory helps explain their current capabilities and limitations, as well as their potential future development.
+--
+
+=== Current AI Landscape: Major Platforms
+
+* Major commercial platforms: OpenAI (GPT-4o), Anthropic (Claude), Google (Gemini), Mistral, Meta (Llama)
+* Open-source alternatives: Llama 3 (Meta), Mistral Large, Falcon (TII), Deepseek, Mixtral 8x7B, BLOOM, Pythia, Stable LM
+
+[.notes]
+--
+Today's AI landscape is characterized by rapid innovation, increasing accessibility, and a growing focus on business applications:
+
+Major commercial platforms have emerged as leaders in the development and deployment of large language models. OpenAI's GPT series, particularly GPT-4o, offers state-of-the-art capabilities across text, image, and audio modalities. Anthropic's Claude models emphasize safety and helpfulness. Google's Gemini combines language capabilities with multimodal understanding. Newer entrants like Mistral AI and Meta's Llama models are also gaining significant traction. These platforms typically offer API access, allowing businesses to integrate their capabilities without managing the underlying infrastructure.
+
+Open-source alternatives have created a parallel ecosystem of freely available models that can be downloaded, modified, and deployed by organizations with the technical resources to do so. Meta's Llama 3 series (ranging from 8B to 70B parameters) has become one of the most widely adopted open-source models, offering performance competitive with many commercial options. Mistral AI has released several high-quality open models, including Mistral Large and the innovative Mixtral 8x7B which uses a mixture-of-experts architecture. The Technology Innovation Institute's Falcon models (7B, 40B, and 180B versions) have shown impressive capabilities for their size. Deepseek's models, particularly Deepseek Coder, excel at programming tasks. Other notable open-source models include BLOOM (a multilingual model developed by over 1,000 researchers), Pythia (a family of models designed for interpretability research), and Stable LM from Stability AI. This open-source movement has accelerated innovation and reduced costs, though these models often require more technical expertise to implement effectively.
+--
+
+=== Current AI Landscape: Trends
+
+* Enterprise AI integration: Increasing focus on business-specific implementations
+* Democratization of access: API-based services making AI capabilities widely available
+* Specialized vs. general-purpose systems: Trend toward adaptable foundation models
+
+[.notes]
+--
+Enterprise AI integration has become a major focus, with organizations moving beyond experimentation to implement AI capabilities in core business processes. This shift is driving demand for industry-specific models, enterprise-grade security and compliance features, and seamless integration with existing business systems. Companies like Microsoft, Salesforce, and IBM are positioning themselves as enablers of this enterprise AI transformation.
+
+The democratization of access represents another key trend. API-based services have made sophisticated AI capabilities available to organizations of all sizes without requiring specialized AI expertise. This accessibility has dramatically expanded the potential user base and use cases for AI technologies. No-code and low-code platforms are further reducing barriers to entry.
+
+The industry is seeing a shift from specialized to general-purpose systems. Rather than building custom AI models for each specific task, organizations are increasingly leveraging foundation models that can be adapted to a wide range of applications through techniques like fine-tuning and prompt engineering. This approach reduces development time and cost while maintaining high performance.
+
+Understanding this landscape is crucial for business professionals seeking to leverage AI effectively. The rapid pace of innovation means new capabilities are constantly emerging, while increasing accessibility makes implementation more feasible than ever before. This combination creates unprecedented opportunities for business transformation across virtually every industry and function.
+--
+
+== Understanding Large Language Models
+
+[.notes]
+--
+In this module, we'll develop a deeper understanding of Large Language Models (LLMs) - what they are, how they work at a high level, and the different approaches to their development. This understanding is essential for evaluating their potential applications in your business.
+
+We'll explore the fundamental capabilities of LLMs and how they process and generate language. We'll then examine different types of LLMs, particularly the distinction between probabilistic models like GPT-4o and reasoning-based models like Claude 3 Opus or GPT-4o with specific prompting techniques.
+
+By understanding these different approaches and their respective strengths and limitations, you'll be better equipped to determine which type of LLM might be most appropriate for different business applications. This knowledge will directly inform your ability to identify and evaluate AI opportunities in your organization.
+--
+
+=== What are LLMs? Core Mechanics
+
+* AI systems trained on vast text datasets to understand and generate human language
+* Process information by breaking text into tokens (word parts) and analyzing patterns
+* Predict likely next words/tokens based on patterns learned during training
+
+[.notes]
+--
+Large Language Models (LLMs) are a type of artificial intelligence system specifically designed to understand and generate human language. Let's explore their fundamental characteristics:
+
+LLMs are trained on vast text datasets, often comprising hundreds of billions of words from sources like books, articles, websites, code repositories, and other text-based content. This extensive training allows them to learn the patterns, structures, and relationships in human language across diverse topics and domains. The largest models have effectively "read" more text than any human could in multiple lifetimes.
+
+These models process information by breaking text into tokens, which are essentially word parts or complete words. For example, the word "understanding" might be broken into tokens like "under" and "standing." The model analyzes patterns in how these tokens appear in relation to each other across its training data. This tokenization approach allows the model to handle words it hasn't explicitly seen before by recognizing their component parts.
+
+At their core, LLMs predict likely next words or tokens based on the patterns they've learned. When given a prompt or partial text, they calculate probabilities for what might come next based on similar patterns in their training data. This predictive capability is what enables them to generate coherent and contextually appropriate text that continues from any starting point.
+--
+
+=== Understanding Tokenization
+
+* Tokens are the basic units LLMs process - can be words, parts of words, or punctuation
+* Examples:
+  ** "Artificial" → "Art" + "ificial"
+  ** "intelligence" → "intel" + "ligence"
+  ** "doesn't" → "doesn" + "'t"
+* Most models use 1,000-100,000 unique tokens in their vocabulary
+* Efficient compression of language into machine-readable units
+
+[.notes]
+--
+Tokenization is a fundamental process that converts human text into a format that LLMs can process. Understanding how tokenization works helps explain both the capabilities and limitations of these models:
+
+Tokens represent the basic units that LLMs process. Unlike traditional NLP systems that might work with whole words, LLMs break text down into subword units. These tokens can be complete words, parts of words, or even individual characters and punctuation marks. This approach allows the model to handle a virtually unlimited vocabulary by combining token pieces.
+
+The tokenization process follows specific patterns based on the frequency of character combinations in the training data. Common words like "the" or "and" typically get their own tokens, while less common words are split into multiple tokens. For example, "tokenization" might be broken into "token" + "ization" because these parts appear frequently in other words.
+
+Different LLM systems use different tokenization approaches. GPT models use a method called Byte-Pair Encoding (BPE), while some other models use WordPiece or SentencePiece tokenizers. Regardless of the specific method, all modern LLMs use some form of subword tokenization.
+
+The size of a model's token vocabulary typically ranges from about 1,000 to 100,000 unique tokens. This vocabulary represents the building blocks the model uses to understand and generate all text. The specific tokens in this vocabulary are determined during the pre-training process based on the frequency of character patterns in the training data.
+
+Tokenization has important practical implications. When using LLMs, inputs are counted in tokens, not words or characters. This affects usage costs for commercial APIs and context window limitations. As a rule of thumb, one word typically corresponds to about 1.3-1.5 tokens in English, though this varies widely depending on the specific text.
+
+Understanding tokenization helps explain why LLMs sometimes struggle with very rare words, made-up terms, or specialized technical vocabulary. If a word must be broken into many small token pieces, the model may have difficulty maintaining coherence across those pieces during processing.
+--
+
+=== Prediction Mechanism: Probability Distribution
+
+* LLMs function as next-token prediction engines
+* For input: "The capital of France is..."
+* Model calculates probability distribution across entire vocabulary:
+  ** "Paris": 92%
+  ** "Lyon": 2%
+  ** "located": 1%
+  ** [thousands of other possibilities with lower probabilities]
+
+[.notes]
+--
+At their core, LLMs operate through a surprisingly simple mechanism: they predict the next token in a sequence based on all the tokens that came before it. This fundamental prediction capability is what enables all their more complex behaviors:
+
+When an LLM receives input text, it processes this text token by token, building an internal representation of the context. This representation captures patterns, relationships, and semantic meanings from the input.
+
+For each position in the sequence, the model calculates a probability distribution across its entire vocabulary of tokens. This distribution represents the model's prediction of how likely each possible token is to appear next in the sequence. For example, given the prompt "The capital of France is," the model might assign a 92% probability to "Paris," a 2% probability to "Lyon," a 1% probability to "located," and distribute the remaining 5% across thousands of other tokens.
+
+The model then selects a token from this probability distribution. In the simplest case, it selects the highest probability token (a process called "greedy decoding"). However, most implementations use more sophisticated sampling methods that introduce controlled randomness to generate more diverse and interesting outputs.
+--
+
+=== Prediction Mechanism: Temperature & Generation
+
+* Temperature setting controls randomness in token selection:
+  ** Low temp (0.1-0.5): More predictable, focused outputs
+  ** Medium temp (0.6-0.8): Balanced creativity & accuracy
+  ** High temp (0.9-1.0+): More creative, diverse outputs
+* Each selected token becomes part of context for next prediction
+  ** This iterative process continues until completion
+
+[.notes]
+--
+The "temperature" setting that many LLM interfaces provide controls the randomness in the token selection process. This parameter fundamentally alters how the model generates text:
+
+At low temperatures (typically 0.1-0.5), the model strongly favors high-probability tokens. This results in more predictable, focused, and often more factually accurate outputs. Low temperatures are ideal for tasks requiring precision, such as answering factual questions or generating code.
+
+At medium temperatures (around 0.6-0.8), the model strikes a balance between selecting high-probability tokens and occasionally choosing less likely options. This creates outputs with a good balance of coherence and creativity, making it suitable for many general-purpose applications.
+
+At high temperatures (0.9 and above), the model is much more likely to select lower-probability tokens. This produces more diverse, creative, and sometimes surprising outputs, but with increased risk of incoherence or factual errors. High temperatures work well for creative writing, brainstorming, or generating varied alternatives.
+
+Once a token is selected, it's added to the sequence, and the process repeats. The model now calculates a new probability distribution for the next position, taking into account the newly added token. This iterative process continues until the model generates a stopping token or reaches a predefined length limit.
+
+What's remarkable is that this relatively simple prediction mechanism, when scaled up with billions of parameters and trained on vast datasets, enables the complex capabilities we observe in modern LLMs. The model isn't explicitly programmed to answer questions, write essays, or solve problems—it's simply predicting what tokens are likely to come next in a given context. The emergent behaviors we value arise from this fundamental prediction capability.
+--
+
+=== LLM Capabilities and Applications
+
+* LLMs demonstrate capabilities in writing, summarizing, answering questions, and reasoning
+* Represent a general-purpose technology with applications across business functions
+* All complex behaviors emerge from the simple next-token prediction mechanism
+
+[.notes]
+--
+Modern LLMs demonstrate remarkable capabilities across a range of language tasks. They can write essays, stories, or business documents; summarize lengthy content; answer questions based on their training data; translate between languages; and even perform reasoning tasks that require multiple steps of logical thinking. These capabilities emerge from their statistical understanding of language patterns rather than explicit programming.
+
+From a business perspective, LLMs represent a general-purpose technology with applications across virtually every function and industry. Unlike previous AI systems that were designed for specific narrow tasks, LLMs can be applied to a wide range of language-related challenges through appropriate prompting or fine-tuning. This flexibility makes them particularly valuable as a business tool.
+
+Understanding LLMs as pattern-recognition systems trained on language data helps explain both their impressive capabilities and their limitations. They don't "understand" text in the human sense but have learned statistical patterns that allow them to mimic understanding in ways that are increasingly useful for business applications.
+
+What makes LLMs particularly remarkable is that all these diverse capabilities—from writing marketing copy to analyzing financial data to generating computer code—emerge from the same fundamental next-token prediction mechanism. The model's ability to perform such varied tasks comes from the patterns it learned during training rather than from task-specific programming. This explains why the same model can switch between different types of tasks simply based on how it's prompted.
+--
+
+=== !
 
 [.h4-style]
-Clock synchronization is crucial for maintaining data consistency in distributed databases
+There are two types of LLMs: Probabilistic and Chain-of-Thought Reasoning
 
-=== Why Clock Synch Matters
+=== Probabilistic LLMs
 
-* CockroachDB relies on accurate timestamps for transaction ordering and conflict resolution
-* Clock skew beyond 500ms can cause node shutdown to preserve data integrity
-* Accurate time synchronization prevents transaction anomalies and ensures reliable operations
-* NTP (Network Time Protocol) is a networking protocol used to synchronize the clocks of computers over variable-latency distributed networks. 
-** Proper NTP configuration is a fundamental requirement for production deployments
-
-[.notes]
---
-Clock synchronization is not just a technical requirement but a fundamental necessity for distributed databases like CockroachDB. The database uses Hybrid Logical Clocks (HLC), which combine physical time (as reported by the node’s clock) with logical time (to handle increments when the clock doesn’t change). This mechanism ensures that transactions are correctly ordered even in the presence of clock skew.
-
-However, if the clock drift across nodes exceeds the 500ms threshold, CockroachDB will proactively shut down the affected node rather than risk data inconsistency. This is a safety feature designed to maintain correctness above all else. In practice, you want to keep skew well under 100ms in production. Proper clock synchronization is therefore vital to avoid transaction ordering issues and anomalies such as write-write conflicts that cannot be properly resolved.
---
-
-
-=== Understanding Network Time Protocol
-
-* NTP uses hierarchical system of time servers organized in stratum levels
-** Stratum 1 servers directly connected to atomic clocks or GPS time sources
-** Lower stratum numbers indicate more accurate time sources
-* NTP continuously adjusts local system time to match reference servers
-* Time synchronization occurs gradually to prevent sudden clock jumps
+* Trained to predict the next token based on statistical patterns in training data
+* Generate text by repeatedly predicting the most likely next word/token
+* Process is purely statistical - no explicit rules about grammar, facts, or reasoning
+* Each prediction influenced by the entire context provided so far
+* Examples: OpenAI's GPT-4o, Anthropic's Claude 3.5, Meta's Llama2
 
 [.notes]
 --
-NTP is an industry-standard protocol to keep system time accurate within milliseconds of a trusted source. 
+Probabilistic LLMs like GPT-4o represent the most common approach to language model development. Let's explore how they work and their business implications:
 
-A few points to remember:
-- *Stratum 1* servers are directly connected to a hardware clock source (e.g., an atomic clock or GPS-based time signals).
-- Each successive stratum level (2, 3, etc.) synchronizes with the level above, adding some offset and latency in the process.
-- NTP’s continuous synchronization approach increments or decrements time slowly (referred to as slewing) instead of doing abrupt clock changes. This avoids sudden jumps that might disrupt running processes, especially in a distributed database environment.
+These models are trained through a process called "next token prediction." During training, the model is shown vast amounts of text and learns to predict what word or token is likely to come next in any given sequence. This training objective is purely statistical - the model learns patterns of word co-occurrence across billions of examples without explicit rules about grammar, facts, or reasoning.
 
-Below is a simple example of checking NTP status using the `ntpq` utility:
-
-[source,bash]
-----
-ntpq -p
-----
-
-This output will list servers, their stratum levels, offsets, delay, and jitter. A ‘*’ next to a server indicates it's the primary reference source.
+When generating text, probabilistic LLMs work by repeatedly predicting the most likely next word or token based on what they've already generated. Each prediction is influenced by the entire context provided so far. The model calculates probability distributions across its entire vocabulary (often 100,000+ tokens) and selects from these possibilities. This process continues word by word until the response is complete.
 --
 
-=== Configuring NTP for CockroachDB
+=== Probabilistic: Strengths & Limitations
 
-* Choose reliable NTP servers with good geographical proximity
-* Configure multiple NTP servers for redundancy and accuracy
-* Public NTP services (like Google's) provide reliable, accessible time sources
+* Strengths:
+  ** Remarkably fluent, natural-sounding writing
+  ** Broad knowledge across diverse domains
+  ** Creative content generation capabilities
+* Limitations:
+  ** May "hallucinate" facts that sound plausible but are incorrect
+  ** Can struggle with complex multi-step reasoning
+  ** Limited by training data cutoff and potential biases
 
 [.notes]
 --
-When configuring NTP for CockroachDB:
-- Select servers that are close to your geographic location or your data center to minimize network latency and jitter.
-- Use at least 3–4 servers to achieve redundancy and a good consensus on accurate time. 
-- Google’s public NTP servers (time1.google.com through time4.google.com) are popular and reliable choices, but other providers (like pool.ntp.org) are also widely used.
+The strengths of probabilistic LLMs include remarkably fluent writing that mimics human language patterns, broad knowledge across diverse domains absorbed from their training data, and creative capabilities in generating novel content like stories, marketing copy, or business ideas. They excel at tasks requiring language fluency and general knowledge.
 
-A sample `/etc/ntp.conf` snippet might look like this:
+However, these models have important limitations. They may "hallucinate" facts that sound plausible but are incorrect, as they're optimizing for plausible-sounding text rather than factual accuracy. They can struggle with complex multi-step reasoning, particularly for problems requiring precise logical or mathematical thinking. They're also limited by their training data - they don't have real-time information beyond their training cutoff and may reflect biases present in that data.
 
-[source,conf]
-----
-server time1.google.com iburst
-server time2.google.com iburst
-server time3.google.com iburst
-server time4.google.com iburst
-----
-
-The `iburst` option speeds up the initial synchronization when the service first starts.
+Understanding the probabilistic nature of these models helps explain both their impressive capabilities and their limitations. They don't "know" facts in the human sense but have learned statistical patterns that allow them to generate text that often contains accurate information. This distinction is important when evaluating their potential applications in business contexts where factual accuracy or reliable reasoning may be critical.
 --
 
-=== Monitoring Clock Synchronization Goals
+=== Probabilistic: Business Applications
 
-* Regular monitoring of NTP status prevents drift-related issues
-* Time offset should be maintained well under 100ms for optimal operation
+* Content creation: marketing materials, reports, communications
+* Document summarization and information extraction
+* Creative ideation and brainstorming
+* Customer support automation and chatbots
+* Knowledge management and information retrieval
+* Draft generation with human review and refinement
 
 [.notes]
 --
-When configuring NTP for CockroachDB:
+From a business perspective, probabilistic LLMs are particularly valuable for a wide range of applications:
 
-- Monitor NTP status regularly to ensure time offset remains within safe bounds, ideally well under 100ms.
+Content creation is one of the most common use cases, with LLMs helping to generate marketing materials, reports, emails, and other business communications. The models can produce drafts quickly that humans can then review and refine.
+
+Document summarization is another powerful application, allowing these models to condense lengthy reports, articles, or transcripts into concise summaries that capture key points. This can dramatically improve information processing efficiency.
+
+For creative tasks, LLMs excel at ideation and brainstorming, generating diverse perspectives and approaches that can spark innovation. They can suggest multiple angles on a problem or help develop creative concepts for marketing campaigns.
+
+Customer support automation has been revolutionized by these models, which can handle a wide range of customer inquiries with natural-sounding responses. They can be deployed as chatbots or used to assist human agents with response suggestions.
+
+Knowledge management applications leverage LLMs' ability to process and retrieve information from large document collections, making organizational knowledge more accessible and useful.
+
+The most effective business implementations typically combine LLM capabilities with human oversight, using the models to generate initial drafts or suggestions that humans then review, edit, and approve. This human-in-the-loop approach mitigates the risk of hallucinations or errors while still capturing the efficiency benefits.
 --
 
-=== Monitoring Clock Synchronization Tools
+=== Chain-of-Thought Reasoning LLMs
 
-* Use `ntpq -p` to check synchronization status and server selection
-** Monitor the offset column to ensure minimal time difference
-** Watch for the '*' indicator showing the selected time source
-* Check `ntpq -c rl` to verify NTP synchronization state
-** Look for warning indicators like `leap_alarm` or `sync_unspec`
+* Specifically trained or prompted to show explicit reasoning steps
+* Process complex problems by breaking them into logical sequences
+* Examples: OpenAI's o1/o3, DeepSeek-R1
+* Example approach for a math problem:
+  ** Identify relevant variables and formulas
+  ** Work through calculations step-by-step
+  ** Verify results before providing final answer
 
 [.notes]
 --
-Monitoring is critical to keep your node’s time within acceptable limits for CockroachDB. Commonly used commands:
+Chain-of-Thought (CoT) reasoning represents an important advancement in LLM capabilities, particularly evident in models like OpenAI's o1 and o3 or when using specific prompting techniques with models like GPT-4:
 
-1. `ntpq -p`: Displays a table of peers, offset, delay, and jitter. The `offset` value should be as low as possible, usually a few milliseconds. An example output might look like:
+These models are either specifically trained or prompted to show explicit reasoning steps rather than jumping directly to conclusions. When faced with a complex problem, they break it down into a logical sequence of steps, working through the problem methodically much like a human would. This approach dramatically improves performance on tasks requiring multi-step reasoning.
 
-[source,bash]
-----
-$ ntpq -p
-     remote           refid      st t when poll reach   delay   offset  jitter
-==============================================================================
-*time1.google .GOOG.           1 u  34   64  377    0.680   -0.012   0.001
-+time2.google .GOOG.           1 u  34   64  377    0.710   -0.015   0.002
-----
+The key innovation in CoT models is their ability to process complex problems by breaking them into manageable components. For example, when solving a math problem, the model might first identify the relevant variables, then determine the appropriate formula, perform the calculation step by step, and finally verify the result. This step-by-step approach significantly reduces errors compared to attempting to solve problems in a single step.
 
-   - `*` indicates the currently chosen synchronization source.
-   - `+` or other symbols may indicate additional servers available for failover.
-
-2. `ntpq -c rl`: Provides the system status, including the system peer, stratum, and leap indicator. Look out for `leap_alarm` or `sync_unspec`, which suggest the clock might not be correctly synchronized. If you see these warnings, investigate immediately.
-
-Keeping an eye on these metrics helps ensure that the underlying system clock meets CockroachDB’s strict timing requirements.
+Chain-of-thought reasoning can be elicited in two primary ways: through specific model training that rewards step-by-step reasoning, or through prompting techniques that explicitly instruct the model to "think step by step" before answering. Both approaches have proven effective at improving performance on complex reasoning tasks.
 --
 
-=== Summary
 
-* Clock synchronization is critical for CockroachDB's operation
-* NTP provides reliable time synchronization across distributed systems
-* Proper configuration and monitoring prevent timing-related issues
-* Time offset should remain well under 100ms
-* Regular validation ensures continued proper operation
+=== Chain-of-Thought Reasoning: Strengths & Limitations
+
+* Strengths:
+  ** Superior mathematical and logical reasoning
+  ** Transparent decision-making process
+  ** Reduced error rates on complex problems
+  ** Self-correction capabilities
+* Limitations:
+  ** Higher computational requirements
+  ** Potentially slower response times
+  ** Still probabilistic at core - can make reasoning errors
 
 [.notes]
 --
-Key points:
-- CockroachDB depends on accurate clocks across all nodes to manage transaction ordering via Hybrid Logical Clocks.
-- NTP is the de facto standard for time synchronization. Configuring multiple, geographically proximate servers enhances accuracy and redundancy.
-- Monitoring and regularly verifying your synchronization status with tools like `ntpq` and logs is paramount.
-- A time offset significantly beyond 100ms can risk transaction anomalies; beyond 500ms, nodes may shut down.
-- Continuous diligence in time synchronization is a cornerstone of reliable and consistent CockroachDB deployments.
+The strengths of CoT models include superior performance on mathematical reasoning tasks, logical problem-solving that requires multiple steps, and transparent decision-making where the reasoning process is visible and can be verified. This transparency is particularly valuable in business contexts where understanding how a conclusion was reached may be as important as the conclusion itself.
+
+A key advantage of chain-of-thought reasoning is the ability to self-correct. By working through problems step-by-step, these models can often identify errors in their own reasoning and revise their approach before arriving at a final answer. This significantly reduces error rates compared to models that attempt to solve problems in a single step.
+
+However, these models have limitations. They typically require more computational resources, which can result in higher costs and potentially slower responses compared to standard LLMs. They're also still fundamentally probabilistic systems at their core, meaning they can make reasoning errors despite their step-by-step approach. Their performance depends significantly on how problems are presented to them.
+
+A key development in this area is the concept of "test-time compute" as a scaling law. Research has shown that allowing models more computation time to think through problems step by step can significantly improve performance, even without increasing model size. This insight suggests that future models may become increasingly capable of complex reasoning tasks simply by allocating more computational resources at inference time.
 --
 
-=== Introduction to the Exercise
+=== Chain-of-Thought Reasoning: Business Applications
 
-* Configure NTP using Google's public time servers
-* Validate proper synchronization using monitoring tools
-* Interpret synchronization metrics and status indicators
-* Verify clock offset remains within acceptable limits
-* Ensure CockroachDB's time requirements are met
+* Financial analysis and modeling
+* Complex decision support with transparent rationale
+* Process optimization and troubleshooting
+* Risk assessment and scenario planning
+* Educational applications and training
+* Regulatory compliance with documented reasoning
 
 [.notes]
 --
-In this exercise, you will:
-1. Update your `/etc/ntp.conf` to include Google’s time servers.
-2. Confirm that your system is synchronizing properly by using `ntpq -p` and interpreting values like offset, delay, and jitter.
-3. Explore additional commands like `ntpq -c rl` to verify the synchronization state.
-4. Cross-check that your clock offset remains well below 100ms to maintain CockroachDB’s optimal operating conditions.
+From a business perspective, CoT models are particularly valuable for applications requiring complex reasoning and transparency:
 
-This hands-on setup will reinforce how essential clock synchronization is for distributed systems. Verifying it thoroughly now prevents issues that can manifest as transaction ordering errors or node shutdowns.
+Financial analysis and modeling benefit greatly from chain-of-thought reasoning, as these models can work through complex calculations while showing their work. This is especially valuable for investment decisions, financial forecasting, and budget planning where stakeholders need to understand the reasoning behind recommendations.
+
+For complex decision support, these models can evaluate multiple factors, weigh trade-offs, and provide recommendations with clear rationales. The transparency of their reasoning process builds trust and allows decision-makers to evaluate the quality of the analysis.
+
+Process optimization and troubleshooting are enhanced by the models' ability to systematically analyze workflows, identify bottlenecks, and suggest improvements with detailed explanations. This applies to manufacturing processes, supply chain optimization, and service delivery improvements.
+
+Risk assessment and scenario planning benefit from the models' ability to methodically work through different scenarios and their implications, helping organizations prepare for various contingencies with well-reasoned strategies.
+
+Educational applications leverage these models' ability to explain complex concepts step-by-step, making them valuable tools for training, knowledge transfer, and skill development within organizations.
+
+Regulatory compliance is another area where documented reasoning is particularly valuable. When decisions need to be justified to regulators or auditors, having a clear record of the reasoning process provides necessary transparency and accountability.
+
+Understanding the capabilities and limitations of CoT reasoning is crucial for identifying business problems where this approach might add significant value compared to standard probabilistic LLMs.
 --
 
+=== Comparing LLM Approaches
+
+* Probabilistic models excel at fluent generation and broad knowledge tasks
+* Reasoning models perform better on complex problem-solving requiring logical steps
+* Cost considerations: Reasoning approaches may require more computational resources
+* Response time: Step-by-step reasoning typically takes longer than direct generation
+* Hybrid approaches often provide the best results for complex business applications
+
+[.notes]
+--
+Understanding the relative strengths and appropriate applications of different LLM approaches is crucial for effective business implementation:
+
+Probabilistic models excel at tasks requiring fluent language generation and broad knowledge. They're particularly effective for content creation, summarization, creative writing, general question answering, and conversational interfaces. Their strength lies in their ability to generate natural-sounding text across a wide range of topics based on patterns learned from their training data. For many business applications where approximate answers or creative content are sufficient, probabilistic models offer an excellent balance of performance and efficiency.
+
+Reasoning models perform significantly better on tasks requiring complex problem-solving with logical steps. They're particularly valuable for mathematical calculations, logical deductions, step-by-step analyses, and situations where the reasoning process itself needs to be transparent. Their explicit reasoning approach reduces errors on complex tasks and provides visibility into how conclusions are reached. For business applications where accuracy and verifiability are critical, reasoning-based approaches often justify their additional resource requirements.
+
+Cost considerations play an important role in choosing between approaches. Reasoning-based methods typically require more computational resources, which translates to higher costs in cloud-based API implementations. The explicit generation of intermediate reasoning steps means more tokens are generated, directly affecting usage-based pricing models. Organizations need to weigh these additional costs against the value of improved accuracy and transparency for specific use cases.
+
+Response time is another important factor. Step-by-step reasoning naturally takes longer than direct generation, as the model works through multiple intermediate steps before reaching a conclusion. For applications where immediate responses are critical, this additional latency may be problematic. However, for complex analytical tasks where accuracy is paramount, the additional time is often a worthwhile tradeoff.
+
+In practice, hybrid approaches often provide the best results for complex business applications. Many implementations use probabilistic models for initial content generation or simple queries, then switch to reasoning approaches for complex problems requiring verification or step-by-step analysis. Some systems also implement verification steps where outputs from probabilistic generation are checked using reasoning approaches before being presented to users.
+
+The field continues to evolve rapidly, with models increasingly incorporating reasoning capabilities as a standard feature rather than a separate approach. Understanding the appropriate application of different techniques allows organizations to optimize their AI implementations for specific business needs, balancing performance, cost, speed, and accuracy.
+--
+
+== Enhancing LLM Capabilities
+
+[.notes]
+--
+In this module, we'll explore techniques that enhance the capabilities of Large Language Models, allowing them to overcome some of their inherent limitations. We'll focus particularly on Retrieval-Augmented Generation (RAG) and tools integration, two approaches that significantly expand what LLMs can accomplish in business contexts.
+
+Understanding these enhancement techniques is crucial for identifying the full range of potential AI applications in your organization. Many valuable business use cases require capabilities beyond what a standalone LLM can provide, such as access to current information, proprietary data, or specialized functionality.
+
+By the end of this module, you'll understand how these techniques work at a conceptual level and be able to identify business scenarios where they would add significant value. This knowledge will expand the range of processes you can consider for AI enhancement during the workshop.
+--
+
+=== Retrieval-Augmented Generation (RAG)
+
+* Combines LLMs with the ability to retrieve and reference specific information
+* Addresses the limitation of LLMs being restricted to their training data
+* Process: Query → Retrieve relevant documents → Incorporate into context → Generate response
+* Enables access to proprietary information, recent data, and specialized knowledge
+* Business applications: Knowledge management, customer support, compliance, research
+
+[.notes]
+--
+Retrieval-Augmented Generation (RAG) represents one of the most important enhancements to LLM capabilities, particularly for business applications:
+
+RAG combines the generative capabilities of LLMs with the ability to retrieve and reference specific information from external sources. This hybrid approach leverages the strengths of both technologies - the language understanding and generation abilities of LLMs and the precision and currency of information retrieval systems. The result is a system that can generate responses grounded in specific, retrievable information rather than relying solely on patterns learned during training.
+
+This approach directly addresses one of the most significant limitations of standalone LLMs: their restriction to information available in their training data. LLMs don't have access to real-time information, proprietary company data, or specialized knowledge unless it was included in their training. RAG overcomes this limitation by allowing the model to access and incorporate external information at the time of response generation.
+
+The RAG process typically follows several steps: First, the system analyzes the user query to understand what information is needed. Next, it retrieves relevant documents or data from specified sources such as company databases, knowledge bases, or document repositories. These retrieved documents are then incorporated into the context provided to the LLM. Finally, the LLM generates a response that incorporates both its general language capabilities and the specific information retrieved.
+
+From a business perspective, RAG enables access to three critical categories of information: proprietary company data that wouldn't be in public training sets (like internal policies, product specifications, or customer records); recent information that postdates the model's training cutoff (like current market conditions or updated regulations); and specialized knowledge that might be too niche to be well-represented in general training data (like industry-specific terminology or procedures).
+
+RAG is particularly valuable for business applications like knowledge management (creating systems that can answer questions about company-specific information), customer support (providing accurate responses about products, services, and policies), compliance (ensuring responses reflect current regulations and company guidelines), and research (synthesizing information from multiple sources to answer complex questions).
+
+The implementation of RAG requires several components: a document storage system, a method for converting documents into a format suitable for retrieval (typically vector embeddings), a retrieval mechanism to find relevant information, and integration with an LLM for response generation. While these technical details are important for implementation, business professionals primarily need to understand the capabilities RAG enables and the types of information it can incorporate.
+
+By understanding RAG, you can identify business processes where access to specific information would significantly enhance the value of AI assistance - a crucial consideration when evaluating automation candidates during our workshop.
+--
+
+=== Tools and Function Calling
+
+* Enables LLMs to interact with external systems and perform specific actions
+* Examples: Calculators, web search, data analysis, calendar management, CRM updates
+* Process: LLM recognizes need for tool → Formats appropriate request → Tool executes → Results incorporated
+* Extends LLM capabilities beyond text generation to real-world actions
+* Business applications: Workflow automation, data analysis, scheduling, transaction processing
+
+[.notes]
+--
+Tools and function calling represent another crucial enhancement to LLM capabilities, particularly for business applications requiring interaction with external systems:
+
+This approach enables LLMs to interact with external systems and perform specific actions beyond text generation. Rather than being limited to producing text based on patterns in their training data, tool-augmented LLMs can recognize when a specific capability is needed and invoke the appropriate external system to perform that function. This dramatically extends what LLMs can accomplish in business contexts.
+
+Common examples of tools include calculators for precise mathematical operations, web search for current information, data analysis functions for processing structured data, calendar management for scheduling, CRM systems for customer information updates, and various API-connected services. Each tool provides specialized capabilities that complement the LLM's language understanding and generation abilities.
+
+The process typically works as follows: The LLM recognizes from the user's request or the context of the conversation that a specific tool is needed. It then formats an appropriate request to that tool, including necessary parameters or inputs. The external tool executes the requested function and returns results. Finally, the LLM incorporates these results into its response, often interpreting or explaining them for the user.
+
+This capability extends LLMs beyond text generation to enabling real-world actions and accessing real-time information. For example, an LLM with calendar access can not only discuss scheduling concepts but actually check availability and create appointments. One with calculation tools can perform precise financial analyses rather than approximating calculations based on training patterns.
+
+From a business perspective, tool integration is particularly valuable for applications like workflow automation (triggering actions across multiple systems), data analysis (performing calculations and generating insights from business data), scheduling and coordination (managing calendars and resources), and transaction processing (initiating and confirming business transactions in external systems).
+
+The implementation of tool integration requires defining the available tools, their parameters, and how they should be invoked. The LLM needs to be instructed or fine-tuned to recognize when tools are appropriate and how to format requests correctly. While these technical details are important for implementation, business professionals primarily need to understand what capabilities tool integration enables and what systems might be connected.
+
+By understanding tool integration, you can identify business processes where interaction with external systems would significantly enhance the value of AI assistance - another crucial consideration when evaluating automation candidates during our workshop.
+--
+
+=== Combining Approaches for Business Solutions
+
+* Most effective business implementations combine multiple enhancement techniques
+* RAG provides knowledge grounding while tools enable actions
+* Integration considerations: Data security, system access, performance requirements
+* Cost-benefit analysis: Enhanced capabilities vs. implementation complexity
+* Example: Customer service agent with product knowledge (RAG) and order processing abilities (tools)
+
+[.notes]
+--
+In practice, the most effective business implementations of AI often combine multiple enhancement techniques to create comprehensive solutions:
+
+Combining approaches allows organizations to address multiple limitations of standalone LLMs simultaneously. For example, RAG provides knowledge grounding by giving the LLM access to specific information, while tools enable actions by connecting the LLM to external systems. Together, these enhancements create AI systems that both know more and can do more than basic LLMs.
+
+A typical combined implementation might include: an LLM for natural language understanding and generation; RAG capabilities to incorporate company-specific information; tool connections to relevant business systems; and potentially chain-of-thought reasoning for complex decision processes. Each component addresses specific requirements of the business process being automated.
+
+When considering such implementations, several integration considerations become important. Data security is paramount when connecting AI systems to proprietary information or business systems. System access must be carefully managed to ensure the AI has appropriate permissions while maintaining security boundaries. Performance requirements must be evaluated, as each enhancement adds some latency to the overall system response time.
+
+Cost-benefit analysis becomes more complex with combined approaches. Enhanced capabilities must be weighed against increased implementation complexity and operational costs. Not every business process requires the full suite of enhancements - the appropriate combination should be determined based on specific requirements and expected value.
+
+As a concrete example, consider a customer service AI agent. It might use RAG to access product specifications, pricing information, and company policies; tool connections to check inventory, process orders, and update customer records; and chain-of-thought reasoning to troubleshoot complex customer issues. This combination creates a comprehensive solution that can handle a wide range of customer interactions with minimal human intervention.
+
+For business professionals evaluating AI opportunities, understanding these combined approaches is valuable even without technical implementation knowledge. It allows you to envision more comprehensive solutions and identify processes where multiple enhancements might create significant value. During our workshop, we'll explore how different combinations of capabilities might address specific business needs in your organization.
+
+The field continues to evolve rapidly, with new enhancement techniques emerging regularly. The fundamental principle remains consistent: identifying the specific limitations of basic LLMs that affect your use case and applying the appropriate enhancements to address those limitations.
+--
+
+== Effective Prompting Strategies
+
+[.notes]
+--
+In this module, we'll explore the art and science of effective prompting - how to communicate with AI systems to get the results you need. Prompt engineering is a crucial skill for business professionals working with AI, as it directly affects the quality and usefulness of AI outputs.
+
+We'll examine the fundamentals of prompt design and explore specific strategies for different types of LLMs. We'll also compare approaches and discuss how to adapt your prompting techniques based on the specific task and model you're working with.
+
+By the end of this module, you'll understand how to construct effective prompts for different business scenarios and be able to optimize your interactions with AI systems to achieve better outcomes. This practical knowledge will be immediately applicable as you begin working with AI tools.
+--
+
+=== Prompting Probabilistic LLMs (GPT-4o)
+
+* Be specific and explicit about desired outcomes and formats
+* Provide relevant context to overcome knowledge limitations
+* Use examples (few-shot learning) to demonstrate expected outputs
+* Manage token limitations by focusing on essential information
+* Business strategy: Start broad, then refine based on initial responses
+
+[.notes]
+--
+Probabilistic LLMs like GPT-4o require specific prompting strategies to maximize their effectiveness for business applications:
+
+Being specific and explicit about desired outcomes is particularly important with probabilistic models. Rather than assuming the model will intuit your needs, clearly state what you want, including the format, level of detail, tone, and any specific elements you require. For example, instead of asking "Tell me about our quarterly results," specify "Analyze our Q2 financial results in a 5-bullet executive summary highlighting year-over-year trends in revenue, expenses, and profit margins."
+
+Providing relevant context helps overcome the knowledge limitations inherent in these models. Remember that probabilistic LLMs don't have access to information beyond their training data unless you provide it. For business applications, this often means including specific facts, figures, or background information in your prompt. For example, when asking for analysis of a business situation, include the key data points the model needs to consider.
+
+Using examples, often called few-shot learning, is a powerful technique for demonstrating expected outputs. By showing the model one or more examples of the type of response you want, you provide a pattern it can follow. This approach is particularly effective for specialized formats or when you need consistency across multiple outputs. For instance, if you need product descriptions in a specific format, provide an example or two in your prompt.
+
+Managing token limitations is important since all LLMs have context windows that limit how much text they can process at once. Focus on providing essential information rather than exhaustive details. For business applications, this might mean summarizing background information rather than including complete documents, or linking to reference materials rather than pasting their entire contents.
+
+From a business strategy perspective, an effective approach is to start with broader prompts and then refine based on initial responses. Begin with a general request to see what the model produces, then iterate with more specific guidance based on what's missing or needs improvement. This iterative approach often yields better results than trying to craft the perfect prompt on the first attempt.
+
+Business-specific prompting strategies might include using industry terminology to improve relevance, specifying the intended audience for the output (e.g., "Write this for C-level executives"), and including company-specific context that might not be in the model's training data. These adaptations help tailor generic LLM capabilities to your specific business needs.
+
+Remember that probabilistic LLMs are particularly good at generating creative content, summarizing information, and producing natural-sounding language. Your prompting strategy should leverage these strengths while providing sufficient guidance to overcome limitations in factual precision or complex reasoning.
+--
+
+=== Prompting Chain-of-Thought LLMs (o1/o3)
+
+* Explicitly request step-by-step reasoning in your prompts
+* Structure complex problems with clear intermediate steps
+* Encourage the model to "think aloud" before concluding
+* Implement verification steps to check reasoning validity
+* Business strategy: Break complex problems into logical sequences
+
+[.notes]
+--
+Chain-of-Thought (CoT) LLMs like OpenAI's o1/o3 or Claude 3 Opus require different prompting strategies to fully leverage their reasoning capabilities:
+
+Explicitly requesting step-by-step reasoning is the foundation of effective CoT prompting. Unlike with standard LLMs where you might ask directly for a conclusion, with reasoning-focused models you should specifically ask the model to work through the problem methodically. For example, instead of "What's the optimal inventory level?" try "Please think through the optimal inventory level step by step, considering our lead times, demand variability, and storage costs."
+
+Structuring complex problems with clear intermediate steps helps guide the model's reasoning process. Break down multi-part problems into a logical sequence and ask the model to address each component in order. This approach is particularly effective for complex business analyses or decision-making scenarios. For instance, when evaluating a potential market entry, you might structure the prompt to first analyze market size, then competition, then regulatory considerations, and finally potential profitability.
+
+Encouraging the model to "think aloud" leverages the model's ability to reason through problems verbally. Phrases like "Let's think about this step by step" or "Let's work through this methodically" signal to the model that you want to see its reasoning process, not just its conclusion. This approach is valuable when the reasoning itself provides insights or when you need to verify the model's approach to a problem.
+
+Implementing verification steps improves accuracy by asking the model to check its own work. After the model provides a solution, prompt it to verify the answer by working backward, using a different method, or checking for common errors. For example, after a financial calculation, you might ask "Please verify this result by using an alternative calculation method and check for any potential errors in your reasoning."
+
+From a business strategy perspective, the key is breaking complex problems into logical sequences that the model can work through methodically. This approach is particularly valuable for financial analyses, strategic decisions, risk assessments, and other business scenarios where the reasoning process is as important as the conclusion.
+
+When working with CoT models in business contexts, it's often valuable to combine reasoning requests with specific business frameworks or methodologies relevant to your industry. For example, you might ask the model to apply a specific strategic framework like Porter's Five Forces or a standard financial analysis methodology to ensure the reasoning follows established business practices.
+
+The explicit reasoning capabilities of these models make them particularly valuable for explaining complex concepts to stakeholders, documenting decision processes for compliance purposes, and building confidence in AI-assisted business decisions through transparent reasoning.
+--

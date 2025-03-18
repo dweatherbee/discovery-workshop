@@ -1,3 +1,3 @@
-= Day 1 Chapter 2
+= Day 1: Chapt 2
 
 include::chapter-02/chapter-02.adoc[]

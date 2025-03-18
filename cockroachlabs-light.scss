@@ -15,7 +15,7 @@
 $backgroundColor: #FFF; // A lighter secondary color for the background
 
 $mainColor: #190F33; // Dark color for text for contrast
-$headingColor: #6933FF; // A primary color for headings
+$headingColor: #BB27C4; // A primary color for headings
 
 $mainFontSize: 35px; // Adjusted to your preferences
 $mainFont: 'Lato', sans-serif; // Your specified main font
@@ -25,7 +25,7 @@ $headingLetterSpacing: normal;
 $headingTextTransform: uppercase;
 $headingFontWeight: 600; // Adjusted weight for Poppins
 
-$linkColor: #0055FF; // A primary color for links
+$linkColor: #BB27C4; // A primary color for links
 $linkColorHover: lighten($linkColor, 20%); // Lightened on hover
 $selectionBackgroundColor: #B921F1; // A secondary color for text selection
 
@@ -294,7 +294,7 @@ $greyStyle: #919191;
 
 .courses-container {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(225px, 1fr));
+  grid-template-columns: repeat(5, 1fr);
   gap: 1rem;
   width: 100%;
   height: 100%;
@@ -343,7 +343,7 @@ $greyStyle: #919191;
   justify-content: space-between;
   width: 100%;
   padding: 0.5rem 0;
-  border-top: 2px solid #6933ff;
+  border-top: 2px solid #BB27C4;
 }
 
 .course-description {
@@ -371,7 +371,7 @@ $greyStyle: #919191;
 }
 
 .course-links a {
-  color: #0055FF;
+  color: #BB27C4;
   text-decoration: none;
 }
 

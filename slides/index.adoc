@@ -1,97 +1,82 @@
-== Ops Fundamentals
+== Integrail Agentic AI Innovation week
 
 ++++
-<div class="courses-container">
-<a class="course-tile" href="complete-course.html">
-    <div class="course-icon">
-      <img src="assets/images/database.svg" height="50">
-    </div>
-    <div class="course-title">Instructor Course</div>
-  </a>
-<a class="course-tile" href="student-complete-course.html">
-    <div class="course-icon">
-      <img src="assets/images/database.svg" height="50">
-    </div>
-    <div class="course-title">Student Course</div>
-</a>
-</div>
 
 <div class="courses-container">
   <div class="course-tile">
     <div class="course-icon">
-      <img src="assets/images/cockroachdb-node.png" height="50">
+      <img src="assets/images/ai-head.svg" height="50">
     </div>
-    <div class="course-title">Day 1:  </div>
+    <div class="course-title">Day 1: AI, Agents and AI Studio</div>
     <div class="course-content">
       <div class="course-links">
         <ul>
-          <li><a href="day-01/chapter-01-course.html">1: Hardware & OS Config</a></li>
-          <li><a href="day-01/chapter-02-course.html">2: Server Clock Sync</a></li>
-          <li><a href="day-01/chapter-03-course.html">3: Create Cluster</a></li>
-          <li><a href="day-01/chapter-04-course.html">4: Movr Workload</a></li>
-          <li><a href="day-01/chapter-05-course.html">5: Failure and Recovery</a></li>
-          <li><a href="day-01/chapter-06-course.html">6: Ranges and Replicas</a></li>
-          <li><a href="day-01/chapter-07-course.html">7: Quorum</a></li>
-          <li><a href="day-01/chapter-08-course.html">8: Secure Cluster</a></li>
-          <li><a href="day-01/chapter-09-course.html">9: Load Balancer HAProxy</a></li>
-          <li><a href="day-01/chapter-10-course.html">10: Authentication and Authorization</a></li>
-          <li><a href="day-01/chapter-11-course.html">11: Encryption At Rest</a></li>
+          <li><a href="day-01/chapter-01-course.html">1: Kickoff & Introductions</a></li>
+          <li><a href="day-01/chapter-02-course.html">2: What is AI?</a></li>
+          <li><a href="day-01/chapter-03-course.html">3: What is Agentic AI?</a></li>
+          <li><a href="day-01/chapter-04-course.html">4: Intro to Studio & Build an Agent</a></li>
         </ul>
       </div>
     </div>
-    <div class="course-length">6.5 hrs</div>
+    <div class="course-length">4 hrs</div>
   </div>
   <div class="course-tile">
     <div class="course-icon">
-      <img src="assets/images/database.svg" height="60">
+      <img src="assets/images/workflows.svg" height="50">
     </div>
-    <div class="course-title">Day 2: </div>
+    <div class="course-title">Day 2: ID Processes for Agentic AI</div>
     <div class="course-content">
       <div class="course-links">
         <ul>
-          <li><a href="day-02/chapter-01-course.html">1: Garbage Collection & TTL</a></li>
-          <li><a href="day-02/chapter-02-course.html">2: Write Intents</a></li>
-          <li><a href="day-02/chapter-03-course.html">3: Data Distribution & Rebalancing</a></li>
-          <li><a href="day-02/chapter-04-course.html">4: Compaction</a></li>
-          <li><a href="day-02/chapter-05-course.html">5: Planned Node Maintenance</a></li>
-          <li><a href="day-02/chapter-06-course.html">6: Unplanned Node Outage</a></li>
-          <li><a href="day-02/chapter-07-course.html">7: Cluster Version Management</a></li>
-          <li><a href="day-02/chapter-08-course.html">8: Application Behavior Settings</a></li>
-          <li><a href="day-02/chapter-09-course.html">9: Time-to-live (TTL) Settings</a></li>
+          <li><a href="day-02/chapter-01-course.html">1: How To ID Processes for Agentic AI</a></li>
+          <li><a href="day-02/chapter-02-course.html">2: ID Departmental Challenges</a></li>
+          <li><a href="day-02/chapter-03-course.html">3: Breakout Groups ID Processes Solving Dept Challenges</a></li>
         </ul>
       </div>
     </div>
-    <div class="course-length">6.5 hrs</div>
+    <div class="course-length">7 hrs</div>
   </div>
   <div class="course-tile">
     <div class="course-icon">
-      <img src="assets/images/tuning-fork.png" height="50">
+      <img src="assets/images/group-teamwork.svg" height="50">
     </div>
-     <div class="course-title">Day 3: </div>
+    <div class="course-title">Day 3: Breakout Design Sessions</div>
     <div class="course-content">
       <div class="course-links">
         <ul>
-          <li><a href="day-03/chapter-01-course.html">1: </a></li>
-          <li><a href="day-03/chapter-02-course.html">2: </a></li>
+          <li><a href="day-02/chapter-01-course.html">1: Mini Business Cases</a></li>
+          <li><a href="day-02/chapter-02-course.html">2: Breakout Design Session I</a></li>
+          <li><a href="day-02/chapter-03-course.html">3: Breakout Design Session II</a></li>
+          <li><a href="day-02/chapter-04-course.html">4: Breakout Design Session III</a></li>
         </ul>
       </div>
     </div>
-    <div class="course-length">6 hrs</div>
+    <div class="course-length">10 hrs</div>
   </div>
   <div class="course-tile">
     <div class="course-icon">
-      <img src="assets/images/transaction.svg" height="50">
+      <img src="assets/images/pause.svg" height="50">
     </div>
-    <div class="course-title">Day 4: </div>
+    <div class="course-title">Day 4: Full Day Break</div>
+    <div class="course-content">
+    </div>
+    <div class="course-length"></div>
+  </div>
+  <div class="course-tile">
+    <div class="course-icon">
+      <img src="assets/images/ai-chip.svg" height="50">
+    </div>
+    <div class="course-title">Day 5: Rank Cases & Way Forward</div>
     <div class="course-content">
       <div class="course-links">
         <ul>
-          <li><a href="day-04/chapter-01-course.html">1: </a></li>
-          <li><a href="day-04/chapter-02-course.html">2: </a></li>
+          <li><a href="#">1: Rank Business Cases and Awards </a></li>
+          <li><a href="#">2: Way Forward & Closing</a></li>
+          <li><a href="#">1/2 Day Break</a></li>
         </ul>
       </div>
     </div>
-    <div class="course-length">?.?</div>
+    <div class="course-length">3 hrs</div>
   </div>
 </div>
 ++++
