@@ -508,6 +508,88 @@ Third, the relevant information that was found is provided to the AI as addition
 Finally, the AI generates a response that incorporates both its general language capabilities (from its training) and the specific information retrieved from your documents. The result is a response that sounds natural and helpful while being grounded in your organization's actual information.
 
 This process happens quickly, often in just seconds, creating the experience of conversing with an AI that somehow knows your organization's specific information.
+
+IMAGE TODO: RAG Process Flow Visualization
+
+Here's a suggested visualization diagram for your "How RAG Works" slide:
+
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│                         HOW RAG WORKS                                   │
+│                                                                         │
+│  ┌──────────┐                                                           │
+│  │   USER   │                                                           │
+│  │    👤    │                                                           │
+│  └────┬─────┘                                                           │
+│       │                                                                 │
+│       │ 1. Asks question                                                │
+│       │ "What's our refund policy                                       │
+│       │  for premium customers?"                                        │
+│       ▼                                                                 │
+│  ┌────────────────────┐    2. Searches     ┌─────────────────────────┐ │
+│  │                    │─────────────────────▶                         │ │
+│  │       SYSTEM       │                    │   YOUR DOCUMENTS        │ │
+│  │        🔍          │                    │   📄 📄 📄 📄 📄        │ │
+│  │                    │◀────────────────────                         │ │
+│  └────────┬───────────┘    Finds relevant   └─────────────────────────┘ │
+│           │                information                                   │
+│           │                                                             │
+│           │ 3. Provides found                                           │
+│           │    information as context                                   │
+│           ▼                                                             │
+│  ┌────────────────────┐                                                 │
+│  │                    │                                                 │
+│  │        LLM         │                                                 │
+│  │        🧠          │                                                 │
+│  │                    │                                                 │
+│  └────────┬───────────┘                                                 │
+│           │                                                             │
+│           │ 4. Generates response using                                 │
+│           │    both training & specific info                            │
+│           ▼                                                             │
+│  ┌────────────────────────────────────────────────────────────────┐    │
+│  │ "For premium customers, our policy allows full refunds within   │    │
+│  │  30 days of purchase with no restocking fee, as outlined in     │    │
+│  │  our 2023 Customer Service Guidelines."                         │    │
+│  └────────────────────────────────────────────────────────────────┘    │
+└─────────────────────────────────────────────────────────────────────────┘
+```
+
+## Key Elements:
+
+1. **User (with icon)**: Represents the person asking the question
+   
+2. **Question**: Shows an example question ("What's our refund policy for premium customers?")
+   
+3. **System (with search icon)**: Represents the RAG system that processes the query
+   
+4. **Document Repository (with document icons)**: Represents your organization's information
+   
+5. **Bidirectional Arrow**: Shows the search and retrieval process
+   
+6. **LLM (with brain icon)**: Represents the large language model
+   
+7. **Response Box**: Shows an example response that incorporates specific information
+
+8. **Numbered Steps**: Clear labels for each of the four steps in the process
+
+## Design Recommendations:
+
+1. **Use a Linear Flow**: The vertical flow makes the process easy to follow from top to bottom
+
+2. **Include Icons**: Simple icons (person, magnifying glass, documents, brain) make the components instantly recognizable
+
+3. **Show Example Text**: Including an example question and response makes the abstract process concrete
+
+4. **Highlight the Four Steps**: Clearly number and label each step to match your bullet points
+
+5. **Color Coding**: Consider using different colors for:
+   - User/question (blue)
+   - Document repository (green)
+   - LLM (purple)
+   - Response (highlighted box)
+
+This visualization effectively shows how RAG connects a user's question to your organization's specific information through the LLM, resulting in accurate, contextually relevant responses. The diagram is simple enough for business professionals to understand while accurately representing the technical process.
 --
 
 === RAG Building Blocks
@@ -628,29 +710,168 @@ Training applications can develop customized learning materials that incorporate
 The common thread across all these applications is that they become possible when AI can access, understand, and utilize your organization's specific information - which is exactly what RAG enables.
 --
 
-=== Tools and Function Calling
+=== Tools and Function Calling: The Basics
 
-* Enables LLMs to interact with external systems and perform specific actions
-* Examples: Calculators, web search, data analysis, calendar management, CRM updates
-* Process: LLM recognizes need for tool → Formats appropriate request → Tool executes → Results incorporated
-* Extends LLM capabilities beyond text generation to real-world actions
-* Business applications: Workflow automation, data analysis, scheduling, transaction processing
+* Enables LLMs to interact with external systems and perform specific functions or actions
+* Extends AI beyond just generating text to actually doing things
+* Think of it as: "AI that can use other software tools on your behalf"
 
 [.notes]
 --
 Tools and function calling represent another crucial enhancement to LLM capabilities, particularly for business applications requiring interaction with external systems:
 
-This approach enables LLMs to interact with external systems and perform specific actions beyond text generation. Rather than being limited to producing text based on patterns in their training data, tool-augmented LLMs can recognize when a specific capability is needed and invoke the appropriate external system to perform that function. This dramatically extends what LLMs can accomplish in business contexts.
+This approach enables LLMs to interact with external systems and perform specific functions or actions beyond text generation. Rather than being limited to producing text based on patterns in their training data, tool-augmented LLMs can recognize when a specific capability is needed and invoke the appropriate external system to perform that function. This dramatically extends what LLMs can accomplish in business contexts.
+--
 
+=== Examples of Tools and Functions
+
+* Calculators for precise mathematical operations
+* Web search for current information
+* Data analysis for processing business metrics
+* Calendar management for scheduling meetings
+* CRM updates for customer information
+* Email sending and document creation
+* Database queries and updates
+
+[.notes]
+--
 Common examples of tools include calculators for precise mathematical operations, web search for current information, data analysis functions for processing structured data, calendar management for scheduling, CRM systems for customer information updates, and various API-connected services. Each tool provides specialized capabilities that complement the LLM's language understanding and generation abilities.
+--
 
+=== How Tools Work
+
+1. LLM recognizes a tool is needed based on user request
+2. LLM formats appropriate request with necessary parameters
+3. External tool executes the requested function or action
+4. LLM incorporates results into its response to the user
+
+[.notes]
+--
 The process typically works as follows: The LLM recognizes from the user's request or the context of the conversation that a specific tool is needed. It then formats an appropriate request to that tool, including necessary parameters or inputs. The external tool executes the requested function and returns results. Finally, the LLM incorporates these results into its response, often interpreting or explaining them for the user.
 
-This capability extends LLMs beyond text generation to enabling real-world actions and accessing real-time information. For example, an LLM with calendar access can not only discuss scheduling concepts but actually check availability and create appointments. One with calculation tools can perform precise financial analyses rather than approximating calculations based on training patterns.
+IMAGE TODO: Tools and Function Calling Visualization
 
-From a business perspective, tool integration is particularly valuable for applications like workflow automation (triggering actions across multiple systems), data analysis (performing calculations and generating insights from business data), scheduling and coordination (managing calendars and resources), and transaction processing (initiating and confirming business transactions in external systems).
+Here's a suggested visualization diagram for your "How Tools Work" slide:
+
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│                         HOW TOOLS WORK                                  │
+│                                                                         │
+│  ┌──────────┐                                                           │
+│  │   USER   │                                                           │
+│  │    👤    │                                                           │
+│  └────┬─────┘                                                           │
+│       │                                                                 │
+│       │ "What's my sales total for Q2?"                                 │
+│       │                                                                 │
+│       ▼                                                                 │
+│  ┌────────────────────┐                                                 │
+│  │                    │  1. RECOGNIZES NEED FOR TOOL                    │
+│  │        LLM         │  "I need to query the sales database            │
+│  │        🧠          │   to get Q2 sales figures"                      │
+│  │                    │                                                 │
+│  └────────┬───────────┘                                                 │
+│           │                                                             │
+│           │  2. FORMATS REQUEST                                         │
+│           │  {                                                          │
+│           │    "tool": "database_query",                                │
+│           │    "parameters": {                                          │
+│           │      "table": "sales",                                      │
+│           │      "timeframe": "Q2"                                      │
+│           │    }                                                        │
+│           │  }                                                          │
+│           ▼                                                             │
+│  ┌────────────────────┐                                                 │
+│  │                    │                                                 │
+│  │   EXTERNAL TOOL    │  3. EXECUTES FUNCTION                           │
+│  │   ⚙️ 🔧 📊        │  Runs SQL query on sales database               │
+│  │                    │  Returns: $1,457,892                            │
+│  └────────┬───────────┘                                                 │
+│           │                                                             │
+│           │                                                             │
+│           ▼                                                             │
+│  ┌────────────────────┐                                                 │
+│  │                    │  4. INCORPORATES RESULTS                        │
+│  │        LLM         │  Formats and contextualizes the                 │
+│  │        🧠          │  information for the user                       │
+│  │                    │                                                 │
+│  └────────┬───────────┘                                                 │
+│           │                                                             │
+│           │                                                             │
+│           ▼                                                             │
+│  ┌────────────────────────────────────────────────────────────────┐    │
+│  │ "Your total sales for Q2 were $1,457,892, which represents     │    │
+│  │  a 12% increase over Q1. The strongest month was June          │    │
+│  │  with $528,341 in sales."                                      │    │
+│  └────────────────────────────────────────────────────────────────┘    │
+└─────────────────────────────────────────────────────────────────────────┘
+```
+
+## Key Elements:
+
+1. **User (with icon)**: Represents the person making the request
+   
+2. **Initial Request**: Shows an example question that requires a tool ("What's my sales total for Q2?")
+   
+3. **LLM (with brain icon)**: Appears twice in the flow - first to recognize the need and format the request, then later to incorporate results
+   
+4. **Tool Recognition**: Shows the LLM's internal recognition that a tool is needed
+   
+5. **Formatted Request**: Shows a simplified example of how the LLM structures the request with parameters
+   
+6. **External Tool (with tool icons)**: Represents the external system or function being called
+   
+7. **Tool Execution**: Shows what the tool does and the result it returns
+   
+8. **Final Response**: Shows how the LLM incorporates the tool's output into a helpful response
+
+## Design Recommendations:
+
+1. **Vertical Flow**: Maintains a clear top-to-bottom process that's easy to follow
+
+2. **Numbered Steps**: Clearly labels each of the four steps to match your bullet points
+
+3. **Example Throughout**: Uses a consistent example (sales query) to show the transformation at each step
+
+4. **Visual Distinction**: 
+   - Use different colors for the LLM (purple) and external tool (blue/green)
+   - Use a different icon for the LLM (brain) and external tool (gear/wrench/chart)
+
+5. **Code Representation**: Show a simplified JSON-like structure for the formatted request to make it concrete without being too technical
+
+6. **Result Transformation**: Demonstrate how raw data ($1,457,892) becomes a contextual, helpful response
+
+This visualization effectively shows how LLMs can recognize when external capabilities are needed, properly format requests to those tools, and then incorporate the results into natural language responses. The diagram maintains a business-friendly approach while accurately representing the technical process of function calling.
+--
+
+=== From "Just Text" to Real Actions
+
+* LLMs with tools can perform concrete business tasks:
+  * Check actual calendar availability and schedule meetings
+  * Run precise calculations on your business data
+  * Look up customer information in your CRM
+  * Create and update records in your systems
+* Integral AI Studio provides **Node Designer + Universal API** for connecting to external tools without coding
+
+[.notes]
+--
+Tools extend LLMs capabilities beyond text generation to enabling real-world actions and accessing real-time information. For example, an LLM with calendar access cannot only discuss scheduling concepts but actually check availability and create appointments. One with calculation tools can perform precise financial analyses rather than approximating calculations based on training patterns.
 
 The implementation of tool integration requires defining the available tools, their parameters, and how they should be invoked. The LLM needs to be instructed or fine-tuned to recognize when tools are appropriate and how to format requests correctly. While these technical details are important for implementation, business professionals primarily need to understand what capabilities tool integration enables and what systems might be connected.
+--
+
+=== Business Applications of Tools
+
+* **Workflow automation:** Triggering actions across multiple systems
+* **Data analysis:** Calculating metrics and generating insights
+* **Scheduling:** Managing calendars and coordinating resources
+* **Transaction processing:** Initiating and confirming business transactions
+* **Customer service:** Accessing and updating customer records
+* **Document processing:** Creating and modifying business documents
+
+[.notes]
+--
+From a business perspective, tool integration is particularly valuable for applications like workflow automation (triggering actions across multiple systems), data analysis (performing calculations and generating insights from business data), scheduling and coordination (managing calendars and resources), and transaction processing (initiating and confirming business transactions in external systems).
 
 By understanding tool integration, you can identify business processes where interaction with external systems would significantly enhance the value of AI assistance - another crucial consideration when evaluating automation candidates during our workshop.
 --
