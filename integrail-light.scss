@@ -1,0 +1,514 @@
+/**
+ * Custom light background theme for reveal.js using your Integrail brand colors.
+ */
+
+// Default mixins and settings --------------------------------
+@import "node_modules/reveal.js/css/theme/template/mixins";
+@import "node_modules/reveal.js/css/theme/template/settings";
+// ------------------------------------------------------------
+
+// Include theme-specific fonts
+@import url(./fonts/source-sans-pro/source-sans-pro.css);
+@import url('https://fonts.googleapis.com/css?family=Poppins:400,600&display=swap'); // Importing Poppins font
+
+// Override theme settings (see ../template/settings.scss)
+$backgroundColor: #FFF; // A lighter secondary color for the background
+
+$mainColor: #190F33; // Dark color for text for contrast
+$headingColor: #BB27C4; // A primary color for headings
+
+$mainFontSize: 28px; // Further reduced size for better readability
+$mainFont: 'Lato', sans-serif; // Your specified main font
+$headingFont: 'Poppins', sans-serif; // Poppins for headings
+$headingTextShadow: none;
+$headingLetterSpacing: normal;
+$headingTextTransform: uppercase;
+$headingFontWeight: 600; // Adjusted weight for Poppins
+
+$linkColor: #BB27C4; // A primary color for links
+$linkColorHover: lighten($linkColor, 20%); // Lightened on hover
+$selectionBackgroundColor: #B921F1; // A secondary color for text selection
+
+$heading1Size: 3.77em;
+$heading2Size: 2.11em;
+$heading3Size: 1.15em;
+$heading4Size: 1.19em;
+
+// Table styling variables
+$tableBorderColor: #ddd;
+$tableHeaderBackgroundColor: #f2f2f2;
+$tableFontSize: 0.4em;
+$tablePadding: 1px 2px;
+
+$resultSetHeaderColor: #E1D6FF;
+
+$kvTableHeaderColor: #0055FF;
+
+$greyStyle: #919191;
+
+// Change text colors against dark slide backgrounds
+@include dark-bg-text-color(#190F33); // Dark color for better readability on light background
+
+// Theme template ------------------------------------------------
+@import "node_modules/reveal.js/css/theme/template/theme";
+// ---------------------------------------------------------------
+
+ /* Two-Column Layout Styling */
+.reveal .two-column-layout {
+    display: flex;
+    justify-content: space-between;
+
+    > div {
+        width: 48%; // Slightly less than 50% to account for margins/padding
+    }
+}
+
+.reveal code {
+    font-family: 'Source Code Pro', monospace; // preferred code font
+    color: #0055FF ; // preferred code text color
+    padding: 0.2em 0.4em; // Optional: Add some padding around the code
+    border-radius: 4px; // Optional: Round the corners of the code blocks
+}
+
+.reveal section img {
+    max-width: 100%; // Ensures the image is not wider than its container
+    max-height: 25vh; // Ensures the image's height does not exceed 25% of the viewport height
+    object-fit: contain; // Ensures the image maintains its aspect ratio
+    margin: 0 auto; // Centers the image
+    display: block; // Treats the image as a block-level element
+}
+
+.reveal .imageblock.full-diagram img {
+  max-width: 100%; // Ensures the image is not wider than its container
+  max-height: 80vh; // Limits the image's max height to 80% of the viewport
+  object-fit: contain; // Ensures the image maintains its aspect ratio
+  margin: 0 auto; // Centers the image
+  display: block; // Treats the image as a block-level element
+}
+
+.reveal .imageblock.half-diagram img {
+  max-width: 100%; // Ensures the image is not wider than its container
+  max-height: 50vh; // Limits the image's max height to 50% of the viewport
+  object-fit: contain; // Ensures the image maintains its aspect ratio
+  margin: 0 auto; // Centers the image
+  display: block; // Treats the image as a block-level element
+}
+
+.reveal .imageblock.quarter-diagram img {
+  max-width: 100%; // Ensures the image is not wider than its container
+  max-height: 30vh; // Limits the image's max height to 30% of the viewport
+  object-fit: contain; // Ensures the image maintains its aspect ratio
+  margin: 0 auto; // Centers the image
+  display: block; // Treats the image as a block-level element
+}
+
+.reveal .small-text-bullets ul, 
+.reveal .small-text-bullets ol {
+    font-size: 0.7em; // Adjusts the font size to 70% of the inherited size
+}
+
+// to make a smaller font for the exercise tables. 
+.reveal .base-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: $tableFontSize;
+
+  th, td {
+    border: 1px solid $tableBorderColor;
+    padding: $tablePadding;
+  }
+
+  th {
+    background-color: $tableHeaderBackgroundColor;
+    text-align: left;
+  }
+
+  td p {
+    margin: 0 !important;
+    padding: 2px !important;
+    line-height: 1 !important;
+  }
+}
+
+// Specific table styling for small font tables
+.reveal .small-font-table {
+  @extend .base-table;
+}
+
+.reveal .data-table {
+  @extend .small-font-table;
+
+  td {
+    font-family: 'Source Code Pro', monospace;
+  }
+}
+
+// Specific table styling for index tables
+.reveal .index-table {
+  @extend .data-table;
+  border-style: dashed;
+
+  th, td {
+    border-style: dashed;
+  }
+}
+
+// Specific table styling for result-set tables
+.reveal .result-set-table {
+  @extend .index-table;
+
+    th {
+      background-color: $resultSetHeaderColor;
+    }
+}
+
+// Specific table styling for kv-tables
+.reveal .kv-table {
+  @extend .base-table;
+
+  th {
+    background-color: $kvTableHeaderColor;
+    border-radius: 10px;
+    color: #fff;
+  }
+
+  table, td {
+    border: 1px solid $kvTableHeaderColor;
+    border-radius: 10px;
+  }
+
+}
+
+.mark {
+  background-color: cyan;
+}
+
+.mark-gold {
+  background-color: gold;
+}
+
+.mark-violet {
+  background-color: violet;
+}
+
+.reveal .greyed-list li {
+  color: $greyStyle;
+}
+
+.reveal .greyed-text {
+  color: $greyStyle;
+}
+
+.course-footer {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: auto;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Course-index styling */
+.course-tile-container {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-gap: 10px;
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+.course-tile {
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  padding: 10px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+  }
+
+  h3 {
+    font-size: 0.7em;
+    margin-top: 0;
+    margin-bottom: 5px;
+    color: #190F33;
+  }
+
+  .course-title {
+    font-size: 0.55em;
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: #190F33;
+  }
+
+  ul {
+    list-style-type: none;
+    padding-left: 0;
+    margin-top: 10px;
+    font-size: 0.4em;
+
+    li {
+      margin-bottom: 5px;
+
+      a {
+        color: #190F33;
+        text-decoration: none;
+        position: relative;
+        
+        // Add a subtle hover effect for links
+        &:hover {
+          color: #BB27C4;
+          
+          &::after {
+            content: "→";
+            position: absolute;
+            right: -15px;
+            opacity: 1;
+          }
+        }
+      }
+    }
+  }
+
+  .course-icon {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 10px;
+
+    img {
+      height: 50px;
+      width: auto;
+    }
+  }
+
+  .course-length {
+    font-size: 0.4em;
+    color: #BB27C4;
+    margin-top: 5px;
+  }
+
+  .course-details {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.5em;
+    color: #BB27C4;
+    margin-top: 10px;
+
+    span {
+      display: flex;
+      align-items: center;
+      
+      i {
+        margin-right: 5px;
+      }
+    }
+  }
+}
+
+/**
+ * A clear style for source code listings, where line height is forced and
+ * content is monospaced. Additionally, the font size is at 0.55em.
+ */
+.reveal div.listingblock {
+  margin: 10px 0 10px 0;
+  position: relative;
+}
+
+.reveal div.listingblock div.title {
+  color: #FFF;
+  background-color: #B921F1;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  font-style: italic;
+  font-weight: 600;
+  padding: 0.3em 0.5em;
+  margin: 0 0 -1.1em 0;
+  position: relative;
+  z-index: 100;
+  display: table;
+}
+
+.reveal div.listingblock > div.content {
+  padding: 1em 0.5em 0.5em 0.5em;
+  background-color: #f5f5f5;
+  border-radius: 5px;
+  margin: 0;
+  position: relative;
+}
+
+.reveal div.listingblock pre {
+  box-shadow: none;
+  margin: 0;
+  overflow-x: auto;
+  padding: 0.5em;
+  white-space: pre;
+}
+
+.reveal div.listingblock pre,
+.reveal div.listingblock pre code {
+  display: block;
+  font-family: 'Source Code Pro', monospace;
+  font-size: 0.55em;
+  line-height: 1.5em;
+  max-height: 30em;
+  width: 100%;
+}
+
+/* Literal styling */
+.reveal .paragraph code.literal {
+  background-color: #f5f5f5;
+  border-radius: 3px;
+  color: #333;
+  font-family: 'Source Code Pro', monospace;
+  padding: 0.1em 0.2em;
+  word-break: break-word;
+}
+
+// Custom styling for headings with inline styling
+.reveal h1.gray, .reveal h2.gray, .reveal h3.gray,
+.reveal h4.gray, .reveal h5.gray, .reveal h6.gray {
+  color: #333; // A nice gray color
+}
+
+.reveal h1.blue, .reveal h2.blue, .reveal h3.blue,
+.reveal h4.blue, .reveal h5.blue, .reveal h6.blue {
+  color: #0078d4; // Microsoft blue
+}
+
+.reveal h1.orange, .reveal h2.orange, .reveal h3.orange,
+.reveal h4.orange, .reveal h5.orange, .reveal h6.orange {
+  color: #f25022; // Orange color
+}
+
+.reveal h1.green, .reveal h2.green, .reveal h3.green,
+.reveal h4.green, .reveal h5.green, .reveal h6.green {
+  color: #7fba00; // Green color
+}
+
+.reveal .small {
+  font-size: 0.7em; // 70% smaller text
+}
+
+/**
+ * Restore Asciidoctor's support for different numbered styles for ordered lists.
+ * See https://docs.asciidoctor.org/asciidoc/latest/lists/ordered/#styles
+ */
+ .reveal ol.arabic {
+  list-style-type: decimal;
+}
+
+.reveal ol.decimal {
+  list-style-type: decimal-leading-zero;
+}
+
+.reveal ol.loweralpha {
+  list-style-type: lower-alpha;
+}
+
+.reveal ol.upperalpha {
+  list-style-type: upper-alpha;
+}
+
+.reveal ol.lowerroman {
+  list-style-type: lower-roman;
+}
+
+.reveal ol.upperroman {
+  list-style-type: upper-roman;
+}
+
+.reveal ol.lowergreek {
+  list-style-type: lower-greek;
+}
+
+// Custom styling for slide headers
+.reveal .slides > section h3,
+.reveal h3,
+.reveal section h3 {
+  font-size: $heading3Size !important;
+  color: $headingColor;
+}
+
+// Moderately reduce spacing between list items
+.reveal ul li,
+.reveal ol li {
+  margin-top: 0.05em !important;
+  margin-bottom: 0.05em !important;
+  line-height: 1.25 !important;
+}
+
+// Reduce spacing in lists overall
+.reveal ul,
+.reveal ol {
+  margin: 0.4em 0 0.4em 1em !important;
+  line-height: 1.25 !important;
+}
+
+// Handle nested lists
+.reveal ul ul,
+.reveal ul ol,
+.reveal ol ol,
+.reveal ol ul {
+  margin-top: 0.05em !important;
+  margin-bottom: 0.05em !important;
+}
+
+// Adjust spacing from paragraphs inside list items
+.reveal li p {
+  margin-top: 0.05em !important;
+  margin-bottom: 0.05em !important;
+  line-height: 1.25 !important;
+}
+
+// Custom styling for h4-style class
+.reveal .h4-style {
+  font-size: $heading4Size;
+  color: $headingColor;
+  font-weight: $headingFontWeight;
+  margin-bottom: 0.5em;
+}
+
+// Properly adjust slide content margins
+.reveal .slides section {
+  box-sizing: border-box !important;
+  padding-left: 40px !important;
+  padding-right: 50px !important;
+  width: 100% !important;
+}
+
+// Ensure text content doesn't overflow
+.reveal .slides section * {
+  max-width: 100%;
+  word-wrap: break-word;
+}
+
+// Notes table - displayed only in student view
+.reveal .notes-section {
+  position: relative;
+  margin: 2em 0;
+  padding: 1em;
+  background-color: #f8f9fa;
+  border-left: 4px solid #BB27C4;
+  border-radius: 4px;
+  
+  h4 {
+    margin-top: 0;
+    color: #BB27C4;
+    font-size: 1.2em;
+  }
+  
+  p {
+    margin-bottom: 0;
+    font-size: 0.9em;
+  }
+  
+  &:before {
+    content: "📝";
+    position: absolute;
+    top: 0.5em;
+    right: 0.5em;
+    font-size: 1.5em;
+  }
+}

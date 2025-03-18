@@ -24,7 +24,7 @@ const Asciidoctor = asciidoctor();
 
 asciidoctorRevealJs.register();
 
-gulp.task('css', () => gulp.src(['cockroach*.{sass,scss}', 'github*.css'])
+gulp.task('css', () => gulp.src(['integrail*.{sass,scss}', 'github*.css'])
     .pipe(sass({}).on('error', sass.logError))
     .pipe(gulp.dest('build/assets/theme')))
 
@@ -51,7 +51,7 @@ gulp.task('create-docinfo', (done) => {
         const backgroundUrl = `background: url(${relativePath}assets/images/App_icon.svg);`;
         const homeUrl = relativePath ? `${relativePath}index.html` : 'index.html';
         const docinfoContent = `
-        <a href="${homeUrl}" id="cockroachDBLogo" style="${backgroundUrl}
+        <a href="${homeUrl}" id="integrailLogo" style="${backgroundUrl}
                             position: absolute;
                             background-repeat: no-repeat;
                             z-index: 1000;
@@ -93,7 +93,7 @@ gulp.task('asciidoctor-root', () => gulp.src(['slides/index.adoc', 'slides/stude
                 'highlightjs-theme': 'assets/theme/github.css',
                 docinfo: 'shared',
                 revealjsdir: 'assets/reveal.js',
-                revealjs_customtheme: 'assets/theme/cockroachlabs-light.css',
+                revealjs_customtheme: 'assets/theme/integrail-light.css',
                 revealjs_margin: 0.04,
                 revealjs_minScale: 0.2,
                 revealjs_maxScale: 2.0,
@@ -140,7 +140,7 @@ gulp.task('asciidoctor-subdir', () => gulp.src(['slides/day-*/chapter-*.adoc'])
                 'highlightjs-theme': '../assets/theme/github.css',
                 docinfo: 'shared',
                 revealjsdir: '../assets/reveal.js',
-                revealjs_customtheme: '../assets/theme/cockroachlabs-light.css',
+                revealjs_customtheme: '../assets/theme/integrail-light.css',
                 revealjs_margin: 0.04,
                 revealjs_minScale: 0.2,
                 revealjs_maxScale: 2.0,
@@ -210,7 +210,7 @@ gulp.task('reload', () => gulp.src(['build/index.html', 'build/student.html'])
 gulp.task('serve', gulp.series('build', (done) => {
     connect.server({
         root: 'build',
-        port: 8000,
+        port: 9000,
         host: '0.0.0.0',
         livereload: true
     })
