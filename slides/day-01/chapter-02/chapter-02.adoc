@@ -264,7 +264,11 @@ What makes LLMs particularly remarkable is that all these diverse capabilitiesâ€
 === !
 
 [.h4-style]
-There are two types of LLMs: Probabilistic and Chain-of-Thought Reasoning
+There are two types of LLMs:
+[.h3-style]
+Probabilistic
+[.h3-style]
+Chain-of-Thought Reasoning
 
 === Probabilistic LLMs
 

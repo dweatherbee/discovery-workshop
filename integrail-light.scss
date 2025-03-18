@@ -462,6 +462,14 @@ $greyStyle: #919191;
   line-height: 1.25 !important;
 }
 
+// Custom styling for h3-style class
+.reveal .h3-style {
+  font-size: 1.5em; // Custom size between h2 and h4, larger than h4
+  color: $headingColor;
+  font-weight: $headingFontWeight;
+  margin-bottom: 0.5em;
+}
+
 // Custom styling for h4-style class
 .reveal .h4-style {
   font-size: $heading4Size;
