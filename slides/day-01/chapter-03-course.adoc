@@ -1,3 +1,5 @@
 = Day 1: Chapter 3
 
+image::images/Integrail_logo_primary_black_fuschia_gr.svg[Logo,width=250]
+
 include::chapter-03/chapter-03.adoc[]
