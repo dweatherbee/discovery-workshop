@@ -1,0 +1,56 @@
+== AI Fundamentals for Business Professionals
+
+image::images/Integrail_logo_primary_black_fuschia_gr.svg[Logo,width=250]
+
+=== Overview
+
+* Provide conceptual understanding of large language models (LLMs) without requiring programming knowledge
+* Explain how to enhance LLM capabilities
+* Prepare participants to identify Agentic AI opportunities in their business processes
+  ** LLMs are a foundational part of Agentic AI
+
+[.notes]
+--
+Welcome to our training module on AI Fundamentals for Business Professionals. This session is designed specifically for business professionals without technical backgrounds who want to understand how AI, particularly large language models, can create value in business contexts.
+
+We'll explore the fundamentals of AI with a focus on practical business applications rather than technical implementation details. You don't need any programming knowledge to benefit from this training - we'll focus on concepts and applications rather than code.
+
+This module serves as the foundation for the remainder of our workshop, where you'll identify business processes that could benefit from AI agent automation. The concepts we cover today will directly inform your ability to recognize valuable AI opportunities in your specific business context.
+
+By the end of this session, you'll have a solid conceptual understanding of modern AI systems, particularly large language models, and be able to evaluate their potential applications in your work. This knowledge will prepare you for the more applied sessions in the coming days.
+--
+
+=== Learning Objectives
+
+* Explain the evolution and key concepts of modern AI systems
+* Differentiate between types of LLMs and their capabilities
+* Evaluate potential business applications for AI technologies
+* Assess when to use different AI enhancement techniques like RAG and Tools
+* Formulate effective prompts for different types of LLMs
+
+
+[.notes]
+--
+Let's review what we aim to accomplish in this session. By the end of this training, you'll be able to:
+
+First, explain the evolution and key concepts of modern AI systems. You'll understand how AI has developed over time and grasp the fundamental concepts that drive today's AI technologies, particularly large language models.
+
+Second, differentiate between types of LLMs and their capabilities. You'll learn about different approaches to language models, including probabilistic models like GPT-4o and reasoning-based models like Claude 3 Opus, and understand when each might be most appropriate for different business needs.
+
+Third, evaluate potential business applications for AI technologies. You'll develop the ability to identify opportunities where AI can create value in your specific business context, focusing on practical applications rather than theoretical possibilities.
+
+Fourth, formulate effective prompts for different types of LLMs. You'll learn the basics of prompt engineering - how to effectively communicate with AI systems to get the results you need for business tasks.
+
+Finally, assess when to use different AI enhancement techniques. You'll understand approaches like Retrieval-Augmented Generation (RAG) and tools that extend AI capabilities, and be able to determine when these techniques might add value to your AI implementations.
+
+These objectives align with Bloom's Taxonomy of learning, progressing from basic understanding to more complex application and evaluation skills. This structured approach ensures you'll develop practical knowledge you can apply immediately in your business context.
+--
+
+=== Agenda
+* The Evolution of AI
+* Understanding Large Language Models
+* Retrieval-Augmented Generation: Enhancing LLM Capabilities I
+* Tools and Function Calling: Enhancing LLM Capabilities II
+* Combining Retrieval-Augmented Generation and Tools for Business Solutions
+* Effective Prompting for LLMs
+

@@ -1,0 +1,139 @@
+== Combining RAG and Tools for Business Solutions
+
+[.notes]
+--
+In this module, we'll explore techniques that enhance the capabilities of Large Language Models, allowing them to overcome some of their inherent limitations. We'll focus particularly on Retrieval-Augmented Generation (RAG) and tools integration, two approaches that significantly expand what LLMs can accomplish in business contexts.
+
+Understanding these enhancement techniques is crucial for identifying the full range of potential AI applications in your organization. Many valuable business use cases require capabilities beyond what a standalone LLM can provide, such as access to current information, proprietary data, or specialized functionality.
+
+By the end of this module, you'll understand how these techniques work at a conceptual level and be able to identify business scenarios where they would add significant value. This knowledge will expand the range of processes you can consider for AI enhancement during the workshop.
+--
+
+=== Combining RAG and Tools for Business Solutions
+
+* Most effective business implementations combine multiple enhancement techniques
+* RAG provides knowledge grounding while tools enable actions
+* Together, these enhancements create AI systems that both:
+  ** *KNOW MORE* (through access to specific information)
+  ** *DO MORE* (through connections to external systems)
+* Addresses multiple limitations of standalone LLMs simultaneously
+
+[.notes]
+--
+In practice, the most effective business implementations of AI combine multiple enhancement techniques to create comprehensive solutions. While we've discussed various approaches separately, their real power emerges when used together.
+
+RAG provides knowledge grounding by giving the LLM access to your organization's specific information - your products, policies, and proprietary knowledge. Tools enable actions by connecting the LLM to external systems, allowing it to perform tasks like checking inventory or processing orders.
+
+The key insight is that these enhancements are complementary. RAG helps the AI KNOW more, while tools help it DO more. Together, they address the fundamental limitations of standalone LLMs: limited knowledge and inability to take actions.
+
+This combined approach is particularly powerful for business applications where both domain-specific knowledge and the ability to perform concrete actions are required.
+--
+
+=== Typical Combined Implementation
+
+* Typical combined implementation might include:
+  ** Probabilistic LLM for natural language understanding and generation
+  ** RAG capabilities to incorporate company-specific information
+  ** Tool connections to relevant business systems
+  ** Potentially chain-of-thought reasoning for complex decision processes
+* Each Component addresses specific requirements of the business process being automated
+
+[.notes]
+--
+Let's look at what a typical combined implementation includes. At its core is the probabilistic LLM, which provides the natural language understanding and generation capabilities - this is the foundation that allows users to interact conversationally with the system.
+
+Added to this foundation are RAG capabilities that incorporate your company-specific information. This might include your product catalog, internal documentation, policy manuals, or knowledge bases.
+
+Tool connections link the system to your relevant business systems - CRM, ERP, inventory management, or other operational systems that contain data or provide functionality needed to complete tasks.
+
+For more complex business processes, chain-of-thought reasoning might be incorporated to handle multi-step decision processes or complex problem-solving.
+
+Each of these components addresses specific requirements of the business process being automated. The right combination depends on your particular use case - not every application needs all components.
+--
+
+=== Integration Considerations
+
+* Data security is paramount when connecting AI systems to proprietary information
+* System access must be carefully managed to ensure appropriate permissions
+* Performance requirements must be evaluated (each enhancement adds latency)
+* Integration with existing IT infrastructure and business processes
+
+[.notes]
+--
+When implementing combined approaches, several integration considerations become important. First and foremost is data security. When connecting AI systems to proprietary information or business systems, you must ensure that sensitive data is protected and that appropriate security measures are in place.
+
+System access must be carefully managed. The AI system should have only the permissions it needs to perform its functions - following the principle of least privilege. This helps maintain security boundaries and prevents potential misuse.
+
+Performance requirements must be evaluated realistically. Each enhancement adds some latency to the overall system response time. RAG requires time to search and retrieve information, while tool calls involve API requests to external systems. These performance impacts need to be balanced against the benefits they provide.
+
+Finally, integration with existing IT infrastructure and business processes is crucial for successful implementation. The AI system needs to work within your current technology ecosystem and align with established workflows to deliver value without disruption.
+--
+
+=== Cost-benefit Analysis
+
+* Enhanced capabilities vs. implementation complexity
+* Increased operational costs vs. business value created
+* Not every business process requires all enhancements
+* Right-size your solution based on specific requirements
+* Consider both immediate ROI and long-term strategic value
+
+[.notes]
+--
+Cost-benefit analysis becomes more complex with combined approaches. You need to weigh enhanced capabilities against increased implementation complexity. More sophisticated systems generally require more expertise to build and maintain.
+
+Similarly, increased operational costs must be justified by the business value created. Each enhancement adds to the computational resources required, potentially increasing per-transaction costs.
+
+It's important to recognize that not every business process requires the full suite of enhancements. A simple RAG implementation might be sufficient for a knowledge base application, while a customer service bot might need both RAG and tools.
+
+The key is to right-size your solution based on specific requirements. Start with a clear understanding of the business process you're enhancing and the value you expect to create.
+
+When evaluating potential implementations, consider both immediate ROI and long-term strategic value. Some capabilities may not show immediate returns but could position your organization for future advantages as AI becomes more central to business operations.
+--
+
+=== Example: Customer Service Agent
+
+* Example: Customer service agent with product knowledge (RAG) and order processing abilities (tools):
+  ** Uses RAG to access product specifications, pricing information, and company policies
+  ** Uses Tool connections to check inventory, process orders, and update customer records
+  ** Uses chain-of-thought reasoning to troubleshoot complex customer issues
+* Creates solution that can handle a wide range of customer interactions with minimal human intervention
+
+[.notes]
+--
+Let's make this concrete with an example of a customer service AI agent that combines multiple enhancement approaches.
+
+This agent uses RAG to access product specifications, pricing information, and company policies. This ensures it can answer detailed questions about your products and services accurately, without hallucinating information.
+
+It also uses tool connections to check inventory levels in real-time, process orders when customers are ready to purchase, and update customer records with new information. These capabilities allow it to take concrete actions, not just provide information.
+
+For more complex situations, it might use chain-of-thought reasoning to troubleshoot customer issues, walking through potential causes and solutions in a logical manner.
+
+Together, these capabilities create a comprehensive solution that can handle a wide range of customer interactions with minimal human intervention. The agent can both answer questions and take actions, providing a complete customer service experience.
+
+This example demonstrates how combining approaches creates something more powerful than any single enhancement could provide on its own.
+--
+
+=== Evaluating AI Opportunities
+
+* Understanding combined approaches is valuable even without deep technical knowledge
+* Enables you as a business professional to:
+  ** Envision more comprehensive knowing and acting solutions 
+  ** Identify high-value processes for enhancement
+* Workshop focus: Matching capability combinations to your specific business needs
+* Prepare for evolving capabilities as the field continues to advance rapidly
+
+[.notes]
+--
+For business professionals evaluating AI opportunities, understanding these combined approaches is valuable even without deep technical implementation knowledge.
+
+This understanding enables you to envision more comprehensive solutions that address multiple aspects of a business process. Rather than thinking of AI as just a chatbot or just a search tool, you can conceptualize systems that both know your business information and can take actions within your systems.
+
+It also helps you identify high-value processes where multiple enhancements might create significant value. Processes that require both knowledge access and the ability to take actions are prime candidates for combined approaches.
+
+In our workshop, we'll focus on matching different combinations of capabilities to your specific business needs. We'll explore how these technologies might address challenges unique to your organization and industry.
+
+Finally, it's important to prepare for evolving capabilities as this field continues to advance rapidly. New enhancement techniques emerge regularly, but the fundamental principle remains consistent: identify the specific limitations of basic LLMs that affect your use case, and apply the appropriate enhancements to address those limitations.
+
+The goal is not to implement technology for its own sake, but to create AI systems that deliver real business value by overcoming the limitations of standalone models.
+--
+

@@ -1,0 +1,99 @@
+== The Evolution of AI
+
+[.notes]
+--
+We'll begin our exploration of AI fundamentals by looking at how artificial intelligence has evolved over time. Understanding this history provides important context for appreciating the capabilities and limitations of today's AI systems, particularly large language models.
+
+In this module, we'll trace the development of AI from early rule-based systems through the AI winters and into the current era of machine learning and deep learning. We'll pay particular attention to the emergence of large language models, which represent a significant advancement in AI capabilities with broad business applications.
+
+This historical perspective will help you understand why today's AI systems are fundamentally different from previous generations of technology and why they're creating unprecedented opportunities for business transformation.
+--
+
+=== Brief History of AI
+
+* Early AI (1950s-1980s): Rule-based systems with explicit programming
+* AI Winters (Late 1970s, Late 1980s-Early 1990s): Periods of reduced funding and interest due to unmet expectations
+* Machine Learning Revolution (1990s-2000s): Systems that learn from data rather than explicit rules
+* Deep Learning Breakthrough (2012-2018): Neural networks with multiple layers enabling complex pattern recognition
+* Current Era (2019-Present): Foundation models trained on massive datasets with broad capabilities
+
+[.notes]
+--
+IMAGE TODO - Timeline with Milestones: Create a horizontal timeline showing the progression of AI development with key milestones marked. Use different colors for each era and include small icons representing the dominant technology of each period (e.g., flowcharts for rule-based systems, neural network diagrams for deep learning).  This slide may need to be split into two.
+
+The history of artificial intelligence spans several decades, with distinct phases that have shaped today's landscape:
+
+Early AI, from roughly the 1950s through the 1980s, focused primarily on rule-based systems that relied on explicit programming. These systems followed logical rules created by human experts to solve specific problems. Examples included expert systems for medical diagnosis or chess-playing programs that used predefined strategies. While impressive for their time, these systems were limited by their inability to handle exceptions or learn from experience.
+
+The field experienced several "AI Winters" - periods of reduced funding and interest when the technology failed to meet inflated expectations. These occurred notably in the late 1970s and again in the late 1980s/early 1990s. During these periods, many believed AI had fundamental limitations that would prevent it from achieving its promised potential.
+
+The Machine Learning Revolution marked a significant shift in approach. Rather than programming explicit rules, systems were designed to learn patterns from data. This approach proved more flexible and scalable, enabling AI to tackle problems that were too complex for rule-based approaches. Statistical methods and algorithms like support vector machines and random forests demonstrated impressive capabilities in specific domains.
+
+The Deep Learning Breakthrough, beginning around 2012, represented another fundamental advancement. Neural networks with multiple layers (hence "deep" learning) demonstrated unprecedented abilities in pattern recognition tasks. The key innovation was the ability to automatically learn hierarchical features from data, eliminating the need for human feature engineering. This approach dramatically improved performance in image recognition, speech processing, and eventually language understanding.
+
+The Current Era is characterized by foundation models - large AI systems trained on massive datasets that can be adapted to a wide range of tasks. These models, particularly large language models like GPT-4, Claude, and Gemini, demonstrate broad capabilities across domains without task-specific training. They represent a shift from specialized AI systems to general-purpose technologies with applications across virtually every business function.
+
+This evolution from narrow, rule-based systems to flexible, learning-based approaches has dramatically expanded the potential applications of AI in business contexts. Understanding this trajectory helps explain why today's AI capabilities represent such a significant opportunity for business transformation.
+--
+
+=== The Rise of Large Language Models
+
+* Word embeddings: Representing words as mathematical vectors
+* Transformer architecture (2017): Revolutionary approach enabling parallel processing of text
+* Key breakthroughs: BERT (2018), GPT series (2018-present), Claude, Gemini
+* Scaling laws (2020-2023): Performance improvements correlate with model size and training data
+* Emergent capabilities (2022-present): Advanced reasoning and problem-solving appearing at scale
+* Test Time Compute scaling (2023-present): Performance improvements through increased inference computation
+
+[.notes]
+--
+IMAGE TODO - Timeline with Milestones: may also use a timeline plus Split Into two.
+
+Large Language Models (LLMs) represent one of the most significant developments in artificial intelligence, with a trajectory of rapid advancement over the past decade:
+
+Word embeddings marked an important early step in natural language processing. These techniques, like Word2Vec (2013) and GloVe (2014), represented words as mathematical vectors in a way that captured semantic relationships. Words with similar meanings would be positioned close together in this mathematical space. This approach allowed algorithms to understand relationships between words, but still had limitations in understanding context.
+
+The Transformer architecture, introduced in the 2017 paper "Attention is All You Need," represented a revolutionary approach to processing text. Unlike previous sequential models, transformers could process all words in a text simultaneously, using a mechanism called "attention" to weigh the importance of different words in relation to each other. This parallel processing capability enabled much more efficient training on larger datasets.
+
+Key breakthroughs followed rapidly. BERT (Bidirectional Encoder Representations from Transformers), released by Google in 2018, demonstrated unprecedented performance on language understanding tasks. The GPT (Generative Pre-trained Transformer) series from OpenAI, beginning in 2018 and continuing through GPT-4 and beyond, showed increasingly impressive text generation capabilities. Other models like Claude from Anthropic and Gemini from Google have further advanced the field.
+
+Scaling laws have emerged as a crucial insight in LLM development. Researchers discovered that performance improvements correlate predictably with increases in model size (number of parameters) and training data volume. This finding led to a race to build ever-larger models, with sizes increasing from millions to billions and now trillions of parameters.
+
+Perhaps most surprisingly, emergent capabilities have appeared as models reached certain scale thresholds. Advanced reasoning, problem-solving, and even coding abilities weren't explicitly programmed but emerged as models grew larger and were trained on more diverse data. These emergent capabilities have dramatically expanded the potential business applications of LLMs.
+
+Test Time Compute scaling represents one of the newest frontiers in LLM advancement. Research from 2023 onward has demonstrated that model performance can be significantly improved not just by increasing model size or training data, but by allocating more computational resources during inference (when the model is actually generating responses). Techniques like speculative decoding, tree-of-thought reasoning, and self-consistency sampling allow models to explore multiple reasoning paths or potential responses before selecting the best one. This approach effectively trades inference speed for quality, enabling even existing models to achieve better performance on complex reasoning tasks without retraining. For businesses, this means that model capabilities can continue to improve through algorithmic innovations even without building larger models, potentially offering more cost-effective paths to enhanced AI performance.
+
+The rapid evolution of LLMs has transformed them from academic curiosities to powerful business tools in just a few years. Understanding this trajectory helps explain their current capabilities and limitations, as well as their potential future development.
+--
+
+=== Current AI Landscape: Major Platforms
+
+* Major commercial platforms: OpenAI (GPT-4o), Anthropic (Claude), Google (Gemini), Mistral, Meta (Llama)
+* Open-source alternatives: Llama 3 (Meta), Mistral Large, Falcon (TII), Deepseek, Mixtral 8x7B, BLOOM, Pythia, Stable LM
+
+[.notes]
+--
+Today's AI landscape is characterized by rapid innovation, increasing accessibility, and a growing focus on business applications:
+
+Major commercial platforms have emerged as leaders in the development and deployment of large language models. OpenAI's GPT series, particularly GPT-4o, offers state-of-the-art capabilities across text, image, and audio modalities. Anthropic's Claude models emphasize safety and helpfulness. Google's Gemini combines language capabilities with multimodal understanding. Newer entrants like Mistral AI and Meta's Llama models are also gaining significant traction. These platforms typically offer API access, allowing businesses to integrate their capabilities without managing the underlying infrastructure.
+
+Open-source alternatives have created a parallel ecosystem of freely available models that can be downloaded, modified, and deployed by organizations with the technical resources to do so. Meta's Llama 3 series (ranging from 8B to 70B parameters) has become one of the most widely adopted open-source models, offering performance competitive with many commercial options. Mistral AI has released several high-quality open models, including Mistral Large and the innovative Mixtral 8x7B which uses a mixture-of-experts architecture. The Technology Innovation Institute's Falcon models (7B, 40B, and 180B versions) have shown impressive capabilities for their size. Deepseek's models, particularly Deepseek Coder, excel at programming tasks. Other notable open-source models include BLOOM (a multilingual model developed by over 1,000 researchers), Pythia (a family of models designed for interpretability research), and Stable LM from Stability AI. This open-source movement has accelerated innovation and reduced costs, though these models often require more technical expertise to implement effectively.
+--
+
+=== Current AI Landscape: Trends
+
+* Enterprise AI integration: Increasing focus on business-specific implementations
+* Democratization of access: API-based services making AI capabilities widely available
+* Specialized vs. general-purpose systems: Trend toward adaptable foundation models
+
+[.notes]
+--
+Enterprise AI integration has become a major focus, with organizations moving beyond experimentation to implement AI capabilities in core business processes. This shift is driving demand for industry-specific models, enterprise-grade security and compliance features, and seamless integration with existing business systems. Companies like Microsoft, Salesforce, and IBM are positioning themselves as enablers of this enterprise AI transformation.
+
+The democratization of access represents another key trend. API-based services have made sophisticated AI capabilities available to organizations of all sizes without requiring specialized AI expertise. This accessibility has dramatically expanded the potential user base and use cases for AI technologies. No-code and low-code platforms are further reducing barriers to entry.
+
+The industry is seeing a shift from specialized to general-purpose systems. Rather than building custom AI models for each specific task, organizations are increasingly leveraging foundation models that can be adapted to a wide range of applications through techniques like fine-tuning and prompt engineering. This approach reduces development time and cost while maintaining high performance.
+
+Understanding this landscape is crucial for business professionals seeking to leverage AI effectively. The rapid pace of innovation means new capabilities are constantly emerging, while increasing accessibility makes implementation more feasible than ever before. This combination creates unprecedented opportunities for business transformation across virtually every industry and function.
+--
+
