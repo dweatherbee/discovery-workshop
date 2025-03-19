@@ -11,11 +11,11 @@
     <div class="course-content">
       <div class="course-links">
         <ul>
-          <li><a href="day-01/chapter-01-course.html">1: Kickoff & Introductions</a></li>
+          <li><a href="day-01/chapter-01-course.html">1: Kickoff, Agenda & Intros</a></li>
           <li><a href="day-01/chapter-02-course.html">2: AI Fundamentals</a></li>
           <li><a href="day-01/chapter-03-course.html">3: Agentic AI Fundamentals</a></li>
           <li><a href="day-01/chapter-04-course.html">4: Intro to Integrail AI Studio</a></li>
-          <li><a href="day-01/chapter-04-course.html">5: Build an Agent Demo</a></li>
+          <li><a href="day-01/chapter-05-course.html">5: Build an Agent Demo</a></li>
         </ul>
       </div>
     </div>

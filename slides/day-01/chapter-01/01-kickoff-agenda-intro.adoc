@@ -1,5 +1,7 @@
 == Workshop Kickoff, Agenda and Introduction
 
+image::images/Integrail_logo_primary_black_fuschia_gr.svg[Logo,width=250]
+
 === Workshop Overview
 
 * Four day workshop provides senior, mid-level and junior non-technical business professionals the skills to:
