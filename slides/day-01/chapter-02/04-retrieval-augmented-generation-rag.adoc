@@ -5,11 +5,11 @@ Enhancing LLM Capabilities I
 
 [.notes]
 --
-In this module, we'll explore techniques that enhance the capabilities of Large Language Models, allowing them to overcome some of their inherent limitations. We'll focus particularly on Retrieval-Augmented Generation (RAG) and tools integration, two approaches that significantly expand what LLMs can accomplish in business contexts.
+In this module, we'll explore the Retrieval-Augmented Generation (RAG) technique. This technology represents one of the most important enhancements to LLM capabilities, particularly for business applications.
 
-Understanding these enhancement techniques is crucial for identifying the full range of potential AI applications in your organization. Many valuable business use cases require capabilities beyond what a standalone LLM can provide, such as access to current information, proprietary data, or specialized functionality.
+Understanding RAG enhancement techniques is crucial for identifying the full range of potential AI applications in your organization. Many valuable business use cases require capabilities beyond what a standalone LLM can provide, such as access to current information or proprietary data. RAG is especially important because it addresses one of the fundamental limitations of standard LLMs - their inability to access your organization's specific information.
 
-By the end of this module, you'll understand how these techniques work at a conceptual level and be able to identify business scenarios where they would add significant value. This knowledge will expand the range of processes you can consider for AI enhancement during the workshop.
+By the end of this module, you'll understand how RAG can transform general-purpose AI into systems that leverage your proprietary knowledge, creating more accurate and valuable business applications.
 --
 
 === Retrieval-Augmented Generation (RAG): The Basics

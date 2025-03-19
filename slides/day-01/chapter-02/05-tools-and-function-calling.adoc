@@ -5,11 +5,13 @@ Enhancing LLM Capabilities II
 
 [.notes]
 --
-In this module, we'll explore techniques that enhance the capabilities of Large Language Models, allowing them to overcome some of their inherent limitations. We'll focus particularly on Retrieval-Augmented Generation (RAG) and tools integration, two approaches that significantly expand what LLMs can accomplish in business contexts.
+In this module, we'll explore Tools and Function Calling tecniques, a powerful enhancement that dramatically expands what AI systems can do for your business.
 
-Understanding these enhancement techniques is crucial for identifying the full range of potential AI applications in your organization. Many valuable business use cases require capabilities beyond what a standalone LLM can provide, such as access to current information, proprietary data, or specialized functionality.
+In this module, we'll examine how connecting LLMs to external tools and systems transforms them from models that can only generate text into systems that can take concrete actions within your business environment.
 
-By the end of this module, you'll understand how these techniques work at a conceptual level and be able to identify business scenarios where they would add significant value. This knowledge will expand the range of processes you can consider for AI enhancement during the workshop.
+While standard LLMs are limited to generating content based on patterns in their training data, tool-enhanced LLMs can interact with your business systems, access real-time information, and perform specific functions on your behalf.
+
+By the end of this section, you'll understand how tools and function calling work conceptually and be able to identify valuable business applications where this capability creates significant value. This knowledge will help you envision more comprehensive AI solutions that go beyond simple text generation to actually performing business tasks.
 --
 
 === Tools and Function Calling: The Basics

@@ -2,11 +2,13 @@
 
 [.notes]
 --
-In this module, we'll explore techniques that enhance the capabilities of Large Language Models, allowing them to overcome some of their inherent limitations. We'll focus particularly on Retrieval-Augmented Generation (RAG) and tools integration, two approaches that significantly expand what LLMs can accomplish in business contexts.
+In this module, we'll explore how combining RAG and tools creates powerful business solutions. In this module, we'll examine how these complementary enhancement techniques work together to create AI systems that are far more capable than standalone LLMs.
 
-Understanding these enhancement techniques is crucial for identifying the full range of potential AI applications in your organization. Many valuable business use cases require capabilities beyond what a standalone LLM can provide, such as access to current information, proprietary data, or specialized functionality.
+While we've discussed RAG and tools separately, the most effective business implementations typically combine these approaches. This combination creates AI systems that can both access your organization's specific knowledge and take concrete actions within your business systems.
 
-By the end of this module, you'll understand how these techniques work at a conceptual level and be able to identify business scenarios where they would add significant value. This knowledge will expand the range of processes you can consider for AI enhancement during the workshop.
+By the end of this module, you'll understand how these combined approaches work conceptually and be able to identify high-value business processes where this comprehensive enhancement strategy creates significant value. You'll also learn practical considerations for implementation, including integration requirements, cost-benefit analysis, and security considerations.
+
+This knowledge will help you envision more sophisticated AI solutions that address multiple business needs simultaneously, moving beyond simple chatbots to systems that can handle complex business processes with minimal human intervention.
 --
 
 === Combining RAG and Tools for Business Solutions
