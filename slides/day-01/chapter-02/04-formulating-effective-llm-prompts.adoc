@@ -1,0 +1,272 @@
+== Effective LLM Prompting Strategies
+
+[.notes]
+--
+In this module, we'll explore the art and science of effective prompting - how to communicate with AI systems to get the results you need. Prompt engineering is a crucial skill for business professionals working with AI, as it directly affects the quality and usefulness of AI outputs.
+
+We'll examine the fundamentals of prompt design and explore specific strategies for different types of LLMs. We'll also compare approaches and discuss how to adapt your prompting techniques based on the specific task and model you're working with.
+
+By the end of this module, you'll understand how to construct effective prompts for different business scenarios and be able to optimize your interactions with AI systems to achieve better outcomes. This practical knowledge will be immediately applicable as you begin working with AI tools.
+--
+
+=== Prompting Probabilistic LLMs
+
+[.text-left]
+Probabilistic LLMs like GPT-4o require specific prompting strategies to maximize their effectiveness for business applications.
+
+* We'll cover six key strategies for effective prompting
+* Each strategy addresses specific limitations of LLMs
+* These techniques will help you get more consistent, relevant results
+
+[.notes]
+--
+Probabilistic LLMs like GPT-4o require specific prompting strategies to maximize their effectiveness for business applications.
+--
+
+=== 1. Be Specific & Explicit About Outcomes
+
+* Rather than assume model will intuit your needs:
+  ** Clearly state what you want
+  ** Include the response format
+  ** Level of detail
+  ** Tone (business, casual, formal, customer-facing)
+* For example, instead of asking "Tell me about our quarterly results," specify:
+  ** _"Analyze our Q2 financial results in a 5-bullet executive summary highlighting year-over-year trends in revenue, expenses, and profit margins."_
+
+[.notes]
+--
+Being specific and explicit about desired outcomes is particularly important with probabilistic models. Rather than assuming the model will intuit your needs, clearly state what you want, including the format, level of detail, tone, and any specific elements you require. For example, instead of asking "Tell me about our quarterly results," specify "Analyze our Q2 financial results in a 5-bullet executive summary highlighting year-over-year trends in revenue, expenses, and profit margins."
+--
+
+=== 2. Provide Relevant Context
+
+* Overcomes LLM knowledge limitations
+* Remember, probabilistic LLMs don't have access to information beyond their training data 
+* Often means including specific facts, figures, or background info
+* For example: when asking for analysis of business situation, include key data points the model needs to consider
+
+[.notes]
+--
+Providing relevant context helps overcome the knowledge limitations inherent in these models. Remember that probabilistic LLMs don't have access to information beyond their training data unless you provide it. For business applications, this often means including specific facts, figures, or background information in your prompt. For example, when asking for analysis of a business situation, include the key data points the model needs to consider.
+--
+
+=== 3. Few-shot Learning
+
+* Powerful technique for demonstrating expected outputs
+* Show LLM one or more examples of type of response you want
+  ** Provides pattern LLM can follow
+* For example:
+  ** If you need product descriptions in a specific format, provide an example:
+  ** _"Please write product descriptions for our new line in this format: [Product Name] - [One sentence benefit]. Features include [3 key features]."_
+
+[.notes]
+--
+Using examples, often called few-shot learning, is a powerful technique for demonstrating expected outputs. By showing the model one or more examples of the type of response you want, you provide a pattern it can follow. This approach is particularly effective for specialized formats or when you need consistency across multiple outputs. For instance, if you need product descriptions in a specific format, provide an example or two in your prompt.
+--
+
+=== 4. Manage Token Limitations
+
+* All LLMs have context windows that limit how much inbound prompting and response text (tokens) they can process at once
+* Provide essential information rather than exhaustive details
+* For example:
+  ** Summarizing background information rather than including complete documents
+  ** Linking to reference materials rather than pasting their entire contents
+
+[.notes]
+--
+Managing token limitations is important since all LLMs have context windows that limit how much text they can process at once. Focus on providing essential information rather than exhaustive details. For business applications, this might mean summarizing background information rather than including complete documents, or linking to reference materials rather than pasting their entire contents.
+--
+
+=== 5. Iterative Prompting
+
+* Start broad, then refine based on initial responses
+  ** Begin with general request
+  ** See model response
+  ** Then iterate with more specific guidance based on what's missing or needs improvement 
+* Iterative approach often yields better results than crafting perfect prompt on first attempt
+
+[.notes]
+--
+From a business strategy perspective, an effective approach is to start with broader prompts and then refine based on initial responses. Begin with a general request to see what the model produces, then iterate with more specific guidance based on what's missing or needs improvement. This iterative approach often yields better results than trying to craft the perfect prompt on the first attempt.
+--
+
+=== 6. Business-specific Prompting Strategies
+
+* Business-specific prompting strategies might include:
+  ** Use industry terminology to improve relevance
+  ** Specify intended audience for output (e.g., "Write this for C-level executives")
+  ** Include company-specific context that might not be in model's training data
+* These help tailor generic LLM capabilities to your specific business needs
+
+[.notes]
+--
+Business-specific prompting strategies might include using industry terminology to improve relevance, specifying the intended audience for the output (e.g., "Write this for C-level executives"), and including company-specific context that might not be in the model's training data. These adaptations help tailor generic LLM capabilities to your specific business needs.
+--
+
+=== Prompting Probabilistic LLMs Checklist
+
+1. Be specific and explicit about desired outcomes and formats
+2. Provide relevant context to overcome knowledge limitations
+3. Use examples (few-shot learning) to demonstrate expected outputs
+4. Manage token limitations by focusing on essential information
+5. Iterative Prompting: Start broad, then refine based on initial responses
+6. Use business-specific terminology, audience, company-specific context
+
+[.notes]
+--
+This checklist summarizes the key prompting strategies we've discussed. Consider keeping this as a reference when working with LLMs in your business context. Remember that effective prompting is often an iterative process - you may need to refine your approach based on initial results. With practice, you'll develop intuition for which strategies work best for different types of business tasks.
+--
+
+=== Prompting Probabilistic LLMs Summary
+
+* Particularly good at:
+  ** Generating creative content
+  ** Summarizing information
+  ** Producing natural-sounding language
+* Prompting strategy: leverage above strengths while providing guidance to overcome limitations in factual precision or complex reasoning
+
+[.notes]
+--
+Remember that probabilistic LLMs are particularly good at generating creative content, summarizing information, and producing natural-sounding language. Your prompting strategy should leverage these strengths while providing sufficient guidance to overcome limitations in factual precision or complex reasoning.
+--
+
+=== Prompting Chain-of-Thought Reasoning LLMs
+
+[.text-left]
+Chain-of-Thought (CoT) reasoning LLMs like OpenAI's o1/o3 require different prompting strategies to fully leverage their reasoning capabilities.
+
+* We'll cover six key strategies for effective prompting
+* Each strategy leverages the power of CoT LLMs
+* These techniques will help you get more consistent, reasoned results
+
+[.notes]
+--
+Chain-of-Thought (CoT) reasoning LLMs like OpenAI's o1/o3 require different prompting strategies to fully leverage their reasoning capabilities.
+--
+
+=== 1. Request Step-by-step Reasoning
+
+* Explicitly ask model to work through problems methodically
+* For example, instead of "What's the optimal inventory level?" try:
+  ** _"Please think through the optimal inventory level step by step, considering our lead times, demand variability, and storage costs."_
+
+[.notes]
+--
+Explicitly requesting step-by-step reasoning is the foundation of effective CoT prompting. Unlike with standard LLMs where you might ask directly for a conclusion, with reasoning-focused models you should specifically ask the model to work through the problem methodically. For example, instead of "What's the optimal inventory level?" try "Please think through the optimal inventory level step by step, considering our lead times, demand variability, and storage costs."
+--
+
+=== 2. Structure with Clear Intermediate Steps
+
+* Guide the model's reasoning process by:
+  ** Breaking down multi-part problems into logical sequences
+  ** Asking the model to address each component in order
+* Example for market entry evaluation:
+  ** "First analyze market size
+  ** Then assess competition landscape
+  ** Next examine regulatory considerations
+  ** Finally calculate potential profitability"
+
+[.notes]
+--
+Structuring complex problems with clear intermediate steps helps guide the model's reasoning process. Break down multi-part problems into a logical sequence and ask the model to address each component in order. This approach is particularly effective for complex business analyses or decision-making scenarios. For instance, when evaluating a potential market entry, you might structure the prompt to first analyze market size, then competition, then regulatory considerations, and finally potential profitability.
+--
+
+=== 3. Encourage "Thinking Aloud"
+
+* Leverages model's ability to reason through problems verbally
+* Use prompting phrases like:
+  ** _"Let's think about this step by step"_
+  ** _"Let's work through this methodically"_
+* Most valuable when:
+  ** The reasoning process provides key insights
+  ** You need to verify the model's approach
+
+[.notes]
+--
+Encouraging the model to "think aloud" leverages the model's ability to reason through problems verbally. Phrases like "Let's think about this step by step" or "Let's work through this methodically" signal to the model that you want to see its reasoning process, not just its conclusion. This approach is valuable when the reasoning itself provides insights or when you need to verify the model's approach to a problem.
+--
+
+=== 4. Implement Verification Steps
+
+* Improve accuracy by asking the model to check its own work
+* After receiving a solution:
+  ** "Verify this answer by working backward"
+  ** "Use a different method to confirm"
+  ** "Check for common errors in this reasoning"
+* Example for financial analysis:
+  ** _"Please verify this result using an alternative calculation method and identify any potential errors in your reasoning."_
+
+[.notes]
+--
+Implementing verification steps improves accuracy by asking the model to check its own work. After the model provides a solution, prompt it to verify the answer by working backward, using a different method, or checking for common errors. For example, after a financial calculation, you might ask "Please verify this result by using an alternative calculation method and check for any potential errors in your reasoning."
+--
+
+=== 5. Break Down Complex Problems into Logical Sequences
+
+* Model can work through logical sequences methodically
+* Valuable for:
+  ** Financial scenarios and projections
+  ** Strategic decision-making processes
+  ** Risk assessment frameworks
+  ** Regulatory compliance evaluations
+
+[.notes]
+--
+From a business strategy perspective, the key is breaking complex problems into logical sequences that the model can work through methodically. This approach is particularly valuable for financial analyses, strategic decisions, risk assessments, and other business scenarios where the reasoning process is as important as the conclusion.
+--
+
+=== 6. Leverage Business Frameworks & Methodologies
+
+* Enhance reasoning by referencing established methodologies:
+  ** _"Apply Porter's Five Forces to analyze this market"_
+  ** _"Use a SWOT analysis framework for this evaluation"_
+  ** _"Follow standard Discounted Cash Flow (DCF) methodology for this valuation"_
+* Ensures outputs align with business best practices and terminology
+
+[.notes]
+--
+When working with CoT models in business contexts, it's often valuable to combine reasoning requests with specific business frameworks or methodologies relevant to your industry. For example, you might ask the model to apply a specific strategic framework like Porter's Five Forces or a standard financial analysis methodology to ensure the reasoning follows established business practices.
+--
+
+=== Prompting CoT Models: Checklist
+
+1. Request explicit step-by-step reasoning
+2. Structure problems with clear intermediate steps
+3. Use "thinking aloud" prompting techniques
+4. Implement self-verification steps
+5. Break complex problems into logical sequences
+6. Reference relevant business frameworks & methodologies
+
+[.notes]
+--
+This checklist summarizes the key strategies for effectively prompting Chain-of-Thought reasoning models.
+--
+
+=== Business Applications of CoT Reasoning
+
+* Particularly valuable for:
+  ** Creating transparent explanations for stakeholders
+  ** Documenting decision processes for compliance
+  ** Building confidence in AI-assisted analysis
+  ** Teaching complex business concepts to teams
+  ** Exploring alternative strategic approaches
+
+[.notes]
+--
+The explicit reasoning capabilities of these models make them particularly valuable for explaining complex concepts to stakeholders, documenting decision processes for compliance purposes, and building confidence in AI-assisted business decisions through transparent reasoning.
+--
+
+=== Summary
+
+[.text-left]
+* Master clear communication: be specific about desired outcomes by specifying format, tone, and level of detail, and provide essential context  
+* Tailor your approach to the specific model and business scenario to achieve actionable insights
+ ** Follow the Prompting Probabilistic LLMs checklist for Probabilistic models
+** Follow the Prompting CoT models checklist for CoT models
+
+
+[.notes]
+--
+This summary reinforces the importance of precise and adaptive prompting. By aligning your communication strategy with each model’s strengths, you drive more accurate, creative, and business-relevant outcomes. Happy prompting!
+--
+

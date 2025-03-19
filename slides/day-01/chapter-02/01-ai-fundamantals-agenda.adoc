@@ -5,8 +5,9 @@ image::images/Integrail_logo_primary_black_fuschia_gr.svg[Logo,width=250]
 === Overview
 
 * Provide conceptual understanding of large language models (LLMs) without requiring programming knowledge
+* Outline LLM Prompting techniques
 * Explain how to enhance LLM capabilities
-* Prepare participants to identify Agentic AI opportunities in their business processes
+* Set up to identify Agentic AI opportunities in your business processes
   ** LLMs are a foundational part of Agentic AI
 
 [.notes]
@@ -22,12 +23,14 @@ By the end of this session, you'll have a solid conceptual understanding of mode
 
 === Learning Objectives
 
+[.text-left]
+By the end of this chapter, you'll be able to:
+
 * Explain the evolution and key concepts of modern AI systems
 * Differentiate between types of LLMs and their capabilities
-* Evaluate potential business applications for AI technologies
-* Assess when to use different AI enhancement techniques like RAG and Tools
 * Formulate effective prompts for different types of LLMs
-
+* Understand when to use AI enhancement techniques like Retrieval-Augmented Generation (RAG) and Tools
+* Identify some potential business applications for AI technologies
 
 [.notes]
 --
@@ -37,20 +40,22 @@ First, explain the evolution and key concepts of modern AI systems. You'll under
 
 Second, differentiate between types of LLMs and their capabilities. You'll learn about different approaches to language models, including probabilistic models like GPT-4o and reasoning-based models like Claude 3 Opus, and understand when each might be most appropriate for different business needs.
 
-Third, evaluate potential business applications for AI technologies. You'll develop the ability to identify opportunities where AI can create value in your specific business context, focusing on practical applications rather than theoretical possibilities.
+Third, formulate effective prompts for different types of LLMs. You'll learn the basics of prompt engineering - how to effectively communicate with AI systems to get the results you need for business tasks.
 
-Fourth, formulate effective prompts for different types of LLMs. You'll learn the basics of prompt engineering - how to effectively communicate with AI systems to get the results you need for business tasks.
+Fourth, understand when to use AI enhancement techniques. You'll learn about approaches like Retrieval-Augmented Generation (RAG) and tools that extend AI capabilities, and be able to determine when these techniques might add value to your AI implementations.
 
-Finally, assess when to use different AI enhancement techniques. You'll understand approaches like Retrieval-Augmented Generation (RAG) and tools that extend AI capabilities, and be able to determine when these techniques might add value to your AI implementations.
+Finally, evaluate potential business applications for AI technologies. You'll develop the ability to identify opportunities where AI can create value in your specific business context, focusing on practical applications rather than theoretical possibilities.
 
 These objectives align with Bloom's Taxonomy of learning, progressing from basic understanding to more complex application and evaluation skills. This structured approach ensures you'll develop practical knowledge you can apply immediately in your business context.
 --
 
 === Agenda
+
 * The Evolution of AI
 * Understanding Large Language Models
+* Effective LLM Prompting Strategies
 * Retrieval-Augmented Generation: Enhancing LLM Capabilities I
 * Tools and Function Calling: Enhancing LLM Capabilities II
 * Combining Retrieval-Augmented Generation and Tools for Business Solutions
-* Effective Prompting for LLMs
+
 
