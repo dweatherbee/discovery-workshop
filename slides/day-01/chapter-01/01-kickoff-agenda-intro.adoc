@@ -83,5 +83,5 @@ Remember, this workshop focuses on the business application of AI technology, no
 * Your Name and Role
 * Do you have experience with AI?
 * Do you have experience with Agentic AI?
-* Do you meet the course prerequisites? (SQL/DDL and programming skills?)
+* Do you meet the course prerequisites? (basic comp literacy, understand business processes?)
 * _What do you expect/hope to get from this workshop?_
