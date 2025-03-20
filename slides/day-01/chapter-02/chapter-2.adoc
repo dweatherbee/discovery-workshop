@@ -1,0 +1,17 @@
+include::00-ai-fundamentals-for-business-professionals.adoc[]
+
+include::01-ai-fundamentals-agenda.adoc[]
+
+include::02-evolution-of-ai.adoc[]
+
+include::03-large-language-models.adoc[]
+
+include::04-probabilistic-llm-prompts.adoc[]
+
+include::05-cot-llm-prompts.adoc[]
+
+include::06-retrieval-augmented-generation-rag.adoc[]
+
+include::07-tools-and-function-calling.adoc[]
+
+include::08-combining-rag-and-tools.adoc[]

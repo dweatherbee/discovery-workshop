@@ -1,0 +1,3 @@
+include::00-agentic-ai-fundamantals-for-business-professionals.adoc[]
+include::01-why-agents-matter.adoc[]
+

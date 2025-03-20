@@ -1,7 +1,3 @@
-== AI Fundamentals for Business Professionals
-
-image::images/Integrail_logo_primary_black_fuschia_gr.svg[Logo,width=250]
-
 === Overview
 
 * Provide conceptual understanding of large language models (LLMs) without requiring programming knowledge

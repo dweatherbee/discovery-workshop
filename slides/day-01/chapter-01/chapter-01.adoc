@@ -1,0 +1,2 @@
+include::00-workshop-introduction.adoc[]
+include::01-kickoff-agenda-intro.adoc[]

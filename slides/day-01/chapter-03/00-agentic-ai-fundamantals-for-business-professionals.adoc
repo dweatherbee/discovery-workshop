@@ -1,0 +1,8 @@
+== Agentic AI Fundamentals for Business Professionals
+
+image::images/Integrail_logo_primary_black_fuschia_gr.svg[Logo,width=250]
+
+[.notes]
+--
+Welcome to our introduction to AI Agents. This one-hour session serves as a foundation for the three-day workshop that follows, where we'll focus on discovering business processes that are candidates for automation using AI agents. Today, we'll explore what AI agents are, how they differ from traditional automation, and why they represent a significant advancement in how we approach business process automation. The concepts we cover today will be applied directly in our upcoming workshop as you identify and evaluate opportunities for implementing AI agents in your organization.
+--
