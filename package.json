@@ -1,42 +1,35 @@
 {
-  "name": "cockroach-university-ilt-operational-fundamentals",
+  "name": "discovery-workshop",
   "version": "1.0.0",
-  "description": "Instructor-led training for operators",
+  "description": "Instructor-led training for Business Process Discovery with Integrail",
   "scripts": {
     "clean": "gulp clean",
     "start": "gulp serve",
     "build": "gulp build",
+    "build-notes": "gulp build-notes",
+    "build-pdf": "gulp build-instructor-pdf",
     "package": "gulp package"
   },
   "type": "module",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/cockroachlabs/cockroach-university-ilt-operational-fundamentals.git"
+    "url": "git+https://github.com/integrail/discovery-workshop.git"
   },
   "keywords": [
-    "cockroachdb",
-    "cockroach",
-    "labs",
-    "operators",
-    "fundamentals",
+    "integrail",
+    "business process discovery",
     "ILT"
   ],
   "contributors": [
     {
-      "name": "Kiki Carter"
-    },
-    {
-      "name": "Ramki Thurimella"
-    },
-    {
-      "name": "Greg L. Turnquist"
+      "name": "Doug Weatherbee"
     }
   ],
   "license": "LicenseRef-LICENSE",
   "bugs": {
-    "url": "https://github.com/cockroachlabs/cockroach-university-ilt-operational-fundamentals/issues"
+    "url": "https://github.com/integrail/discovery-workshop/issues"
   },
-  "homepage": "https://github.com/cockroachlabs/cockroach-university-ilt-operational-fundamentals#readme",
+  "homepage": "https://github.com/integrail/discovery-workshop#readme",
   "dependencies": {
     "@asciidoctor/reveal.js": "^5.1.0",
     "highlight.js": "^11.9.0",
