@@ -53,7 +53,8 @@ These objectives align with Bloom's Taxonomy of learning, progressing from basic
 
 * The Evolution of AI
 * Understanding Large Language Models
-* Effective LLM Prompting Strategies
+* Prompting Probabilistic LLMs
+* Prompting Chain-of-Thought Reasoning LLMs
 * Retrieval-Augmented Generation: Enhancing LLM Capabilities I
 * Tools and Function Calling: Enhancing LLM Capabilities II
 * Combining Retrieval-Augmented Generation and Tools for Business Solutions

@@ -117,10 +117,13 @@ What makes LLMs particularly remarkable is that all these diverse capabilitiesâ€
 
 === !
 
+[.text-left]
 [.h4-style]
 There are two types of LLMs:
+[.text-left]
 [.h3-style]
 Probabilistic
+[.text-left]
 [.h3-style]
 Chain-of-Thought Reasoning
 
@@ -284,3 +287,21 @@ In practice, hybrid approaches often provide the best results for complex busine
 The field continues to evolve rapidly, with models increasingly incorporating reasoning capabilities as a standard feature rather than a separate approach. Understanding the appropriate application of different techniques allows organizations to optimize their AI implementations for specific business needs, balancing performance, cost, speed, and accuracy.
 --
 
+=== Summary
+
+* LLMs process and generate human language by tokenizing text and predicting the next token.
+* Fundamental mechanisms include tokenization, probability distributions, and temperature-controlled generation.
+* Two main LLM types:
+  ** Probabilistic models excel in fluent, context-rich generation.
+  ** Chain-of-Thought reasoning models deliver explicit, step-by-step logical processes.
+* Applications range from content creation and summarization to complex problem-solving and decision support.
+* Hybrid approaches often combine both types to balance speed, accuracy, and resource requirements.
+
+[.notes]
+--
+This slide consolidates the key insights from our discussion on LLMs. It highlights that LLMs work by breaking text into tokens and using probability distributions to predict the next token based on learned patterns. The generation process can be controlled via temperature settings, which manage the randomness and creativity of the output.
+
+We also differentiated between two primary types of LLMs: probabilistic models and Chain-of-Thought (CoT) reasoning models. Probabilistic models are renowned for their fluency and broad knowledge, making them ideal for applications like content creation and chatbots. In contrast, CoT reasoning models provide detailed, transparent reasoning through step-by-step processes, making them better suited for complex logical tasks such as financial analysis or decision making.
+
+Ultimately, understanding these mechanisms and their trade-offs enables you to evaluate the best LLM approach for various business applications while considering performance, cost, and response time. Hybrid approaches that leverage both types often offer the most effective solution for addressing diverse business needs.
+--

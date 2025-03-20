@@ -1,0 +1,159 @@
+== Prompting Probabilistic LLMs
+
+[.notes]
+--
+In this module, we'll dive into how probabilistic LLMs work and why their unique characteristics require targeted prompting strategies. We'll explore the specific challenges inherent to these models, such as token limitations and their probabilistic nature, and how you can navigate these challenges effectively.
+
+We'll explore a range of techniques—from being specific in your prompts to employing iterative prompting—ensuring that you maximize the quality and relevance of the results produced by these models. By understanding these techniques, you'll be better equipped to tailor your prompts for various business scenarios.
+
+By understanding the strengths and limitations of probabilistic LLMs, you'll be able to craft prompts that not only leverage their creative abilities but also overcome their weaknesses. This knowledge is essential for integrating AI solutions effectively within your business applications.
+--
+
+=== !
+
+[.text-left]
+Probabilistic LLMs like GPT-4o require specific prompting strategies to maximize their effectiveness for business applications.
+
+* We'll cover six key strategies for effective prompting
+* Each strategy addresses specific limitations of probabilistic LLMs
+* These techniques will help you get more consistent, relevant results
+
+[.notes]
+--
+Probabilistic LLMs like GPT-4o require specific prompting strategies to maximize their effectiveness for business applications.
+--
+
+=== 1. Be Specific & Explicit About Outcomes
+
+* Rather than assume model will intuit your needs:
+  ** Clearly state what you want
+  ** Include the response format
+  ** Level of detail
+  ** Tone (business, casual, formal, customer-facing)
+* For example, instead of asking "Tell me about our quarterly results," specify:
+  ** _"Analyze our Q2 financial results in a 5-bullet executive summary highlighting year-over-year trends in revenue, expenses, and profit margins."_
+
+[.notes]
+--
+Being specific and explicit about desired outcomes is particularly important with probabilistic models. Rather than assuming the model will intuit your needs, clearly state what you want, including the format, level of detail, tone, and any specific elements you require. For example, instead of asking "Tell me about our quarterly results," specify "Analyze our Q2 financial results in a 5-bullet executive summary highlighting year-over-year trends in revenue, expenses, and profit margins."
+--
+
+=== 2. Provide Relevant Context
+
+* Overcomes LLM knowledge limitations
+* Remember, probabilistic LLMs don't have access to information beyond their training data 
+* Often means including specific facts, figures, or background info
+* For example: when asking for analysis of business situation, include key data points the model needs to consider
+
+[.notes]
+--
+Providing relevant context helps overcome the knowledge limitations inherent in these models. Remember that probabilistic LLMs don't have access to information beyond their training data unless you provide it. For business applications, this often means including specific facts, figures, or background information in your prompt. For example, when asking for analysis of a business situation, include the key data points the model needs to consider.
+--
+
+=== 3. Few-shot Learning
+
+* Powerful technique for demonstrating expected outputs
+* Show LLM one or more examples of type of response you want
+  ** Provides pattern LLM can follow
+* For example:
+  ** If you need product descriptions in a specific format, provide an example:
+  ** _"Please write product descriptions for our new line in this format: [Product Name] - [One sentence benefit]. Features include [3 key features]."_
+
+[.notes]
+--
+Using examples, often called few-shot learning, is a powerful technique for demonstrating expected outputs. By showing the model one or more examples of the type of response you want, you provide a pattern it can follow. This approach is particularly effective for specialized formats or when you need consistency across multiple outputs. For instance, if you need product descriptions in a specific format, provide an example or two in your prompt.
+--
+
+=== 4. Manage Token Limitations
+
+* All LLMs have context windows that limit how much inbound prompting and response text (tokens) they can process at once
+* Provide essential information rather than exhaustive details
+* For example:
+  ** Summarizing background information rather than including complete documents
+  ** Linking to reference materials rather than pasting their entire contents
+
+[.notes]
+--
+Managing token limitations is important since all LLMs have context windows that limit how much text they can process at once. Focus on providing essential information rather than exhaustive details. For business applications, this might mean summarizing background information rather than including complete documents, or linking to reference materials rather than pasting their entire contents.
+--
+
+=== 5. Iterative Prompting
+
+* Start broad, then refine based on initial responses
+  ** Begin with general request
+  ** See model response
+  ** Then iterate with more specific guidance based on what's missing or needs improvement 
+* Iterative approach often yields better results than crafting perfect prompt on first attempt
+
+[.notes]
+--
+From a business strategy perspective, an effective approach is to start with broader prompts and then refine based on initial responses. Begin with a general request to see what the model produces, then iterate with more specific guidance based on what's missing or needs improvement. This iterative approach often yields better results than trying to craft the perfect prompt on the first attempt.
+--
+
+=== 6. Business-specific Prompting Strategies
+
+* Business-specific prompting strategies might include:
+  ** Use industry terminology to improve relevance
+  ** Specify intended audience for output (e.g., "Write this for C-level executives")
+  ** Include company-specific context that might not be in model's training data
+* These help tailor generic LLM capabilities to your specific business needs
+
+[.notes]
+--
+Business-specific prompting strategies might include using industry terminology to improve relevance, specifying the intended audience for the output (e.g., "Write this for C-level executives"), and including company-specific context that might not be in the model's training data. These adaptations help tailor generic LLM capabilities to your specific business needs.
+--
+
+=== Prompting Probabilistic LLMs Checklist
+
+1. Be specific and explicit about desired outcomes and formats
+2. Provide relevant context to overcome knowledge limitations
+3. Use examples (few-shot learning) to demonstrate expected outputs
+4. Manage token limitations by focusing on essential information
+5. Iterative Prompting: Start broad, then refine based on initial responses
+6. Use business-specific terminology, audience, company-specific context
+
+[.notes]
+--
+This checklist summarizes the key prompting strategies we've discussed. Consider keeping this as a reference when working with LLMs in your business context. Remember that effective prompting is often an iterative process - you may need to refine your approach based on initial results. With practice, you'll develop intuition for which strategies work best for different types of business tasks.
+--
+
+=== Business Applications
+
+* Examples of valuable applications:
+  ** Generating creative marketing or advertising content  
+  ** Summarizing extensive reports or data for quick decision-making  
+  ** Producing engaging, natural-sounding customer communications  
+  ** Crafting personalized content and responses for customer support  
+  ** Enabling dynamic and interactive content generation for digital platforms
+
+[.notes]
+--
+Probabilistic LLMs shine in scenarios where creativity, natural language flow, and rapid summarization are key. Their ability to produce engaging and human-like text is particularly beneficial for generating creative marketing campaigns or advertisements. They can quickly summarize large volumes of information, helping executives make informed decisions. Additionally, these models are great for automating personalized customer interactions, enhancing both support and communication channels. Overall, leveraging the natural language output of probabilistic LLMs can transform many aspects of business communication and content creation.
+--
+
+=== Generalizable Use Cases
+
+* Particularly good at:
+  ** Generating creative content
+  ** Summarizing information
+  ** Producing natural-sounding language
+* Prompting strategy: leverage above strengths while providing guidance to overcome limitations in factual precision or complex reasoning
+
+[.notes]
+--
+Remember that probabilistic LLMs are particularly good at generating creative content, summarizing information, and producing natural-sounding language. Your prompting strategy should leverage these strengths while providing sufficient guidance to overcome limitations in factual precision or complex reasoning.
+--
+
+=== Summary
+
+* Tailor prompts to harness probabilistic LLM strengths and mitigate limitations  
+* Six key strategies: Be specific, Provide context, Few-shot examples, Manage tokens, Iterative refinement, and Business-specific cues  
+* Effective prompts maximize creative, natural language output while overcoming knowledge and token constraints  
+* Iterative prompting refines initial responses for greater consistency and relevance
+
+[.notes]
+--
+This slide summarizes the essential prompting techniques for probabilistic LLMs. Effective prompting starts with clear, specific directives—detailing the desired output format, tone, and level of detail—to guide the model accurately. Including relevant context, such as key business data, helps overcome the inherent knowledge limitations of these models. The use of few-shot learning by showing examples sets the expected output pattern, especially for specialized tasks. 
+
+Managing token limitations is crucial; focus on providing only essential details and consider summarizing larger texts. Iterative prompting involves starting with a broad query and then refining the request based on the initial response to improve relevance and completeness. Incorporating business-specific terminology and context tailors the model's output to your organizational needs. Together, these strategies ensure that you achieve consistent, high-quality responses that align with your business applications.
+--

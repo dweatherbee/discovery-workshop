@@ -139,3 +139,15 @@ Finally, it's important to prepare for evolving capabilities as this field conti
 The goal is not to implement technology for its own sake, but to create AI systems that deliver real business value by overcoming the limitations of standalone models.
 --
 
+=== Summary
+
+* Combines multiple AI enhancement techniques for comprehensive solutions  
+* RAG grounds the model with specific knowledge; tools empower it to execute actions  
+* Enables AI systems that both KNOW MORE and DO MORE, addressing standalone limitations
+
+[.notes]
+--
+This module demonstrated how integrating Retrieval-Augmented Generation (RAG) with external tools creates far more capable AI systems for business applications. RAG empowers the model with access to company-specific information, while tool connections enable direct, real-world actions— from checking inventory to processing orders. Together, these techniques overcome the inherent limitations of standalone LLMs, delivering comprehensive solutions that can both provide informed responses and automate complex business processes.
+
+The discussion also covered typical combined implementations, integration considerations (such as data security, system access, and performance), and cost-benefit analysis to balance enhanced capabilities against complexity. By combining these approaches, organizations can deploy advanced AI solutions that are tailored to their unique needs, making processes more efficient and effective.
+--

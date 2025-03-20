@@ -1,0 +1,161 @@
+== Prompting Chain-of-Thought Reasoning LLMs
+
+[.notes]
+--
+In this module, we'll explore the unique characteristics of Chain-of-Thought reasoning LLMs and why they require a different approach compared to traditional probabilistic models. We'll dive into the techniques that harness their ability to work through complex problems step by step, ensuring that every part of the reasoning process is transparent and logically sound.
+
+We'll explore various prompting strategies that encourage the model to break down complex issues into clear, manageable steps. By using methods like "thinking aloud" and explicit verification, you'll be able to leverage these models' strengths and gain deeper insights into their decision-making processes.
+
+By understanding how to structure prompts for CoT models, you'll be better equipped to apply these techniques in scenarios that demand rigorous logical reasoning and detailed explanations. This knowledge is essential for building trust in AI-assisted analysis and for effectively communicating decision processes to stakeholders.
+--
+
+=== !
+
+[.text-left]
+Chain-of-Thought (CoT) reasoning LLMs like OpenAI's o1/o3 require different prompting strategies to fully leverage their reasoning capabilities.
+
+* We'll cover six key strategies for effective prompting
+* Each strategy leverages the power of CoT LLMs
+* These techniques will help you get more consistent, reasoned results
+
+[.notes]
+--
+Chain-of-Thought (CoT) reasoning LLMs like OpenAI's o1/o3 require different prompting strategies to fully leverage their reasoning capabilities.
+--
+
+=== 1. Request Step-by-step Reasoning
+
+* Explicitly ask model to work through problems methodically
+* For example, instead of "What's the optimal inventory level?" try:
+  ** _"Please think through the optimal inventory level step by step, considering our lead times, demand variability, and storage costs."_
+
+[.notes]
+--
+Explicitly requesting step-by-step reasoning is the foundation of effective CoT prompting. Unlike with standard LLMs where you might ask directly for a conclusion, with reasoning-focused models you should specifically ask the model to work through the problem methodically. For example, instead of "What's the optimal inventory level?" try "Please think through the optimal inventory level step by step, considering our lead times, demand variability, and storage costs."
+--
+
+=== 2. Structure with Clear Intermediate Steps
+
+* Guide the model's reasoning process by:
+  ** Breaking down multi-part problems into logical sequences
+  ** Asking the model to address each component in order
+* Example for market entry evaluation:
+  ** "First analyze market size
+  ** Then assess competition landscape
+  ** Next examine regulatory considerations
+  ** Finally calculate potential profitability"
+
+[.notes]
+--
+Structuring complex problems with clear intermediate steps helps guide the model's reasoning process. Break down multi-part problems into a logical sequence and ask the model to address each component in order. This approach is particularly effective for complex business analyses or decision-making scenarios. For instance, when evaluating a potential market entry, you might structure the prompt to first analyze market size, then competition, then regulatory considerations, and finally potential profitability.
+--
+
+=== 3. Encourage "Thinking Aloud"
+
+* Leverages model's ability to reason through problems verbally
+* Use prompting phrases like:
+  ** _"Let's think about this step by step"_
+  ** _"Let's work through this methodically"_
+* Most valuable when:
+  ** The reasoning process provides key insights
+  ** You need to verify the model's approach
+
+[.notes]
+--
+Encouraging the model to "think aloud" leverages the model's ability to reason through problems verbally. Phrases like "Let's think about this step by step" or "Let's work through this methodically" signal to the model that you want to see its reasoning process, not just its conclusion. This approach is valuable when the reasoning itself provides insights or when you need to verify the model's approach to a problem.
+--
+
+=== 4. Implement Verification Steps
+
+* Improve accuracy by asking the model to check its own work
+* After receiving a solution:
+  ** "Verify this answer by working backward"
+  ** "Use a different method to confirm"
+  ** "Check for common errors in this reasoning"
+* Example for financial analysis:
+  ** _"Please verify this result using an alternative calculation method and identify any potential errors in your reasoning."_
+
+[.notes]
+--
+Implementing verification steps improves accuracy by asking the model to check its own work. After the model provides a solution, prompt it to verify the answer by working backward, using a different method, or checking for common errors. For example, after a financial calculation, you might ask "Please verify this result by using an alternative calculation method and check for any potential errors in your reasoning."
+--
+
+=== 5. Break Down Complex Problems into Logical Sequences
+
+* Model can work through logical sequences methodically
+* Valuable for:
+  ** Financial scenarios and projections
+  ** Strategic decision-making processes
+  ** Risk assessment frameworks
+  ** Regulatory compliance evaluations
+
+[.notes]
+--
+From a business strategy perspective, the key is breaking complex problems into logical sequences that the model can work through methodically. This approach is particularly valuable for financial analyses, strategic decisions, risk assessments, and other business scenarios where the reasoning process is as important as the conclusion.
+--
+
+=== 6. Leverage Business Frameworks & Methodologies
+
+* Enhance reasoning by referencing established methodologies:
+  ** _"Apply Porter's Five Forces to analyze this market"_
+  ** _"Use a SWOT analysis framework for this evaluation"_
+  ** _"Follow standard Discounted Cash Flow (DCF) methodology for this valuation"_
+* Ensures outputs align with business best practices and terminology
+
+[.notes]
+--
+When working with CoT models in business contexts, it's often valuable to combine reasoning requests with specific business frameworks or methodologies relevant to your industry. For example, you might ask the model to apply a specific strategic framework like Porter's Five Forces or a standard financial analysis methodology to ensure the reasoning follows established business practices.
+--
+
+=== Prompting CoT Models: Checklist
+
+1. Request explicit step-by-step reasoning
+2. Structure problems with clear intermediate steps
+3. Use "thinking aloud" prompting techniques
+4. Implement self-verification steps
+5. Break complex problems into logical sequences
+6. Reference relevant business frameworks & methodologies
+
+[.notes]
+--
+This checklist summarizes the key strategies for effectively prompting Chain-of-Thought reasoning models.
+--
+
+=== Business Applications
+
+* Examples of valuable applications:
+  ** Creating transparent explanations for stakeholders
+  ** Documenting decision processes for compliance
+  ** Building confidence in AI-assisted analysis
+  ** Teaching complex business concepts to teams
+  ** Exploring alternative strategic approaches
+
+[.notes]
+--
+The explicit reasoning capabilities of these models make them particularly valuable for explaining complex concepts to stakeholders, documenting decision processes for compliance purposes, and building confidence in AI-assisted business decisions through transparent reasoning.
+--
+
+=== Generalizable Use Cases
+
+* Particularly good at:
+  ** Solving complex, multi-step problems
+  ** Providing transparent, step-by-step logical explanations
+  ** Breaking down intricate tasks (e.g., math problems, decision analyses, and troubleshooting)
+* Prompting strategy: Leverage their detailed reasoning capabilities by encouraging clear, sequential guidance and iterative refinement for improved accuracy and error-checking
+
+[.notes]
+--
+Chain-of-thought reasoning LLMs excel when tasks require navigating multiple steps or complex logic. They are particularly effective at breaking down complex problems into clear, manageable components, whether working through mathematical computations, logical puzzles, or detailed decision-making processes. Their ability to transparently expose each step in their reasoning process means you get a traceable path to the final answer, which is valuable for verification and troubleshooting. To make the most of these models, prompts should include explicit instructions for step-by-step analysis and encourage iterative refinements, ensuring that each logical step is properly addressed and validated for improved overall accuracy.
+--
+
+=== Summary
+
+* Leverage detailed, step-by-step prompts to activate the model’s full reasoning capabilities  
+* Structure complex problems with clear intermediate steps and "thinking aloud" cues  
+* Encourage self-verification and logical breakdowns to build trust and transparency  
+* Integrate established business frameworks to align outputs with industry best practices
+
+[.notes]
+--
+This module focused on the unique prompting strategies needed to effectively utilize Chain-of-Thought reasoning LLMs. By asking the model to work through problems methodically and explicitly guiding it through each stage of reasoning, you harness its ability to reveal a transparent, step-by-step process. Encouraging the model to “think aloud” and verify its work not only increases accuracy but also builds trust in its conclusions. Additionally, incorporating familiar business frameworks and breaking down complex tasks into logical sequences ensures that outputs are both reliable and contextually relevant. This summary consolidates the key techniques to get more consistent, reasoned, and business-aligned results from CoT LLMs.
+--
